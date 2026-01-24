@@ -1,4 +1,4 @@
-# toufou
+# toufou for TCSS491
 
 A better touhou
 
