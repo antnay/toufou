@@ -1,4 +1,4 @@
-// scoreboard overlay// Scoreboard overlay
+// Scoreboard overlay //
 
 interface GameState {
     stage: any;
