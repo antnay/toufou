@@ -1,9 +1,16 @@
-function run(state: GameState) {
-    update(state);
-    draw(state);
+import { GameState } from "./state";
+import { InputState } from "./state";
+
+export function run(state: GameState, input: InputState) {
+    function loop() {
+        update(state, input);
+        draw(state);
+        requestAnimationFrame(loop);
+    }
+    loop();
 }
 
-function update(state: GameState) {
+function update(state: GameState, input: InputState) {
 
 }
 
