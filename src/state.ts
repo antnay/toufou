@@ -1,3 +1,5 @@
+import { HitBox } from "./hitbox";
+
 export interface GameState {
     stage: Stage;
     current_phase: Phase;
@@ -22,6 +24,7 @@ interface Player {
     y: number;
     width: number;
     height: number;
+    hitbox: HitBox;
     speed: number;
     skin: string;
     bullets: Bullet[];
@@ -91,6 +94,7 @@ export async function initState(): Promise<GameState> {
             y: 0,
             width: 0,
             height: 0,
+            hitbox: new HitBox(0, 0, 0),
             speed: 0,
             skin: "",
             bullets: [],
