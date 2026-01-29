@@ -1,6 +1,6 @@
 import { HitBox } from "./hitbox";
 
-interface GameState {
+export interface GameState {
     stage: Stage;
     current_phase: Phase;
     player: Player;
@@ -75,8 +75,17 @@ interface Bullet {
     skin: string;
 }
 
+export interface InputState {
+    left: boolean;
+    right: boolean;
+    up: boolean;
+    down: boolean;
+    shoot: boolean;
+    bomb: boolean;
+}
+
 // todo: modify starting positions and dimensions
-async function initState(): Promise<GameState> {
+export async function initState(): Promise<GameState> {
     return {
         stage: await loadStage("stage1.json"),
         current_phase: Phase.LOSERS,
