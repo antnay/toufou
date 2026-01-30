@@ -1,6 +1,6 @@
 import { initState } from "./state";
-import { createInput } from "./ui";
 import { run } from "./gameloop";
+import { createInput } from './input';
 
 async function main() {
     const state = await initState();

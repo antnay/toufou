@@ -1,6 +1,6 @@
 class HitBox {
     x: number;
-    y: number
+    y: number;
     radius: number;
 
     constructor(x: number, y: number, radius: number) {
