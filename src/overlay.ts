@@ -1,31 +1,12 @@
 // Scoreboard overlay //
-
-interface GameState {
-    stage: any;
-    current_phase: Phase;
-    player: any;
-    losers: any[];
-    mid_boss: any;
-    boss: {
-        spellcard_on: boolean;
-        spellcard: string;
-        [key: string]: any;
-    };
-    current_bomb: number;
-    score: number;
-    deaths: number;
-}
-
-enum Phase {
-    LOSERS,
-    MID_BOSS,
-    BOSS,
-}
+import { GameState } from "./state";
+import { StagePhase } from "./stageloader";
 
 // DOM element references for overlay components
 let scoreElement: HTMLElement | null = null;
 let hiScoreElement: HTMLElement | null = null;
 let bombElement: HTMLElement | null = null;
+let livesElement: HTMLElement | null = null;
 let deathsElement: HTMLElement | null = null;
 let phaseElement: HTMLElement | null = null;
 let spellcardElement: HTMLElement | null = null;
@@ -34,10 +15,10 @@ let spellcardNameElement: HTMLElement | null = null;
 // High score
 let hiScore: number = 0;
 
-const PHASE_NAMES: Record<Phase, string> = {
-    [Phase.LOSERS]: 'Phase: Losers',
-    [Phase.MID_BOSS]: 'Phase: Mid Boss',
-    [Phase.BOSS]: 'Phase: Boss',
+const PHASE_NAMES: Record<StagePhase, string> = {
+    [StagePhase.LOSERS]: 'Phase: Losers',
+    [StagePhase.MID_BOSS]: 'Phase: Mid Boss',
+    [StagePhase.BOSS]: 'Phase: Boss',
 };
 
 const STAT_PANEL_WIDTH = 280;
@@ -123,7 +104,7 @@ function createScoreSection(): { container: HTMLElement; hiScore: HTMLElement; s
 }
 
 // Stats display section (bomb, deaths)
-function createStatsSection(): { container: HTMLElement; bomb: HTMLElement; deaths: HTMLElement } {
+function createStatsSection(): { container: HTMLElement; bomb: HTMLElement; lives: HTMLElement; deaths: HTMLElement } {
     const statsSection = document.createElement('div');
     statsSection.style.cssText = `
         margin-bottom: 25px;
@@ -133,16 +114,19 @@ function createStatsSection(): { container: HTMLElement; bomb: HTMLElement; deat
 
     const bombDiv = document.createElement('div');
     bombDiv.style.cssText = 'color: #ffaa00;';
-
+    const livesDiv = document.createElement('div');
+    livesDiv.style.cssText = 'color: #7dd3fc;';
     const deathsDiv = document.createElement('div');
     deathsDiv.style.cssText = 'color: #ff6b6b;';
 
     statsSection.appendChild(bombDiv);
+    statsSection.appendChild(livesDiv);
     statsSection.appendChild(deathsDiv);
 
     return {
         container: statsSection,
         bomb: bombDiv,
+        lives: livesDiv,
         deaths: deathsDiv,
     };
 }
@@ -222,6 +206,7 @@ export function initOverlay(): void {
 
     const statsSection = createStatsSection();
     bombElement = statsSection.bomb;
+    livesElement = statsSection.lives;
     deathsElement = statsSection.deaths;
     statPanel.appendChild(statsSection.container);
 
@@ -245,7 +230,7 @@ function formatScore(score: number): string {
 
 // Updates the overlay with current game state
 export function updateOverlay(state: GameState): void {
-    if (!scoreElement || !hiScoreElement || !bombElement || !deathsElement || 
+    if (!scoreElement || !hiScoreElement || !bombElement || !livesElement || !deathsElement || 
         !phaseElement || !spellcardElement || !spellcardNameElement) {
         return;
     }
@@ -259,6 +244,7 @@ export function updateOverlay(state: GameState): void {
     hiScoreElement.textContent = `HiScore ${formatScore(hiScore)}`;
     scoreElement.textContent = `Score ${formatScore(state.score)}`;
     bombElement.textContent = `Bomb ${state.current_bomb}`;
+    livesElement.textContent = `Lives ${state.lives}`;
     deathsElement.textContent = `Deaths ${state.deaths}`;
     phaseElement.textContent = PHASE_NAMES[state.current_phase] || 'Phase: Unknown';
 
@@ -268,14 +254,5 @@ export function updateOverlay(state: GameState): void {
         spellcardElement.style.display = 'block';
     } else {
         spellcardElement.style.display = 'none';
-    }
-}
-
-// Initialize overlay
-if (typeof document !== 'undefined') {
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initOverlay);
-    } else {
-        initOverlay();
     }
 }

@@ -10,12 +10,3 @@ export function initUI(): void {
         btn.style.display = 'none';
     }
 }
-
-// Initialize UI when DOM is ready
-if (typeof document !== 'undefined') {
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initUI);
-    } else {
-        initUI();
-    }
-}

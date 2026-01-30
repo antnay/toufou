@@ -1,6 +1,7 @@
 import { GameState } from "./state";
 import { Director } from "./director";
 import { InputState } from './stageloader';
+import { updateOverlay } from "./overlay";
 
 const director = new Director();
 

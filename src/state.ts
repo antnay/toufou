@@ -10,6 +10,7 @@ export interface GameState {
     losers: Loser[];
     midboss: MidBoss;
     boss: Boss;
+    lives: number;
     current_bomb: number;
     score: number;
     deaths: number;
@@ -41,6 +42,7 @@ export async function initState(): Promise<GameState> {
         boss: {
             x: 0, y: 0, width: 0, height: 0, speed: 0, bullets: [], current_phase: BossPhase.ONE, spellcard_on: false, spellcard: "",
         },
+        lives: stage.player.initial_lives,
         current_bomb: stage.player.initial_bombs,
         score: 0,
         deaths: 0,
