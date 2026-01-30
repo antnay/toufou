@@ -110,4 +110,6 @@ function draw(state: GameState) {
         ctx.fillStyle = "blue";
         ctx.fillRect(state.midboss.x - state.midboss.width / 2, state.midboss.y - state.midboss.height / 2, state.midboss.width, state.midboss.height);
     }
+
+    updateOverlay(state);
 }
