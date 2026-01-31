@@ -1,125 +1,49 @@
+import { HitBox } from "./hitbox";
+import { Animator } from "./animator";
+import { loadStage, Loser, MidBoss, Boss, StagePhase, Player, Stage, MidBossPhase, BossPhase } from './stageloader';
+import { AssetManager } from "./assetmanager";
+
 export interface GameState {
     stage: Stage;
-    current_phase: Phase;
+    current_phase: StagePhase;
     player: Player;
     losers: Loser[];
-    mid_boss: MidBoss;
+    midboss: MidBoss;
     boss: Boss;
     current_bomb: number;
     score: number;
     deaths: number;
+    assets: AssetManager;
 }
 
-enum Phase {
-    LOSERS,
-    MID_BOSS,
-    BOSS,
-}
-
-// represents the player
-interface Player {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    speed: number;
-    skin: string;
-    bullets: Bullet[];
-}
-
-// represents the lesser enemy
-interface Loser {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    speed: number;
-    skin: string;
-    bullets: Bullet[];
-}
-
-// represents the midboss
-interface MidBoss extends Loser {
-    current_phase: MidBossPhase;
-}
-
-enum MidBossPhase {
-    ONE,
-    TWO,
-}
-
-// represents the final boss
-interface Boss extends Loser {
-    current_phase: BossPhase;
-    spellcard_on: boolean;
-    spellcard: string;
-}
-
-enum BossPhase {
-    ONE,
-    TWO,
-    THREE,
-}
-
-// represents a bullet
-interface Bullet {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    speed: number;
-    owner: Player | Loser | MidBoss | Boss;
-    skin: string;
-}
-
-export interface InputState {
-    left: boolean;
-    right: boolean;
-    up: boolean;
-    down: boolean;
-    shoot: boolean;
-    bomb: boolean;
-}
-
-// todo: modify starting positions and dimensions
 export async function initState(): Promise<GameState> {
+    const stage = await loadStage("stages/stage1.json");
+
+    const assets = new AssetManager();
+    await assets.loadStageAssets(stage);
+
     return {
-        stage: await loadStage("stage1.json"),
-        current_phase: Phase.LOSERS,
+        stage: stage,
+        current_phase: StagePhase.LOSERS,
         player: {
-            x: 0,
-            y: 0,
-            width: 0,
-            height: 0,
-            speed: 0,
-            skin: "",
-            bullets: [],
+            x: stage.player.x - stage.player.animation.width / 2,
+            y: stage.player.y - stage.player.animation.height / 2,
+            width: stage.player.animation.width * stage.player.animation.scale,
+            height: stage.player.animation.height * stage.player.animation.scale,
+            hitbox: new HitBox(stage.player.x - stage.player.animation.width / 2, stage.player.y - stage.player.animation.height / 2, 5), // radius 5
+            speed: stage.player.speed,
+            bullets: []
         },
         losers: [],
-        mid_boss: {
-            x: 0,
-            y: 0,
-            width: 0,
-            height: 0,
-            speed: 0,
-            skin: "",
-            bullets: [],
-            current_phase: 0,
+        midboss: {
+            x: 0, y: 0, width: 0, height: 0, speed: 0, bullets: [], current_phase: MidBossPhase.ONE,
         },
         boss: {
-            x: 0,
-            y: 0,
-            width: 0,
-            height: 0,
-            speed: 0,
-            skin: "",
-            bullets: [],
-            current_phase: 0,
-            spellcard_on: false,
-            spellcard: "",
+            x: 0, y: 0, width: 0, height: 0, speed: 0, bullets: [], current_phase: BossPhase.ONE, spellcard_on: false, spellcard: "",
         },
-        current_bomb: 0,
+        current_bomb: stage.player.initial_bombs,
         score: 0,
         deaths: 0,
+        assets: assets,
     };
 }

@@ -1,0 +1,148 @@
+{
+    "background": "background1.png",
+    "player": {
+        "sprite": "cirno-back.png",
+        "speed": 5,
+        "x": 400,
+        "y": 700,
+        "initial_lives": 3,
+        "initial_bombs": 2,
+        "bomb_freq": 10,
+        "animation": {
+            "x": 0,
+            "y": 0,
+            "width": 24,
+            "height": 32,
+            "frames": 9,
+            "speed": 0.4,
+            "scale": 1
+        },
+        "player_bullet": {
+            "sprite": "player_bullet.png",
+            "animation": {
+                "x": 0,
+                "y": 0,
+                "width": 2,
+                "height": 32,
+                "frames": 9,
+                "speed": 0.4,
+                "scale": 2
+            }
+        }
+    },
+    "boss": {
+        "phases": [
+            {
+                "sprite": "cirno-fall.png",
+                "speed": 5,
+                "x": 400,
+                "y": 100,
+                "animation": {
+                    "x": 0,
+                    "y": 0,
+                    "width": 24,
+                    "height": 32,
+                    "frames": 8,
+                    "speed": 0.4,
+                    "scale": 2
+                },
+                "bullet": {
+                    "sprite": "bullet.png",
+                    "animation": {
+                        "x": 0,
+                        "y": 0,
+                        "width": 24,
+                        "height": 32,
+                        "frames": 9,
+                        "speed": 0.4,
+                        "scale": 2
+                    }
+                }
+            }
+        ]
+    },
+    "midboss": {
+        "phases": [
+            {
+                "sprite": "cirno-fall.png",
+                "speed": 5,
+                "x": 400,
+                "y": 100,
+                "animation": {
+                    "x": 0,
+                    "y": 0,
+                    "width": 24,
+                    "height": 32,
+                    "frames": 8,
+                    "speed": 0.4,
+                    "scale": 2
+                },
+                "bullet": {
+                    "sprite": "bullet.png",
+                    "animation": {
+                        "x": 0,
+                        "y": 0,
+                        "width": 24,
+                        "height": 32,
+                        "frames": 9,
+                        "speed": 0.4,
+                        "scale": 2
+                    }
+                }
+            }
+        ]
+    },
+    "loser": {
+        "sprite": "cirno-fall.png",
+        "speed": 5,
+        "animation": {
+            "x": 0,
+            "y": 0,
+            "width": 24,
+            "height": 32,
+            "frames": 8,
+            "speed": 0.3,
+            "scale": 2
+        },
+        "bullet": {
+            "sprite": "bullet.png",
+            "animation": {
+                "x": 0,
+                "y": 0,
+                "width": 24,
+                "height": 32,
+                "frames": 9,
+                "speed": 0.4,
+                "scale": 2
+            }
+        }
+    },
+    "config": {
+        "player_start": {
+            "x": 400,
+            "y": 700
+        },
+        "initial_lives": 3,
+        "initial_bombs": 2
+    },
+    "timeline": [
+        {
+            "frame": 60,
+            "type": "LOSER",
+            "x": 300,
+            "y": 400
+        },
+        {
+            "frame": 90,
+            "type": "MIDBOSS",
+            "x": 300,
+            "y": 100
+        },
+        {
+            "frame": 120,
+            "type": "BOSS",
+            "x": 300,
+            "y": 100
+        }
+    ]
+}
