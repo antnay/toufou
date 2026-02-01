@@ -1,12 +1,13 @@
 {
     "background": "background1.png",
     "player": {
-        "speed": 5,
+        "speed": 3,
         "x": 400,
         "y": 700,
         "initial_lives": 3,
         "initial_bombs": 2,
         "bomb_freq": 10,
+        "hitbox": 2,
         "animation_up": {
             "sprite": "cirno-u.png",
             "x": 0,
@@ -15,7 +16,7 @@
             "height": 31,
             "frames": 4,
             "speed": 0.4,
-            "scale": 2
+            "scale": 1
         },
         "animation_down": {
             "sprite": "cirno-d.png",
@@ -25,7 +26,7 @@
             "height": 31,
             "frames": 4,
             "speed": 0.4,
-            "scale": 2
+            "scale": 1
         },
         "animation_left": {
             "sprite": "cirno-l.png",
@@ -35,7 +36,7 @@
             "height": 31,
             "frames": 4,
             "speed": 0.4,
-            "scale": 2
+            "scale": 1
         },
         "animation_right": {
             "sprite": "cirno-r.png",
@@ -45,7 +46,7 @@
             "height": 31,
             "frames": 4,
             "speed": 0.4,
-            "scale": 2
+            "scale": 1
         },
         "animation_idle": {
             "sprite": "cirno-u.png",
@@ -55,7 +56,7 @@
             "height": 31,
             "frames": 4,
             "speed": 0.4,
-            "scale": 2
+            "scale": 1
         },
         "player_bullet": {
             "animation": {
@@ -76,6 +77,7 @@
                 "speed": 5,
                 "x": 400,
                 "y": 100,
+                "hitbox": 2,
                 "animation": {
                     "sprite": "cirno-d.png",
                     "x": 0,
@@ -107,6 +109,7 @@
                 "speed": 5,
                 "x": 400,
                 "y": 100,
+                "hitbox": 2,
                 "animation": {
                     "sprite": "cirno-d.png",
                     "x": 0,
@@ -134,6 +137,7 @@
     },
     "loser": {
         "speed": 5,
+        "hitbox": 2,
         "animation": {
             "sprite": "cirno-d.png",
             "x": 0,

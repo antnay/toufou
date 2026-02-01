@@ -11,6 +11,7 @@ export interface Stage {
         initial_lives: number;
         initial_bombs: number;
         bomb_freq: number;
+        hitbox: number;
         animation_up: {
             sprite: string;
             x: number;
@@ -76,6 +77,7 @@ export interface Stage {
     },
     loser: {
         speed: number;
+        hitbox: number;
         animation: {
             sprite: string;
             x: number;
@@ -119,6 +121,7 @@ export interface EnemyPhase {
     speed: number;
     x: number;
     y: number;
+    hitbox: number;
     animation: {
         sprite: string;
         x: number;

@@ -35,7 +35,7 @@ export async function initState(): Promise<GameState> {
             width: stage.player.animation_idle.width * stage.player.animation_idle.scale,
             height: stage.player.animation_idle.height * stage.player.animation_idle.scale,
             direction: Direction.IDLE,
-            hitbox: new HitBox(stage.player.x - stage.player.animation_idle.width / 2, stage.player.y - stage.player.animation_idle.height / 2, 5), // radius 5
+            hitbox: new HitBox(stage.player.x - stage.player.animation_idle.width / 2, stage.player.y - stage.player.animation_idle.height / 2, stage.player.hitbox), // radius 5
             speed: stage.player.speed,
             bullets: []
         },
