@@ -62,10 +62,6 @@ function update(state: GameState, input: InputState) {
 }
 
 function draw(state: GameState) {
-    try {
-        console.log(state.losers[0].bullets.length);
-    } catch (e) {
-    }
     const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
     if (!canvas) {
         console.error("Canvas not found!");
