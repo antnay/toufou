@@ -107,6 +107,7 @@ export interface Stage {
     boss: {
         phases: EnemyPhase[];
     };
+    pattern_index: string[];
     timeline: { frame: number, type: string, x: number, y: number; }[];
     spellcards: {
         easy: string[];

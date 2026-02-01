@@ -20,7 +20,7 @@ export interface BulletPatternConfig {
 }
 
 export class BulletPatternDef {
-    constructor(public readonly name: string, public readonly config: BulletPatternConfig) {}
+    constructor(public readonly name: string, public readonly config: BulletPatternConfig) { }
 
     createInstance(): BulletPatternInstance {
         return new BulletPatternInstance(this.config);
@@ -105,78 +105,78 @@ export class BulletPatternInstance {
     }
 }
 
-export async function loadPatterns(): Promise<Map<string, BulletPatternDef>> {
-    const index = await fetch("/patterns/pattern.json")
-        .then((response) => response.json())
-        .catch(() => []);
+// export async function loadPatterns(): Promise<Map<string, BulletPatternDef>> {
+//     const index = await fetch("/patterns/pattern.json")
+//         .then((response) => response.json())
+//         .catch(() => []);
 
-    const files: string[] = Array.isArray(index) ? index : [];
-    const map = new Map<string, BulletPatternDef>();
+//     const files: string[] = Array.isArray(index) ? index : [];
+//     const map = new Map<string, BulletPatternDef>();
 
-    for (const file of files) {
-        const text = await fetch(`/patterns/${file}`)
-            .then((response) => response.text())
-            .catch(() => "");
-        if (!text) continue;
+//     for (const file of files) {
+//         const text = await fetch(`/patterns/${file}`)
+//             .then((response) => response.text())
+//             .catch(() => "");
+//         if (!text) continue;
 
-        const defs = parsePatternFile(file, text);
-        for (const def of defs) {
-            map.set(def.name, def);
-        }
-    }
+//         const defs = parsePatternFile(file, text);
+//         for (const def of defs) {
+//             map.set(def.name, def);
+//         }
+//     }
 
-    return map;
-}
+//     return map;
+// }
 
-function parsePatternFile(fileName: string, text: string): BulletPatternDef[] {
-    const baseName = fileName.replace(/\.[^/.]+$/, "");
-    const lines = text.split(/\r?\n/);
-    const defs: BulletPatternDef[] = [];
+// function parsePatternFile(fileName: string, text: string): BulletPatternDef[] {
+//     const baseName = fileName.replace(/\.[^/.]+$/, "");
+//     const lines = text.split(/\r?\n/);
+//     const defs: BulletPatternDef[] = [];
 
-    for (let i = 0; i < lines.length; i++) {
-        const raw = lines[i].trim();
-        if (!raw || raw.startsWith("#") || raw.startsWith("//")) continue;
+//     for (let i = 0; i < lines.length; i++) {
+//         const raw = lines[i].trim();
+//         if (!raw || raw.startsWith("#") || raw.startsWith("//")) continue;
 
-        const tokens = raw.split(/\s+/);
-        if (tokens.length < 12) continue;
+//         const tokens = raw.split(/\s+/);
+//         if (tokens.length < 12) continue;
 
-        const numbers = tokens.slice(0, 12).map((value) => Number(value));
-        if (numbers.some((value) => Number.isNaN(value))) continue;
+//         const numbers = tokens.slice(0, 12).map((value) => Number(value));
+//         if (numbers.some((value) => Number.isNaN(value))) continue;
 
-        let idx = 12;
-        let durationSeconds: number | undefined;
-        let blinkSeconds: number | undefined;
-        if (idx < tokens.length && isNumberToken(tokens[idx])) {
-            durationSeconds = Number(tokens[idx]);
-            idx += 1;
-        }
-        if (idx < tokens.length && isNumberToken(tokens[idx])) {
-            blinkSeconds = Number(tokens[idx]);
-            idx += 1;
-        }
-        const bulletType = tokens[idx] ?? "";
-        const name = lines.length > 1 ? `${baseName}_${defs.length + 1}` : baseName;
+//         let idx = 12;
+//         let durationSeconds: number | undefined;
+//         let blinkSeconds: number | undefined;
+//         if (idx < tokens.length && isNumberToken(tokens[idx])) {
+//             durationSeconds = Number(tokens[idx]);
+//             idx += 1;
+//         }
+//         if (idx < tokens.length && isNumberToken(tokens[idx])) {
+//             blinkSeconds = Number(tokens[idx]);
+//             idx += 1;
+//         }
+//         const bulletType = tokens[idx] ?? "";
+//         const name = lines.length > 1 ? `${baseName}_${defs.length + 1}` : baseName;
 
-        defs.push(new BulletPatternDef(name, {
-            originX: numbers[0],
-            originY: numbers[1],
-            frequency: numbers[2],
-            burstCount: numbers[3],
-            burstSize: numbers[4],
-            burstSizeChange: numbers[5],
-            direction: numbers[6],
-            directionChange: numbers[7],
-            spawnDirection: numbers[8],
-            spawnDirectionChange: numbers[9],
-            velocity: numbers[10],
-            velocityChange: numbers[11],
-            durationSeconds,
-            blinkSeconds,
-            bulletType,
-        }));
-    }
-    return defs;
-}
+//         defs.push(new BulletPatternDef(name, {
+//             originX: numbers[0],
+//             originY: numbers[1],
+//             frequency: numbers[2],
+//             burstCount: numbers[3],
+//             burstSize: numbers[4],
+//             burstSizeChange: numbers[5],
+//             direction: numbers[6],
+//             directionChange: numbers[7],
+//             spawnDirection: numbers[8],
+//             spawnDirectionChange: numbers[9],
+//             velocity: numbers[10],
+//             velocityChange: numbers[11],
+//             durationSeconds,
+//             blinkSeconds,
+//             bulletType,
+//         }));
+//     }
+//     return defs;
+// }
 
 function createBullet(
     params: {
@@ -224,8 +224,8 @@ function radToDeg(rad: number): number {
     return (rad * 180) / Math.PI;
 }
 
-function isNumberToken(value: string): boolean {
-    return value !== "" && !Number.isNaN(Number(value));
-}
+// function isNumberToken(value: string): boolean {
+//     return value !== "" && !Number.isNaN(Number(value));
+// }
 
 const FRAMES_PER_SECOND = 60;

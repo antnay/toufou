@@ -1,6 +1,6 @@
 import { GameState } from "./state";
 import { Director } from "./director";
-import { InputState } from './stageloader';
+import { InputState, StagePhase } from './stageloader';
 import { updateOverlay } from "./overlay";
 
 const director = new Director();
@@ -19,7 +19,7 @@ export function run(state: GameState, input: InputState) {
 function update(state: GameState, input: InputState) {
     if (input.left) {
         state.player.x -= state.player.speed;
-        state.player.animator?.switchAnimation(state.assets.get(state.stage.player.animation_left.sprite),
+        state.player.animator?.switchAnimation(state.assets.getImage(state.stage.player.animation_left.sprite),
             state.stage.player.animation_left.x,
             state.stage.player.animation_left.y,
             state.stage.player.animation_left.width,
@@ -29,7 +29,7 @@ function update(state: GameState, input: InputState) {
     }
     if (input.right) {
         state.player.x += state.player.speed;
-        state.player.animator?.switchAnimation(state.assets.get(state.stage.player.animation_right.sprite),
+        state.player.animator?.switchAnimation(state.assets.getImage(state.stage.player.animation_right.sprite),
             state.stage.player.animation_right.x,
             state.stage.player.animation_right.y,
             state.stage.player.animation_right.width,
@@ -39,7 +39,7 @@ function update(state: GameState, input: InputState) {
     }
     if (input.up) {
         state.player.y -= state.player.speed;
-        state.player.animator?.switchAnimation(state.assets.get(state.stage.player.animation_up.sprite),
+        state.player.animator?.switchAnimation(state.assets.getImage(state.stage.player.animation_up.sprite),
             state.stage.player.animation_up.x,
             state.stage.player.animation_up.y,
             state.stage.player.animation_up.width,
@@ -49,7 +49,7 @@ function update(state: GameState, input: InputState) {
     }
     if (input.down) {
         state.player.y += state.player.speed;
-        state.player.animator?.switchAnimation(state.assets.get(state.stage.player.animation_down.sprite),
+        state.player.animator?.switchAnimation(state.assets.getImage(state.stage.player.animation_down.sprite),
             state.stage.player.animation_down.x,
             state.stage.player.animation_down.y,
             state.stage.player.animation_down.width,
@@ -62,6 +62,10 @@ function update(state: GameState, input: InputState) {
 }
 
 function draw(state: GameState) {
+    try {
+        console.log(state.losers[0].bullets.length);
+    } catch (e) {
+    }
     const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
     if (!canvas) {
         console.error("Canvas not found!");
@@ -163,8 +167,8 @@ function updateBullets(state: GameState) {
     const maxX = canvas?.width ?? 600;
     const maxY = canvas?.height ?? 800;
 
-    for (const loser of state.losers) {
-        loser.bullets = loser.bullets.filter((bullet) => {
+    const updateBulletList = (bullets: any[]) => {
+        return bullets.filter((bullet) => {
             const vx = bullet.vx ?? 0;
             const vy = bullet.vy ?? bullet.speed;
             bullet.x += vx;
@@ -172,7 +176,29 @@ function updateBullets(state: GameState) {
             return bullet.x >= -bullet.width && bullet.x <= maxX + bullet.width &&
                 bullet.y >= -bullet.height && bullet.y <= maxY + bullet.height;
         });
+    };
+
+    switch (state.current_phase) {
+        case StagePhase.LOSERS:
+            for (const loser of state.losers) {
+                loser.bullets = updateBulletList(loser.bullets);
+            }
+            break;
+        case StagePhase.MID_BOSS:
+            for (const loser of state.losers) {
+                loser.bullets = updateBulletList(loser.bullets);
+            }
+            state.midboss.bullets = updateBulletList(state.midboss.bullets);
+            break;
+        case StagePhase.BOSS:
+            for (const loser of state.losers) {
+                loser.bullets = updateBulletList(loser.bullets);
+            }
+            state.boss.bullets = updateBulletList(state.boss.bullets);
+            break;
     }
+
+    state.player.bullets = updateBulletList(state.player.bullets);
 }
 
 function drawEnemyBullets(state: GameState, ctx: CanvasRenderingContext2D) {

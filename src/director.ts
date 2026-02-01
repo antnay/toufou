@@ -39,7 +39,7 @@ export class Director {
     createPlayer(state: GameState) {
         let playerAnimator: Animator | undefined;
         try {
-            const playerImg = state.assets.get(state.stage.player.animation_idle.sprite);
+            const playerImg = state.assets.getImage(state.stage.player.animation_idle.sprite);
             playerAnimator = new Animator(
                 playerImg,
                 state.stage.player.animation_idle.x,
@@ -87,7 +87,7 @@ export class Director {
     createMidBoss(state: GameState) {
         let midBossAnimator: Animator | undefined;
         try {
-            const midBossImg = state.assets.get(state.stage.midboss.phases[MidBossPhase.ONE].animation.sprite);
+            const midBossImg = state.assets.getImage(state.stage.midboss.phases[MidBossPhase.ONE].animation.sprite);
             midBossAnimator = new Animator(
                 midBossImg,
                 state.stage.midboss.phases[MidBossPhase.ONE].animation.x,
@@ -117,7 +117,7 @@ export class Director {
     createBoss(state: GameState) {
         let bossAnimator: Animator | undefined;
         try {
-            const bossImg = state.assets.get(state.stage.boss.phases[BossPhase.ONE].animation.sprite);
+            const bossImg = state.assets.getImage(state.stage.boss.phases[BossPhase.ONE].animation.sprite);
             bossAnimator = new Animator(
                 bossImg,
                 state.stage.boss.phases[BossPhase.ONE].animation.x,
@@ -156,7 +156,7 @@ export class Director {
                     event.x,
                     event.y,
                     new Animator(
-                        state.assets.get(state.stage.loser.animation.sprite),
+                        state.assets.getImage(state.stage.loser.animation.sprite),
                         state.stage.loser.animation.x,
                         state.stage.loser.animation.y,
                         state.stage.loser.animation.width,
@@ -196,7 +196,7 @@ export class Director {
                         player: state.player,
                         bulletSprite: state.stage.loser.bullet.animation.sprite,
                         bulletAnimation: state.stage.loser.bullet.animation,
-                        getBulletImage: (sprite) => state.assets.get(sprite),
+                        getBulletImage: (sprite) => state.assets.getImage(sprite),
                     });
                     if (bullets.length > 0) {
                         loser.bullets.push(...bullets);

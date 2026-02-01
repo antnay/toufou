@@ -169,6 +169,12 @@
         "initial_lives": 3,
         "initial_bombs": 2
     },
+    "pattern_index": [
+        "spiral.txt",
+        "circle.txt",
+        "circle16.txt",
+        "circle16mirror.txt"
+    ],
     "timeline": [
         {
             "frame": 60,

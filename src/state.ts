@@ -2,7 +2,7 @@ import { HitBox } from "./hitbox";
 import { Animator } from "./animator";
 import { loadStage, Loser, MidBoss, Boss, StagePhase, Player, Stage, MidBossPhase, BossPhase, Direction } from './stageloader';
 import { AssetManager } from "./assetmanager";
-import { BulletPatternDef, loadPatterns } from "./patterns";
+import { BulletPatternDef } from "./patterns";
 
 export interface GameState {
     stage: Stage;
@@ -21,7 +21,6 @@ export interface GameState {
 
 export async function initState(): Promise<GameState> {
     const stage = await loadStage("stages/stage1.json");
-    const patterns = await loadPatterns();
 
     const assets = new AssetManager();
     await assets.loadStageAssets(stage);
@@ -51,6 +50,6 @@ export async function initState(): Promise<GameState> {
         score: 0,
         deaths: 0,
         assets: assets,
-        patterns: patterns,
+        patterns: assets.patterns,
     };
 }
