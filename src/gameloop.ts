@@ -58,6 +58,7 @@ function update(state: GameState, input: InputState) {
             state.stage.player.animation_down.speed);
     }
     director.update(state);
+    updateBullets(state);
 }
 
 function draw(state: GameState) {
@@ -127,6 +128,7 @@ function draw(state: GameState) {
         }
     }
 
+    drawEnemyBullets(state, ctx);
     if (state.boss.animator) {
         state.boss.animator.drawFrameHorizontal(
             0.016,
@@ -154,4 +156,43 @@ function draw(state: GameState) {
     }
 
     updateOverlay(state);
+}
+
+function updateBullets(state: GameState) {
+    const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement | null;
+    const maxX = canvas?.width ?? 600;
+    const maxY = canvas?.height ?? 800;
+
+    for (const loser of state.losers) {
+        loser.bullets = loser.bullets.filter((bullet) => {
+            const vx = bullet.vx ?? 0;
+            const vy = bullet.vy ?? bullet.speed;
+            bullet.x += vx;
+            bullet.y += vy;
+            return bullet.x >= -bullet.width && bullet.x <= maxX + bullet.width &&
+                bullet.y >= -bullet.height && bullet.y <= maxY + bullet.height;
+        });
+    }
+}
+
+function drawEnemyBullets(state: GameState, ctx: CanvasRenderingContext2D) {
+    for (const loser of state.losers) {
+        for (const bullet of loser.bullets) {
+            if (bullet.animator) {
+                bullet.animator.drawFrameHorizontal(
+                    0.016,
+                    ctx,
+                    bullet.x - bullet.width / 2,
+                    bullet.y - bullet.height / 2,
+                    bullet.scale ?? 1
+                );
+            } else {
+                const radius = Math.max(2, bullet.width * 0.35);
+                ctx.fillStyle = "white";
+                ctx.beginPath();
+                ctx.arc(bullet.x, bullet.y, radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+    }
 }

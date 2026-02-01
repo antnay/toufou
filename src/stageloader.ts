@@ -1,5 +1,6 @@
 import { Animator } from './animator';
 import { HitBox } from './hitbox';
+import type { BulletPatternInstance } from "./patterns";
 
 export interface Stage {
     background: string;
@@ -185,6 +186,7 @@ export interface Loser {
     height: number;
     speed: number;
     bullets: Bullet[];
+    patternInstances?: BulletPatternInstance[];
     animator?: Animator;
 }
 
@@ -196,6 +198,7 @@ export interface MidBoss {
     height: number;
     speed: number;
     bullets: Bullet[];
+    patternInstances?: BulletPatternInstance[];
     animator?: Animator;
     current_phase: MidBossPhase;
 }
@@ -213,6 +216,7 @@ export interface Boss {
     height: number;
     speed: number;
     bullets: Bullet[];
+    patternInstances?: BulletPatternInstance[];
     animator?: Animator;
     current_phase: BossPhase;
     spellcard_on: boolean;
@@ -232,8 +236,12 @@ export interface Bullet {
     width: number;
     height: number;
     speed: number;
+    vx?: number;
+    vy?: number;
     owner: Player | Loser | MidBoss | Boss;
     animator?: Animator;
+    skin?: string;
+    scale?: number;
 }
 
 export interface InputState {
