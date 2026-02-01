@@ -1,25 +1,65 @@
 {
     "background": "background1.png",
     "player": {
-        "sprite": "cirno-back.png",
         "speed": 5,
         "x": 400,
         "y": 700,
         "initial_lives": 3,
         "initial_bombs": 2,
         "bomb_freq": 10,
-        "animation": {
+        "animation_up": {
+            "sprite": "cirno-u.png",
             "x": 0,
             "y": 0,
             "width": 24,
-            "height": 32,
-            "frames": 9,
+            "height": 31,
+            "frames": 4,
             "speed": 0.4,
-            "scale": 1
+            "scale": 2
+        },
+        "animation_down": {
+            "sprite": "cirno-d.png",
+            "x": 0,
+            "y": 0,
+            "width": 24,
+            "height": 31,
+            "frames": 4,
+            "speed": 0.4,
+            "scale": 2
+        },
+        "animation_left": {
+            "sprite": "cirno-l.png",
+            "x": 0,
+            "y": 0,
+            "width": 24,
+            "height": 31,
+            "frames": 4,
+            "speed": 0.4,
+            "scale": 2
+        },
+        "animation_right": {
+            "sprite": "cirno-r.png",
+            "x": 0,
+            "y": 0,
+            "width": 23.92,
+            "height": 31,
+            "frames": 4,
+            "speed": 0.4,
+            "scale": 2
+        },
+        "animation_idle": {
+            "sprite": "cirno-u.png",
+            "x": 0,
+            "y": 0,
+            "width": 24,
+            "height": 31,
+            "frames": 4,
+            "speed": 0.4,
+            "scale": 2
         },
         "player_bullet": {
-            "sprite": "player_bullet.png",
             "animation": {
+                "sprite": "player_bullet.png",
                 "x": 0,
                 "y": 0,
                 "width": 2,
@@ -33,11 +73,11 @@
     "boss": {
         "phases": [
             {
-                "sprite": "cirno-fall.png",
                 "speed": 5,
                 "x": 400,
                 "y": 100,
                 "animation": {
+                    "sprite": "cirno-d.png",
                     "x": 0,
                     "y": 0,
                     "width": 24,
@@ -47,8 +87,8 @@
                     "scale": 2
                 },
                 "bullet": {
-                    "sprite": "bullet.png",
                     "animation": {
+                        "sprite": "bullet.png",
                         "x": 0,
                         "y": 0,
                         "width": 24,
@@ -64,11 +104,11 @@
     "midboss": {
         "phases": [
             {
-                "sprite": "cirno-fall.png",
                 "speed": 5,
                 "x": 400,
                 "y": 100,
                 "animation": {
+                    "sprite": "cirno-d.png",
                     "x": 0,
                     "y": 0,
                     "width": 24,
@@ -78,8 +118,8 @@
                     "scale": 2
                 },
                 "bullet": {
-                    "sprite": "bullet.png",
                     "animation": {
+                        "sprite": "bullet.png",
                         "x": 0,
                         "y": 0,
                         "width": 24,
@@ -93,9 +133,9 @@
         ]
     },
     "loser": {
-        "sprite": "cirno-fall.png",
         "speed": 5,
         "animation": {
+            "sprite": "cirno-d.png",
             "x": 0,
             "y": 0,
             "width": 24,
@@ -105,8 +145,8 @@
             "scale": 2
         },
         "bullet": {
-            "sprite": "bullet.png",
             "animation": {
+                "sprite": "bullet.png",
                 "x": 0,
                 "y": 0,
                 "width": 24,

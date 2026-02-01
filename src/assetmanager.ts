@@ -4,19 +4,23 @@ export class AssetManager {
     images: Map<string, HTMLImageElement> = new Map();
 
     async loadStageAssets(stage: Stage) {
-        await this.load(stage.player.sprite);
-        await this.load(stage.player.player_bullet.sprite);
+        await this.load(stage.player.animation_up.sprite);
+        await this.load(stage.player.animation_down.sprite);
+        await this.load(stage.player.animation_left.sprite);
+        await this.load(stage.player.animation_right.sprite);
+        await this.load(stage.player.animation_idle.sprite);
+        await this.load(stage.player.player_bullet.animation.sprite);
 
-        await this.load(stage.loser.sprite);
-        await this.load(stage.loser.bullet.sprite);
+        await this.load(stage.loser.animation.sprite);
+        await this.load(stage.loser.bullet.animation.sprite);
 
         for (const phase of stage.midboss.phases) {
-            await this.load(phase.sprite);
-            await this.load(phase.bullet.sprite);
+            await this.load(phase.animation.sprite);
+            await this.load(phase.bullet.animation.sprite);
         }
         for (const phase of stage.boss.phases) {
-            await this.load(phase.sprite);
-            await this.load(phase.bullet.sprite);
+            await this.load(phase.animation.sprite);
+            await this.load(phase.bullet.animation.sprite);
         }
     }
 

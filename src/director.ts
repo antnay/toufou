@@ -1,5 +1,5 @@
 import { Animator } from './animator';
-import { StagePhase, Loser, Stage, MidBossPhase, BossPhase } from './stageloader';
+import { StagePhase, Loser, Stage, MidBossPhase, BossPhase, Direction } from './stageloader';
 import { GameState } from "./state";
 import { HitBox } from "./hitbox";
 
@@ -8,6 +8,15 @@ export class Director {
 
     async update(state: GameState) {
         this.frameCount++;
+
+        switch (state.current_phase) {
+            case StagePhase.LOSERS:
+                break;
+            case StagePhase.MID_BOSS:
+                break;
+            case StagePhase.BOSS:
+                break;
+        }
 
         if (state.stage.timeline) {
             const currentEvents = state.stage.timeline.filter(e => e.frame === this.frameCount);
@@ -28,15 +37,15 @@ export class Director {
     createPlayer(state: GameState) {
         let playerAnimator: Animator | undefined;
         try {
-            const playerImg = state.assets.get(state.stage.player.sprite);
+            const playerImg = state.assets.get(state.stage.player.animation_idle.sprite);
             playerAnimator = new Animator(
                 playerImg,
-                state.stage.player.animation.x,
-                state.stage.player.animation.y,
-                state.stage.player.animation.width,
-                state.stage.player.animation.height,
-                state.stage.player.animation.frames,
-                state.stage.player.animation.speed
+                state.stage.player.animation_idle.x,
+                state.stage.player.animation_idle.y,
+                state.stage.player.animation_idle.width,
+                state.stage.player.animation_idle.height,
+                state.stage.player.animation_idle.frames,
+                state.stage.player.animation_idle.speed
             );
         } catch (e) {
             console.error("Failed to create player animator", e);
@@ -45,8 +54,9 @@ export class Director {
         return {
             x: state.stage.player.x,
             y: state.stage.player.y,
-            width: state.stage.player.animation.width * state.stage.player.animation.scale,
-            height: state.stage.player.animation.height * state.stage.player.animation.scale,
+            width: state.stage.player.animation_idle.width * state.stage.player.animation_idle.scale,
+            height: state.stage.player.animation_idle.height * state.stage.player.animation_idle.scale,
+            direction: Direction.IDLE,
             hitbox: new HitBox(0, 0, 5),
             speed: state.stage.player.speed,
             bullets: [],
@@ -69,7 +79,7 @@ export class Director {
     createMidBoss(state: GameState) {
         let midBossAnimator: Animator | undefined;
         try {
-            const midBossImg = state.assets.get(state.stage.midboss.phases[MidBossPhase.ONE].sprite);
+            const midBossImg = state.assets.get(state.stage.midboss.phases[MidBossPhase.ONE].animation.sprite);
             midBossAnimator = new Animator(
                 midBossImg,
                 state.stage.midboss.phases[MidBossPhase.ONE].animation.x,
@@ -99,7 +109,7 @@ export class Director {
     createBoss(state: GameState) {
         let bossAnimator: Animator | undefined;
         try {
-            const bossImg = state.assets.get(state.stage.boss.phases[BossPhase.ONE].sprite);
+            const bossImg = state.assets.get(state.stage.boss.phases[BossPhase.ONE].animation.sprite);
             bossAnimator = new Animator(
                 bossImg,
                 state.stage.boss.phases[BossPhase.ONE].animation.x,
@@ -136,7 +146,7 @@ export class Director {
                     event.x,
                     event.y,
                     new Animator(
-                        state.assets.get(state.stage.loser.sprite),
+                        state.assets.get(state.stage.loser.animation.sprite),
                         state.stage.loser.animation.x,
                         state.stage.loser.animation.y,
                         state.stage.loser.animation.width,

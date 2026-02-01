@@ -19,15 +19,43 @@ export function run(state: GameState, input: InputState) {
 function update(state: GameState, input: InputState) {
     if (input.left) {
         state.player.x -= state.player.speed;
+        state.player.animator?.switchAnimation(state.assets.get(state.stage.player.animation_left.sprite),
+            state.stage.player.animation_left.x,
+            state.stage.player.animation_left.y,
+            state.stage.player.animation_left.width,
+            state.stage.player.animation_left.height,
+            state.stage.player.animation_left.frames,
+            state.stage.player.animation_left.speed);
     }
     if (input.right) {
         state.player.x += state.player.speed;
+        state.player.animator?.switchAnimation(state.assets.get(state.stage.player.animation_right.sprite),
+            state.stage.player.animation_right.x,
+            state.stage.player.animation_right.y,
+            state.stage.player.animation_right.width,
+            state.stage.player.animation_right.height,
+            state.stage.player.animation_right.frames,
+            state.stage.player.animation_right.speed);
     }
     if (input.up) {
         state.player.y -= state.player.speed;
+        state.player.animator?.switchAnimation(state.assets.get(state.stage.player.animation_up.sprite),
+            state.stage.player.animation_up.x,
+            state.stage.player.animation_up.y,
+            state.stage.player.animation_up.width,
+            state.stage.player.animation_up.height,
+            state.stage.player.animation_up.frames,
+            state.stage.player.animation_up.speed);
     }
     if (input.down) {
         state.player.y += state.player.speed;
+        state.player.animator?.switchAnimation(state.assets.get(state.stage.player.animation_down.sprite),
+            state.stage.player.animation_down.x,
+            state.stage.player.animation_down.y,
+            state.stage.player.animation_down.width,
+            state.stage.player.animation_down.height,
+            state.stage.player.animation_down.frames,
+            state.stage.player.animation_down.speed);
     }
     director.update(state);
 }
@@ -49,7 +77,7 @@ function draw(state: GameState) {
             ctx,
             state.player.x - state.player.width / 2,
             state.player.y - state.player.height / 2,
-            state.stage.player.animation.scale
+            state.stage.player.animation_idle.scale
         );
     } else {
         ctx.fillStyle = "red";
@@ -83,7 +111,21 @@ function draw(state: GameState) {
         }
     }
 
-    // TODO: Draw bullets
+    // Draw bullets
+    for (const bullet of state.player.bullets) {
+        if (bullet.animator) {
+            bullet.animator.drawFrameHorizontal(
+                0.016,
+                ctx,
+                bullet.x - bullet.width / 2,
+                bullet.y - bullet.height / 2,
+                state.stage.player.player_bullet.animation.scale
+            );
+        } else {
+            ctx.fillStyle = "red";
+            ctx.fillRect(bullet.x - bullet.width / 2, bullet.y - bullet.height / 2, bullet.width, bullet.height);
+        }
+    }
 
     if (state.boss.animator) {
         state.boss.animator.drawFrameHorizontal(

@@ -4,14 +4,54 @@ import { HitBox } from './hitbox';
 export interface Stage {
     background: string;
     player: {
-        sprite: string;
         speed: number;
         x: number;
         y: number;
         initial_lives: number;
         initial_bombs: number;
         bomb_freq: number;
-        animation: {
+        animation_up: {
+            sprite: string;
+            x: number;
+            y: number;
+            width: number;
+            height: number;
+            frames: number;
+            speed: number;
+            scale: number;
+        };
+        animation_down: {
+            sprite: string;
+            x: number;
+            y: number;
+            width: number;
+            height: number;
+            frames: number;
+            speed: number;
+            scale: number;
+        };
+        animation_left: {
+            sprite: string;
+            x: number;
+            y: number;
+            width: number;
+            height: number;
+            frames: number;
+            speed: number;
+            scale: number;
+        };
+        animation_right: {
+            sprite: string;
+            x: number;
+            y: number;
+            width: number;
+            height: number;
+            frames: number;
+            speed: number;
+            scale: number;
+        };
+        animation_idle: {
+            sprite: string;
             x: number;
             y: number;
             width: number;
@@ -21,8 +61,8 @@ export interface Stage {
             scale: number;
         };
         player_bullet: {
-            sprite: string;
             animation: {
+                sprite: string;
                 x: number;
                 y: number;
                 width: number;
@@ -34,9 +74,9 @@ export interface Stage {
         },
     },
     loser: {
-        sprite: string;
         speed: number;
         animation: {
+            sprite: string;
             x: number;
             y: number;
             width: number;
@@ -46,8 +86,8 @@ export interface Stage {
             scale: number;
         };
         bullet: {
-            sprite: string;
             animation: {
+                sprite: string;
                 x: number;
                 y: number;
                 width: number;
@@ -75,11 +115,11 @@ export interface Stage {
 }
 
 export interface EnemyPhase {
-    sprite: string;
     speed: number;
     x: number;
     y: number;
     animation: {
+        sprite: string;
         x: number;
         y: number;
         width: number;
@@ -89,8 +129,8 @@ export interface EnemyPhase {
         scale: number;
     };
     bullet: {
-        sprite: string;
         animation: {
+            sprite: string;
             x: number;
             y: number;
             width: number;
@@ -122,10 +162,19 @@ export interface Player {
     y: number;
     width: number;
     height: number;
+    direction: Direction;
     hitbox: HitBox;
     speed: number;
     bullets: Bullet[];
     animator?: Animator;
+}
+
+export enum Direction {
+    UP = 0,
+    DOWN,
+    LEFT,
+    RIGHT,
+    IDLE,
 }
 
 // represents the lesser enemy
@@ -140,7 +189,14 @@ export interface Loser {
 }
 
 // represents the midboss
-export interface MidBoss extends Loser {
+export interface MidBoss {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    speed: number;
+    bullets: Bullet[];
+    animator?: Animator;
     current_phase: MidBossPhase;
 }
 
@@ -150,7 +206,14 @@ export enum MidBossPhase {
 }
 
 // represents the final boss
-export interface Boss extends Loser {
+export interface Boss {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    speed: number;
+    bullets: Bullet[];
+    animator?: Animator;
     current_phase: BossPhase;
     spellcard_on: boolean;
     spellcard: string;
@@ -170,7 +233,7 @@ export interface Bullet {
     height: number;
     speed: number;
     owner: Player | Loser | MidBoss | Boss;
-    skin: string;
+    animator?: Animator;
 }
 
 export interface InputState {

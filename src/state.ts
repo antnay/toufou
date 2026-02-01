@@ -1,6 +1,6 @@
 import { HitBox } from "./hitbox";
 import { Animator } from "./animator";
-import { loadStage, Loser, MidBoss, Boss, StagePhase, Player, Stage, MidBossPhase, BossPhase } from './stageloader';
+import { loadStage, Loser, MidBoss, Boss, StagePhase, Player, Stage, MidBossPhase, BossPhase, Direction } from './stageloader';
 import { AssetManager } from "./assetmanager";
 
 export interface GameState {
@@ -27,11 +27,12 @@ export async function initState(): Promise<GameState> {
         stage: stage,
         current_phase: StagePhase.LOSERS,
         player: {
-            x: stage.player.x - stage.player.animation.width / 2,
-            y: stage.player.y - stage.player.animation.height / 2,
-            width: stage.player.animation.width * stage.player.animation.scale,
-            height: stage.player.animation.height * stage.player.animation.scale,
-            hitbox: new HitBox(stage.player.x - stage.player.animation.width / 2, stage.player.y - stage.player.animation.height / 2, 5), // radius 5
+            x: stage.player.x - stage.player.animation_idle.width / 2,
+            y: stage.player.y - stage.player.animation_idle.height / 2,
+            width: stage.player.animation_idle.width * stage.player.animation_idle.scale,
+            height: stage.player.animation_idle.height * stage.player.animation_idle.scale,
+            direction: Direction.IDLE,
+            hitbox: new HitBox(stage.player.x - stage.player.animation_idle.width / 2, stage.player.y - stage.player.animation_idle.height / 2, 5), // radius 5
             speed: stage.player.speed,
             bullets: []
         },

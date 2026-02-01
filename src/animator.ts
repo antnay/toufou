@@ -41,6 +41,16 @@ export class Animator {
         ctx.drawImage(this.sprite, this.xStart, this.yStart + frame * this.height, this.width, this.height, x, y, this.width * scale, this.height * scale);
     };
 
+    switchAnimation(sprite: HTMLImageElement, xStart: number, yStart: number, width: number, height: number, frameCount: number, frameDuration: number) {
+        this.sprite = sprite;
+        this.xStart = xStart;
+        this.yStart = yStart;
+        this.width = width;
+        this.height = height;
+        this.frameCount = frameCount;
+        this.frameDuration = frameDuration;
+    }
+
     currentFrame() {
         return Math.floor(this.elapsedTime / this.frameDuration);
     };
