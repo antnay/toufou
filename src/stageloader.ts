@@ -187,6 +187,15 @@ export interface Loser {
     speed: number;
     bullets: Bullet[];
     patternInstances?: BulletPatternInstance[];
+    patternNames?: string[];
+    // this should be on mid-boss or boss mob.
+    // but let's keep it just for prototype.
+    patternCycle?: {
+        index: number;
+        active?: BulletPatternInstance;
+        activeEndFrame: number;
+        gapEndFrame: number;
+    };
     animator?: Animator;
 }
 

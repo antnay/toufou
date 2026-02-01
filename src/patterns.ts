@@ -106,7 +106,7 @@ export class BulletPatternInstance {
 }
 
 export async function loadPatterns(): Promise<Map<string, BulletPatternDef>> {
-    const index = await fetch("/patterns/index.json")
+    const index = await fetch("/patterns/pattern.json")
         .then((response) => response.json())
         .catch(() => []);
 
