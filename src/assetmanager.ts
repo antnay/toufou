@@ -51,5 +51,6 @@ export const loadImage = (src: string): Promise<HTMLImageElement> => {
         img.onload = () => resolve(img);
         img.onerror = reject;
         img.src = "/assets/" + src;
+        img.src = `${import.meta.env.BASE_URL}assets/${src}`;
     });
 };
