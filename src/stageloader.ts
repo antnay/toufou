@@ -255,6 +255,7 @@ export interface Bullet {
     animator?: Animator;
     skin?: string;
     scale?: number;
+    hitbox: HitBox;
 }
 
 export interface InputState {

@@ -1,4 +1,5 @@
 import { Animator } from "./animator";
+import { HitBox } from "./hitbox";
 import type { Bullet, Loser, MidBoss, Boss, Player, Stage } from "./stageloader";
 
 export interface BulletPatternConfig {
@@ -213,6 +214,7 @@ function createBullet(
         animator,
         skin: sprite,
         scale: animation.scale,
+        hitbox: new HitBox(x, y, 5), // TODO change to a value based on JSON config later
     };
 }
 
