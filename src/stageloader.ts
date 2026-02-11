@@ -201,6 +201,7 @@ export interface Loser {
         gapEndFrame: number;
     };
     animator?: Animator;
+    hitbox: HitBox;
 }
 
 // represents the midboss
@@ -214,6 +215,7 @@ export interface MidBoss {
     patternInstances?: BulletPatternInstance[];
     animator?: Animator;
     current_phase: MidBossPhase;
+    hitbox: HitBox;
 }
 
 export enum MidBossPhase {
@@ -234,6 +236,7 @@ export interface Boss {
     current_phase: BossPhase;
     spellcard_on: boolean;
     spellcard: string;
+    hitbox: HitBox;
 }
 
 export enum BossPhase {

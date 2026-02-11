@@ -229,8 +229,7 @@ function checkCollisions(state: GameState) {
         let newBullets: Bullet[] = [];
         for (const bullet of loser.bullets) {
             if (bullet.hitbox.intersects(state.player.hitbox)) {
-                console.log("Player hit by bullet!");
-                state.player.hitbox.startInvulnerability(); // Start invulnerability frames
+                playerHit(state);
                 // Handle player hit (e.g., reduce lives, reset position, etc.)
             }
             else newBullets.push(bullet);
@@ -240,33 +239,37 @@ function checkCollisions(state: GameState) {
     }
     for (const bullet of state.midboss.bullets) {
         if (bullet.hitbox.intersects(state.player.hitbox)) {
-            console.log("Player hit by midboss bullet!");
-            // Handle player hit (e.g., reduce lives, reset position, etc.)
+            playerHit(state);
         }
     }
     for (const bullet of state.boss.bullets) {
         if (bullet.hitbox.intersects(state.player.hitbox)) {
-            console.log("Player hit by boss bullet!");
-            // Handle player hit (e.g., reduce lives, reset position, etc.)
+            playerHit(state);
         }
     }
     // Check player bullets against enemies
-    // for (const bullet of state.player.bullets) {
-    //     for (const loser of state.losers) {
-    //         if (bullet.hitbox.intersects(loser.hitbox)) {
-    //             console.log("Loser hit by player bullet!");
-    //             // Handle enemy hit (e.g., reduce health, destroy enemy, etc.)
-    //         }
-    //     }
-    // if (bullet.hitbox.intersects(state.midboss.hitbox)) {
-    //     console.log("MidBoss hit by player bullet!");
-    //     // Handle midboss hit (e.g., reduce health, destroy midboss, etc.)
-    // }
-    // if (bullet.hitbox.intersects(state.boss.hitbox)) {
-    //     console.log("Boss hit by player bullet!");
-    //     // Handle boss hit (e.g., reduce health, destroy boss, etc.)
-    // }
-    // }
+    for (const bullet of state.player.bullets) {
+        for (const loser of state.losers) {
+            if (bullet.hitbox.intersects(loser.hitbox)) {
+                console.log("Loser hit by player bullet!");
+                // Handle enemy hit (e.g., reduce health, destroy enemy, etc.)
+            }
+        }
+        if (bullet.hitbox.intersects(state.midboss.hitbox)) {
+            console.log("MidBoss hit by player bullet!");
+            // Handle midboss hit (e.g., reduce health, destroy midboss, etc.)
+        }
+        if (bullet.hitbox.intersects(state.boss.hitbox)) {
+            console.log("Boss hit by player bullet!");
+            // Handle boss hit (e.g., reduce health, destroy boss, etc.)
+        }
+    }
+}
+
+function playerHit(state: GameState) {
+    console.log("Player hit!");
+    state.player.hitbox.startInvulnerability(); // Start invulnerability frames
+    // Handle player hit (e.g., reduce lives, reset position, etc.)
 }
 
 function updateHitboxes(state: GameState) {
