@@ -3,15 +3,20 @@ import { Director } from "./director";
 import { Bullet, InputState, StagePhase } from './stageloader';
 import { updateOverlay } from "./overlay";
 import { HitBox } from "./hitbox";
+import { createStarfield, updateStarfield, drawStarfield } from "./background_starfield";
 
 const director = new Director();
+const CANVAS_W = 600;
+const CANVAS_H = 800;
 
 export function run(state: GameState, input: InputState) {
     director.initGame(state);
+    const starfield = createStarfield();
 
     function loop() {
         update(state, input);
-        draw(state);
+        updateStarfield(starfield, CANVAS_W, CANVAS_H);
+        draw(state, starfield);
         requestAnimationFrame(loop);
     }
     loop();
@@ -60,12 +65,14 @@ function update(state: GameState, input: InputState) {
     }
 
     director.update(state);
+    updateBullets(state);
+    updateHitboxes(state);
     checkCollisions(state);
     updateHitboxes(state);
     updateBullets(state);
 }
 
-function draw(state: GameState) {
+function draw(state: GameState, starfield: ReturnType<typeof createStarfield>) {
     const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
     if (!canvas) {
         console.error("Canvas not found!");
@@ -74,7 +81,7 @@ function draw(state: GameState) {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawStarfield(ctx, starfield, canvas.width, canvas.height);
 
     if (state.player.animator) {
         state.player.animator.drawFrameHorizontal(
@@ -270,6 +277,10 @@ function playerHit(state: GameState) {
     console.log("Player hit!");
     state.player.hitbox.startInvulnerability(); // Start invulnerability frames
     // Handle player hit (e.g., reduce lives, reset position, etc.)
+    state.lives = Math.max(0, state.lives - 1);
+    if (state.lives === 0) {
+        // state.deaths += 1;
+    }
 }
 
 function updateHitboxes(state: GameState) {

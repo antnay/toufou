@@ -45,7 +45,7 @@ export async function initState(): Promise<GameState> {
         boss: {
             x: 0, y: 0, width: 0, height: 0, speed: 0, bullets: [], current_phase: BossPhase.ONE, spellcard_on: false, spellcard: "", hitbox: new HitBox(0, 0, 0),
         },
-        lives: stage.player.initial_lives,
+        lives: Math.min(3, Math.max(0, stage.player.initial_lives)),
         current_bomb: stage.player.initial_bombs,
         score: 0,
         deaths: 0,
