@@ -60,7 +60,7 @@
         },
         "player_bullet": {
             "animation": {
-                "sprite": "player_bullet.png",
+                "sprite": "test-bullet.png",
                 "x": 0,
                 "y": 0,
                 "width": 2,
@@ -78,6 +78,7 @@
                 "x": 400,
                 "y": 100,
                 "hitbox": 2,
+                "hp": 10,
                 "animation": {
                     "sprite": "cirno-d.png",
                     "x": 0,
@@ -90,7 +91,7 @@
                 },
                 "bullet": {
                     "animation": {
-                        "sprite": "bullet.png",
+                        "sprite": "test-bullet.png",
                         "x": 0,
                         "y": 0,
                         "width": 24,
@@ -110,6 +111,7 @@
                 "x": 400,
                 "y": 100,
                 "hitbox": 2,
+                "hp": 10,
                 "animation": {
                     "sprite": "cirno-d.png",
                     "x": 0,
@@ -122,7 +124,7 @@
                 },
                 "bullet": {
                     "animation": {
-                        "sprite": "bullet.png",
+                        "sprite": "test-bullet.png",
                         "x": 0,
                         "y": 0,
                         "width": 24,
@@ -138,6 +140,7 @@
     "loser": {
         "speed": 5,
         "hitbox": 2,
+        "hp": 10,
         "animation": {
             "sprite": "cirno-d.png",
             "x": 0,
