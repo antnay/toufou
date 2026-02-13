@@ -1,17 +1,59 @@
 import { Animator } from './animator';
 import { HitBox } from './hitbox';
+import type { BulletPatternInstance } from "./patterns";
 
 export interface Stage {
     background: string;
     player: {
-        sprite: string;
         speed: number;
         x: number;
         y: number;
         initial_lives: number;
         initial_bombs: number;
         bomb_freq: number;
-        animation: {
+        hitbox: number;
+        animation_up: {
+            sprite: string;
+            x: number;
+            y: number;
+            width: number;
+            height: number;
+            frames: number;
+            speed: number;
+            scale: number;
+        };
+        animation_down: {
+            sprite: string;
+            x: number;
+            y: number;
+            width: number;
+            height: number;
+            frames: number;
+            speed: number;
+            scale: number;
+        };
+        animation_left: {
+            sprite: string;
+            x: number;
+            y: number;
+            width: number;
+            height: number;
+            frames: number;
+            speed: number;
+            scale: number;
+        };
+        animation_right: {
+            sprite: string;
+            x: number;
+            y: number;
+            width: number;
+            height: number;
+            frames: number;
+            speed: number;
+            scale: number;
+        };
+        animation_idle: {
+            sprite: string;
             x: number;
             y: number;
             width: number;
@@ -21,8 +63,8 @@ export interface Stage {
             scale: number;
         };
         player_bullet: {
-            sprite: string;
             animation: {
+                sprite: string;
                 x: number;
                 y: number;
                 width: number;
@@ -34,9 +76,10 @@ export interface Stage {
         },
     },
     loser: {
-        sprite: string;
         speed: number;
+        hitbox: number;
         animation: {
+            sprite: string;
             x: number;
             y: number;
             width: number;
@@ -46,8 +89,8 @@ export interface Stage {
             scale: number;
         };
         bullet: {
-            sprite: string;
             animation: {
+                sprite: string;
                 x: number;
                 y: number;
                 width: number;
@@ -64,6 +107,7 @@ export interface Stage {
     boss: {
         phases: EnemyPhase[];
     };
+    pattern_index: string[];
     timeline: { frame: number, type: string, x: number, y: number; }[];
     spellcards: {
         easy: string[];
@@ -75,11 +119,12 @@ export interface Stage {
 }
 
 export interface EnemyPhase {
-    sprite: string;
     speed: number;
     x: number;
     y: number;
+    hitbox: number;
     animation: {
+        sprite: string;
         x: number;
         y: number;
         width: number;
@@ -89,8 +134,8 @@ export interface EnemyPhase {
         scale: number;
     };
     bullet: {
-        sprite: string;
         animation: {
+            sprite: string;
             x: number;
             y: number;
             width: number;
@@ -122,10 +167,19 @@ export interface Player {
     y: number;
     width: number;
     height: number;
+    direction: Direction;
     hitbox: HitBox;
     speed: number;
     bullets: Bullet[];
     animator?: Animator;
+}
+
+export enum Direction {
+    UP = 0,
+    DOWN,
+    LEFT,
+    RIGHT,
+    IDLE,
 }
 
 // represents the lesser enemy
@@ -136,11 +190,29 @@ export interface Loser {
     height: number;
     speed: number;
     bullets: Bullet[];
+    patternInstances?: BulletPatternInstance[];
+    patternNames?: string[];
+    // this should be on mid-boss or boss mob.
+    // but let's keep it just for prototype.
+    patternCycle?: {
+        index: number;
+        active?: BulletPatternInstance;
+        activeEndFrame: number;
+        gapEndFrame: number;
+    };
     animator?: Animator;
 }
 
 // represents the midboss
-export interface MidBoss extends Loser {
+export interface MidBoss {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    speed: number;
+    bullets: Bullet[];
+    patternInstances?: BulletPatternInstance[];
+    animator?: Animator;
     current_phase: MidBossPhase;
 }
 
@@ -150,7 +222,15 @@ export enum MidBossPhase {
 }
 
 // represents the final boss
-export interface Boss extends Loser {
+export interface Boss {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    speed: number;
+    bullets: Bullet[];
+    patternInstances?: BulletPatternInstance[];
+    animator?: Animator;
     current_phase: BossPhase;
     spellcard_on: boolean;
     spellcard: string;
@@ -169,8 +249,12 @@ export interface Bullet {
     width: number;
     height: number;
     speed: number;
+    vx?: number;
+    vy?: number;
     owner: Player | Loser | MidBoss | Boss;
-    skin: string;
+    animator?: Animator;
+    skin?: string;
+    scale?: number;
 }
 
 export interface InputState {

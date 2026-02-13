@@ -1,0 +1,15 @@
+originX
+originY
+frequency
+burstCount
+burstSize
+burstSizeChange
+direction
+directionChange
+spawnDirection
+spawnDirectionChange
+velocity
+velocityChange
+durationSeconds
+blinkSeconds
+bulletType
