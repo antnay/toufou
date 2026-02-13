@@ -152,7 +152,7 @@ export class Director {
         switch (event.type) {
             case "LOSER": {
                 // name of the pattern is the file name without the extension
-                const patternNames = ["spiral", "circle"];
+                const patternNames = ["straight"];
                 state.losers.push(this.createLoser(
                     state.stage,
                     event.x,
@@ -260,7 +260,7 @@ const FRAMES_PER_SECOND = 60;
 const DEFAULT_PATTERN_DURATION_SECONDS = 3;
 
 // gap between patterns
-const PATTERN_GAP_SECONDS = 3;
+const PATTERN_GAP_SECONDS = 0;
 const PATTERN_GAP_FRAMES = Math.round(PATTERN_GAP_SECONDS * FRAMES_PER_SECOND);
 
 const CANVAS_WIDTH = 600;

@@ -156,7 +156,7 @@
                 "width": 16,
                 "height": 16,
                 "frames": 1,
-                "speed": 0.2,
+                "speed": 0.1,
                 "scale": 1
             }
         }
@@ -172,20 +172,25 @@
     "pattern_index": [
         "spiral.txt",
         "circle.txt",
-        "circle16.txt",
-        "circle16mirror.txt"
+        "straight.txt"
     ],
     "timeline": [
         {
-            "frame": 2700,
+            "frame": 200,
             "type": "LOSER",
-            "x": 300,
+            "x": 50,
+            "y": 200
+        },
+        {
+            "frame": 200,
+            "type": "LOSER",
+            "x": 800,
             "y": 200
         },
         {
             "frame": 90,
             "type": "MIDBOSS",
-            "x": 300,
+            "x": 600,
             "y": 100
         },
         {

@@ -172,8 +172,7 @@
     "pattern_index": [
         "spiral.txt",
         "circle.txt",
-        "circle16.txt",
-        "circle16mirror.txt"
+        "straight.txt"
     ],
     "timeline": [
         {
