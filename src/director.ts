@@ -66,7 +66,7 @@ export class Director {
         };
     }
 
-    createLoser(stage: Stage, x: number, y: number, animator?: Animator, patternNames: string[] = []): Loser {
+    createLoser(stage: Stage, x: number, y: number, hitbox: HitBox, animator?: Animator, patternNames: string[] = []): Loser {
         return {
             x,
             y,
@@ -81,6 +81,7 @@ export class Director {
                 activeEndFrame: 0,
                 gapEndFrame: 0,
             },
+            hitbox,
         };
     }
 
@@ -155,6 +156,7 @@ export class Director {
                     state.stage,
                     event.x,
                     event.y,
+                    new HitBox(event.x, event.y, state.stage.loser.hitbox),
                     new Animator(
                         state.assets.getImage(state.stage.loser.animation.sprite),
                         state.stage.loser.animation.x,
