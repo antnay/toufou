@@ -49,6 +49,8 @@ export class Animator {
         this.height = height;
         this.frameCount = frameCount;
         this.frameDuration = frameDuration;
+        this.elapsedTime = 0;
+        this.totalTime = this.frameCount * this.frameDuration;
     }
 
     currentFrame() {

@@ -1,0 +1,198 @@
+{
+    "background": "space-background.png",
+    "player": {
+        "speed": 1.5,
+        "x": 400,
+        "y": 700,
+        "initial_lives": 3,
+        "initial_bombs": 2,
+        "bomb_freq": 10,
+        "hitbox": 2,
+        "animation_up": {
+            "sprite": "player_1.png",
+            "x": 0,
+            "y": 0,
+            "width": 32,
+            "height": 50,
+            "frames": 8,
+            "speed": 0.4,
+            "scale": 1
+        },
+        "animation_down": {
+            "sprite": "player_1.png",
+            "x": 0,
+            "y": 0,
+            "width": 32,
+            "height": 50,
+            "frames": 8,
+            "speed": 0.4,
+            "scale": 1
+        },
+        "animation_left": {
+            "sprite": "player_1.png",
+            "x": 128,
+            "y": 50,
+            "width": 32,
+            "height": 50,
+            "frames": 4,
+            "speed": 0.4,
+            "scale": 1
+        },
+        "animation_right": {
+            "sprite": "player_1.png",
+            "x": 128,
+            "y": 100,
+            "width": 32,
+            "height": 44,
+            "frames": 4,
+            "speed": 0.4,
+            "scale": 1
+        },
+        "animation_idle": {
+            "sprite": "player_1.png",
+            "x": 0,
+            "y": 0,
+            "width": 32,
+            "height": 50,
+            "frames": 8,
+            "speed": 0.4,
+            "scale": 1
+        },
+        "player_bullet": {
+            "animation": {
+                "sprite": "player_bullet.png",
+                "x": 0,
+                "y": 0,
+                "width": 2,
+                "height": 32,
+                "frames": 9,
+                "speed": 0.4,
+                "scale": 2
+            }
+        }
+    },
+    "boss": {
+        "phases": [
+            {
+                "speed": 5,
+                "x": 400,
+                "y": 100,
+                "hitbox": 2,
+                "animation": {
+                    "sprite": "touhou1.png",
+                    "x": 0,
+                    "y": 0,
+                    "width": 64,
+                    "height": 87,
+                    "frames": 8,
+                    "speed": 0.4,
+                    "scale": 2
+                },
+                "bullet": {
+                    "animation": {
+                        "sprite": "bullet.png",
+                        "x": 0,
+                        "y": 0,
+                        "width": 24,
+                        "height": 32,
+                        "frames": 9,
+                        "speed": 0.4,
+                        "scale": 2
+                    }
+                }
+            }
+        ]
+    },
+    "midboss": {
+        "phases": [
+            {
+                "speed": 5,
+                "x": 400,
+                "y": 100,
+                "hitbox": 2,
+                "animation": {
+                    "sprite": "touhou1.png",
+                    "x": 0,
+                    "y": 0,
+                    "width": 64,
+                    "height": 87,
+                    "frames": 8,
+                    "speed": 0.4,
+                    "scale": 2
+                },
+                "bullet": {
+                    "animation": {
+                        "sprite": "bullet.png",
+                        "x": 0,
+                        "y": 0,
+                        "width": 24,
+                        "height": 32,
+                        "frames": 9,
+                        "speed": 0.4,
+                        "scale": 2
+                    }
+                }
+            }
+        ]
+    },
+    "loser": {
+        "speed": 0.5,
+        "hitbox": 2,
+        "animation": {
+            "sprite": "touhou1.png",
+            "x": 0,
+            "y": 0,
+            "width": 64,
+            "height": 87,
+            "frames": 8,
+            "speed": 0.3,
+            "scale": 1.2
+        },
+        "bullet": {
+            "animation": {
+                "sprite": "test-bullet.png",
+                "x": 0,
+                "y": 0,
+                "width": 16,
+                "height": 16,
+                "frames": 1,
+                "speed": 0.2,
+                "scale": 1
+            }
+        }
+    },
+    "config": {
+        "player_start": {
+            "x": 400,
+            "y": 700
+        },
+        "initial_lives": 3,
+        "initial_bombs": 2
+    },
+    "pattern_index": [
+        "spiral.txt",
+        "circle.txt",
+        "circle16.txt",
+        "circle16mirror.txt"
+    ],
+    "timeline": [
+        {
+            "frame": 2700,
+            "type": "LOSER",
+            "x": 300,
+            "y": 200
+        },
+        {
+            "frame": 90,
+            "type": "MIDBOSS",
+            "x": 300,
+            "y": 100
+        },
+        {
+            "frame": 120,
+            "type": "BOSS",
+            "x": 300,
+            "y": 100
+        }
+    ]
+}

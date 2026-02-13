@@ -26,6 +26,7 @@ export class Director {
             }
         }
 
+        this.updateLoserMovement(state);
         this.updateEnemyPatterns(state);
         if (state.losers.length === 0 && this.timelineFinished(state)) {
             state.current_phase = StagePhase.MID_BOSS;
@@ -73,6 +74,7 @@ export class Director {
             width: stage.loser.animation.width * stage.loser.animation.scale,
             height: stage.loser.animation.height * stage.loser.animation.scale,
             speed: stage.loser.speed,
+            vx: stage.loser.speed,
             bullets: [],
             animator,
             patternNames,
@@ -220,6 +222,25 @@ export class Director {
         }
     }
 
+    private updateLoserMovement(state: GameState) {
+        if (state.losers.length === 0) return;
+
+        for (const loser of state.losers) {
+            loser.x += loser.vx;
+
+            const leftEdge = loser.x - loser.width / 2;
+            const rightEdge = loser.x + loser.width / 2;
+
+            if (leftEdge <= LOSER_LEFT_BOUND) {
+                loser.x = LOSER_LEFT_BOUND + loser.width / 2;
+                loser.vx = Math.abs(loser.vx);
+            } else if (rightEdge >= LOSER_RIGHT_BOUND) {
+                loser.x = LOSER_RIGHT_BOUND - loser.width / 2;
+                loser.vx = -Math.abs(loser.vx);
+            }
+        }
+    }
+
     private timelineFinished(state: GameState): boolean {
         if (!state.stage.timeline || state.stage.timeline.length === 0) return true;
         const lastEventFrame = Math.max(...state.stage.timeline.map(e => e.frame));
@@ -241,3 +262,7 @@ const DEFAULT_PATTERN_DURATION_SECONDS = 3;
 // gap between patterns
 const PATTERN_GAP_SECONDS = 3;
 const PATTERN_GAP_FRAMES = Math.round(PATTERN_GAP_SECONDS * FRAMES_PER_SECOND);
+
+const CANVAS_WIDTH = 600;
+const LOSER_LEFT_BOUND = 50;
+const LOSER_RIGHT_BOUND = CANVAS_WIDTH - 50;

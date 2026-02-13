@@ -57,6 +57,7 @@ function update(state: GameState, input: InputState) {
             state.stage.player.animation_down.frames,
             state.stage.player.animation_down.speed);
     }
+    
     director.update(state);
     updateBullets(state);
 }
@@ -71,6 +72,9 @@ function draw(state: GameState) {
     if (!ctx) return;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const background = state.assets.getImage(state.stage.background);
+    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
     if (state.player.animator) {
         state.player.animator.drawFrameHorizontal(

@@ -6,6 +6,7 @@ export class AssetManager {
     patterns: Map<string, BulletPatternDef> = new Map();
 
     async loadStageAssets(stage: Stage) {
+        await this.loadImage(stage.background);
         await this.loadImage(stage.player.animation_up.sprite);
         await this.loadImage(stage.player.animation_down.sprite);
         await this.loadImage(stage.player.animation_left.sprite);
