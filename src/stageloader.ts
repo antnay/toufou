@@ -191,6 +191,7 @@ export interface Loser {
     width: number;
     height: number;
     speed: number;
+    vx: number;
     bullets: Bullet[];
     patternInstances?: BulletPatternInstance[];
     patternNames?: string[];

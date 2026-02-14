@@ -11,35 +11,51 @@ export function createInput(): InputState {
     };
 
     window.addEventListener("keydown", (e) => {
-        switch (e.key) {
+        const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+        switch (key) {
             case "w":
+            case "ArrowUp":
+                e.preventDefault();
                 input.up = true; break;
             case "s":
+            case "ArrowDown":
+                e.preventDefault();
                 input.down = true; break;
             case "a":
+            case "ArrowLeft":
+                e.preventDefault();
                 input.left = true; break;
             case "d":
+            case "ArrowRight":
+                e.preventDefault();
                 input.right = true; break;
-            case "space":
+            case " ":
+                e.preventDefault();
                 input.shoot = true; break;
-            case "enter":
+            case "Enter":
+                e.preventDefault();
                 input.bomb = true; break;
         }
     });
-
+    
     window.addEventListener("keyup", (e) => {
-        switch (e.key) {
+        const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+        switch (key) {
             case "w":
+            case "ArrowUp":
                 input.up = false; break;
             case "s":
+            case "ArrowDown":
                 input.down = false; break;
             case "a":
+            case "ArrowLeft":
                 input.left = false; break;
             case "d":
+            case "ArrowRight":
                 input.right = false; break;
-            case "space":
+            case " ":
                 input.shoot = false; break;
-            case "enter":
+            case "Enter":
                 input.bomb = false; break;
         }
     });
