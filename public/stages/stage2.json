@@ -179,22 +179,22 @@
             "frame": 200,
             "type": "LOSER",
             "x": 50,
-            "y": 200
+            "y": 100
         },
         {
             "frame": 200,
             "type": "LOSER",
             "x": 800,
-            "y": 200
+            "y": 100
         },
         {
-            "frame": 90,
+            "frame": 400,
             "type": "MIDBOSS",
             "x": 600,
             "y": 100
         },
         {
-            "frame": 120,
+            "frame": 1200,
             "type": "BOSS",
             "x": 300,
             "y": 100

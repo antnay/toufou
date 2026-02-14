@@ -18,7 +18,7 @@ export class Director {
 
         this.updateLoserMovement(state);
         this.updateEnemyPatterns(state);
-        if (state.losers.length === 0 && this.timelineFinished(state)) {
+        if (state.losers.length === 0 && this.timelineFinished(state) && state.current_phase === StagePhase.LOSERS) {
             state.current_phase = StagePhase.MIDBOSS;
         }
     }
@@ -153,6 +153,7 @@ export class Director {
     private async spawnEvent(event: any, state: GameState) {
         switch (event.type) {
             case "LOSER": {
+                state.current_phase = StagePhase.LOSERS;
                 // name of the pattern is the file name without the extension
                 const patternNames = ["straight"];
                 state.losers.push(this.createLoser(
