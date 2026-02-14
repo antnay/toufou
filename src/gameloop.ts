@@ -102,6 +102,14 @@ function draw(state: GameState, starfield: ReturnType<typeof createStarfield>) {
         );
     }
 
+    const orbImg = state.assets.getImage("shooting-orb.png");
+    const orbW = orbImg.naturalWidth;
+    const orbH = orbImg.naturalHeight;
+    const gap = 6;
+    const orbX = state.player.x - orbW / 2;
+    const orbY = state.player.y - state.player.height / 2 - gap - orbH;
+    ctx.drawImage(orbImg, orbX, orbY, orbW, orbH);
+
     // Draw Hitbox (Debug)
     ctx.strokeStyle = "white";
     ctx.beginPath();
