@@ -1,8 +1,7 @@
 import { GameState } from "./state";
 import { Director } from "./director";
-import { Bullet, InputState, StagePhase } from './stageloader';
+import { Bullet, InputState, MidBoss, Boss, StagePhase } from './stageloader';
 import { updateOverlay } from "./overlay";
-import { HitBox } from "./hitbox";
 import { createStarfield, updateStarfield, drawStarfield } from "./background_starfield";
 
 const director = new Director();
@@ -108,20 +107,7 @@ function draw(state: GameState, starfield: ReturnType<typeof createStarfield>) {
     ctx.stroke();
 
     // Draw Enemies (Losers)
-    for (const loser of state.losers) {
-        if (loser.animator) {
-            loser.animator.drawFrameHorizontal(
-                0.016,
-                ctx,
-                loser.x - loser.width / 2,
-                loser.y - loser.height / 2,
-                state.stage.loser.animation.scale
-            );
-        } else {
-            ctx.fillStyle = "blue";
-            ctx.fillRect(loser.x - loser.width / 2, loser.y - loser.height / 2, loser.width, loser.height);
-        }
-    }
+
 
     // Draw bullets
     for (const bullet of state.player.bullets) {
@@ -140,32 +126,69 @@ function draw(state: GameState, starfield: ReturnType<typeof createStarfield>) {
     }
 
     drawEnemyBullets(state, ctx);
-    if (state.boss.animator) {
-        state.boss.animator.drawFrameHorizontal(
-            0.016,
-            ctx,
-            state.boss.x - state.boss.width / 2,
-            state.boss.y - state.boss.height / 2,
-            state.stage.boss.phases[state.boss.current_phase].animation.scale
-        );
-    } else {
-        ctx.fillStyle = "blue";
-        ctx.fillRect(state.boss.x - state.boss.width / 2, state.boss.y - state.boss.height / 2, state.boss.width, state.boss.height);
-    }
 
-    if (state.midboss.animator) {
-        state.midboss.animator.drawFrameHorizontal(
-            0.016,
-            ctx,
-            state.midboss.x - state.midboss.width / 2,
-            state.midboss.y - state.midboss.height / 2,
-            state.stage.midboss.phases[state.midboss.current_phase].animation.scale
-        );
-    } else {
-        ctx.fillStyle = "blue";
-        ctx.fillRect(state.midboss.x - state.midboss.width / 2, state.midboss.y - state.midboss.height / 2, state.midboss.width, state.midboss.height);
+    switch (state.current_phase) {
+        case StagePhase.BOSS:
+            if (!state.boss) {
+                console.log("OH MAN IM BREAKING OUT OF BOSS LOOP BECAUSE THERE IS NO BOSS EVEN THOUGH ITS BOSS PHASE WHERE IS THE BOSS AHHHHHHHHHHHHHhh");
+                break;
+            }
+            if (state.boss.animator) {
+                state.boss.animator.drawFrameHorizontal(
+                    0.016,
+                    ctx,
+                    state.boss.x - state.boss.width / 2,
+                    state.boss.y - state.boss.height / 2,
+                    state.stage.boss.phases[state.boss.current_phase].animation.scale
+                );
+                if (state.boss.maxHp > 0) {
+                    drawCircularHealthBar(ctx, state.boss);
+                }
+            } else {
+                ctx.fillStyle = "blue";
+                ctx.fillRect(state.boss.x - state.boss.width / 2, state.boss.y - state.boss.height / 2, state.boss.width, state.boss.height);
+            }
+            break;
+        case StagePhase.MIDBOSS:
+            if (!state.midboss) {
+                console.log("OH MAN IM BREAKING OUT OF MIDBOSS LOOP BECAUSE THERE IS NO MIDBOSS EVEN THOUGH ITS MIDBOSS PHASE WHERE IS THE MIDBOSS AHHHHHHHHHHHHHhh");
+                break;
+            }
+            if (state.midboss.animator) {
+                state.midboss.animator.drawFrameHorizontal(
+                    0.016,
+                    ctx,
+                    state.midboss.x - state.midboss.width / 2,
+                    state.midboss.y - state.midboss.height / 2,
+                    state.stage.midboss.phases[state.midboss.current_phase].animation.scale
+                );
+                if (state.midboss.maxHp > 0) {
+                    drawCircularHealthBar(ctx, state.midboss);
+                }
+            } else {
+                ctx.fillStyle = "blue";
+                ctx.fillRect(state.midboss.x - state.midboss.width / 2, state.midboss.y - state.midboss.height / 2, state.midboss.width, state.midboss.height);
+            }
+            break;
+        case StagePhase.LOSERS:
+            for (const loser of state.losers) {
+                if (loser.animator) {
+                    loser.animator.drawFrameHorizontal(
+                        0.016,
+                        ctx,
+                        loser.x - loser.width / 2,
+                        loser.y - loser.height / 2,
+                        state.stage.loser.animation.scale
+                    );
+                } else {
+                    ctx.fillStyle = "blue";
+                    ctx.fillRect(loser.x - loser.width / 2, loser.y - loser.height / 2, loser.width, loser.height);
+                }
+            }
+            break;
+        default:
+            break;
     }
-
 
     updateOverlay(state);
 }
@@ -189,17 +212,22 @@ function updateBullets(state: GameState) {
     switch (state.current_phase) {
         case StagePhase.LOSERS:
             for (const loser of state.losers) {
+                if (!loser) break;
                 loser.bullets = updateBulletList(loser.bullets);
             }
             break;
-        case StagePhase.MID_BOSS:
+        case StagePhase.MIDBOSS:
+            if (!state.midboss) break;
             for (const loser of state.losers) {
+                if (!loser) break;
                 loser.bullets = updateBulletList(loser.bullets);
             }
             state.midboss.bullets = updateBulletList(state.midboss.bullets);
             break;
         case StagePhase.BOSS:
+            if (!state.boss) break;
             for (const loser of state.losers) {
+                if (!loser) break;
                 loser.bullets = updateBulletList(loser.bullets);
             }
             state.boss.bullets = updateBulletList(state.boss.bullets);
@@ -244,32 +272,59 @@ function checkCollisions(state: GameState) {
         }
         loser.bullets = newBullets;
     }
-    for (const bullet of state.midboss.bullets) {
-        if (bullet.hitbox.intersects(state.player.hitbox)) {
-            playerHit(state);
-        }
-    }
-    for (const bullet of state.boss.bullets) {
-        if (bullet.hitbox.intersects(state.player.hitbox)) {
-            playerHit(state);
-        }
-    }
-    // Check player bullets against enemies
-    for (const bullet of state.player.bullets) {
-        for (const loser of state.losers) {
-            if (bullet.hitbox.intersects(loser.hitbox)) {
-                console.log("Loser hit by player bullet!");
-                // Handle enemy hit (e.g., reduce health, destroy enemy, etc.)
+    switch (state.current_phase) {
+        case StagePhase.MIDBOSS:
+            if (!state.midboss) break;
+            for (const bullet of state.midboss.bullets) {
+                if (bullet.hitbox.intersects(state.player.hitbox)) {
+                    playerHit(state);
+                }
             }
-        }
-        if (bullet.hitbox.intersects(state.midboss.hitbox)) {
-            console.log("MidBoss hit by player bullet!");
-            // Handle midboss hit (e.g., reduce health, destroy midboss, etc.)
-        }
-        if (bullet.hitbox.intersects(state.boss.hitbox)) {
-            console.log("Boss hit by player bullet!");
-            // Handle boss hit (e.g., reduce health, destroy boss, etc.)
-        }
+            for (const bullet of state.player.bullets) {
+                for (const loser of state.losers) {
+                    if (bullet.hitbox.intersects(loser.hitbox)) {
+                        console.log("Loser hit by player bullet!");
+                        // Handle enemy hit (e.g., reduce health, destroy enemy, etc.)
+                    }
+                }
+                if (bullet.hitbox.intersects(state.midboss.hitbox)) {
+                    console.log("MidBoss hit by player bullet!");
+                    // Handle midboss hit (e.g., reduce health, destroy midboss, etc.)
+                }
+            }
+            break;
+        case StagePhase.BOSS:
+            if (!state.boss) break;
+            for (const bullet of state.boss.bullets) {
+                if (bullet.hitbox.intersects(state.player.hitbox)) {
+                    playerHit(state);
+                }
+            }
+            for (const bullet of state.player.bullets) {
+                for (const loser of state.losers) {
+                    if (bullet.hitbox.intersects(loser.hitbox)) {
+                        console.log("Loser hit by player bullet!");
+                        // Handle enemy hit (e.g., reduce health, destroy enemy, etc.)
+                    }
+                }
+                if (bullet.hitbox.intersects(state.boss.hitbox)) {
+                    console.log("Boss hit by player bullet!");
+                    // Handle boss hit (e.g., reduce health, destroy boss, etc.)
+                }
+            }
+            break;
+        case StagePhase.LOSERS:
+            for (const bullet of state.player.bullets) {
+                for (const loser of state.losers) {
+                    if (bullet.hitbox.intersects(loser.hitbox)) {
+                        console.log("Loser hit by player bullet!");
+                        // Handle enemy hit (e.g., reduce health, destroy enemy, etc.)
+                    }
+                }
+            }
+            break;
+        default:
+            break;
     }
 }
 
@@ -291,4 +346,39 @@ function updateHitboxes(state: GameState) {
             bullet.hitbox.updateHitbox(bullet.x, bullet.y);
         }
     }
+}
+
+// Precomputed constants — avoids Math.PI lookups + multiplies every frame
+const TAU = 6.2831853;        // 2 * Math.PI
+const NEG_HALF_PI = -1.5707963; // -Math.PI / 2  (12 o'clock)
+
+function drawCircularHealthBar(ctx: CanvasRenderingContext2D, entity: MidBoss | Boss) {
+    // clamp ratio 0..1
+    const ratio = entity.hp / entity.maxHp;
+    const healthRatio = ratio > 1 ? 1 : (ratio < 0 ? 0 : ratio);
+
+    const radius = (entity.width > entity.height ? entity.width : entity.height) / 2 + 10;
+    const lineWidth = 4;
+    const endAngle = NEG_HALF_PI + TAU * healthRatio;
+
+    ctx.save();
+    ctx.lineWidth = lineWidth;
+
+    // Background ring (depleted portion)
+    ctx.beginPath();
+    ctx.arc(entity.x, entity.y, radius, 0, TAU, false);
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
+    ctx.stroke();
+
+    // Health arc — starts at 12 o'clock, extends clockwise
+    if (healthRatio > 0) {
+        ctx.beginPath();
+        ctx.arc(entity.x, entity.y, radius, NEG_HALF_PI, endAngle, false);
+        const hue = (healthRatio * 120) | 0;
+        ctx.strokeStyle = `hsl(${hue}, 100%, 45%)`;
+        ctx.lineCap = "round";
+        ctx.stroke();
+    }
+
+    ctx.restore();
 }

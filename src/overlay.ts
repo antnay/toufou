@@ -10,6 +10,7 @@ let livesElement: HTMLElement | null = null;
 let heartElements: HTMLImageElement[] = [];
 let deathsElement: HTMLElement | null = null;
 let phaseElement: HTMLElement | null = null;
+let enemyHpElement: HTMLElement | null = null;
 let spellcardElement: HTMLElement | null = null;
 let spellcardNameElement: HTMLElement | null = null;
 
@@ -18,8 +19,9 @@ let hiScore: number = 0;
 
 const PHASE_NAMES: Record<StagePhase, string> = {
     [StagePhase.LOSERS]: 'Phase: Losers',
-    [StagePhase.MID_BOSS]: 'Phase: Mid Boss',
+    [StagePhase.MIDBOSS]: 'Phase: Mid Boss',
     [StagePhase.BOSS]: 'Phase: Boss',
+    [StagePhase.CLEAR]: 'Phase: Clear',
 };
 
 const STAT_PANEL_WIDTH = 400;
@@ -72,7 +74,7 @@ function createGameTitle(): HTMLElement {
 }
 
 // Score display section
-function createScoreSection(): { container: HTMLElement; hiScore: HTMLElement; score: HTMLElement } {
+function createScoreSection(): { container: HTMLElement; hiScore: HTMLElement; score: HTMLElement; } {
     const scoreSection = document.createElement('div');
     scoreSection.style.cssText = `
         margin-bottom: 22px;
@@ -107,7 +109,7 @@ function createScoreSection(): { container: HTMLElement; hiScore: HTMLElement; s
 }
 
 // Stats display section (bomb, deaths)
-function createStatsSection(): { container: HTMLElement; bomb: HTMLElement; lives: HTMLElement; deaths: HTMLElement } {
+function createStatsSection(): { container: HTMLElement; bomb: HTMLElement; lives: HTMLElement; deaths: HTMLElement; } {
     const statsSection = document.createElement('div');
     statsSection.style.cssText = `
         margin-bottom: 25px;
@@ -164,8 +166,18 @@ function createPhaseSection(): HTMLElement {
     return phaseSection;
 }
 
+function createEnemyHPSection(): HTMLElement {
+    const enemyHpSection = document.createElement('div');
+    enemyHpSection.style.cssText = `
+        margin-bottom: 22px;
+        font-size: 13px;
+        color: #b0b8d0;
+    `;
+    return enemyHpSection;
+}
+
 // Spellcard display section
-function createSpellcardSection(): { container: HTMLElement; name: HTMLElement } {
+function createSpellcardSection(): { container: HTMLElement; name: HTMLElement; } {
     const spellcardSection = document.createElement('div');
     spellcardSection.style.cssText = `
         margin-bottom: 20px;
@@ -236,6 +248,8 @@ export function initOverlay(): void {
 
     phaseElement = createPhaseSection();
     statPanel.appendChild(phaseElement);
+    enemyHpElement = createEnemyHPSection();
+    statPanel.appendChild(enemyHpElement);
 
     const spellcardSection = createSpellcardSection();
     spellcardElement = spellcardSection.container;
@@ -254,8 +268,8 @@ function formatScore(score: number): string {
 
 // Updates the overlay with current game state
 export function updateOverlay(state: GameState): void {
-    if (!scoreElement || !hiScoreElement || !bombElement || !livesElement || !deathsElement || 
-        !phaseElement || !spellcardElement || !spellcardNameElement) {
+    if (!scoreElement || !hiScoreElement || !bombElement || !livesElement || !deathsElement ||
+        !phaseElement || !enemyHpElement || !spellcardElement || !spellcardNameElement) {
         return;
     }
 
@@ -274,8 +288,27 @@ export function updateOverlay(state: GameState): void {
     }
     deathsElement.textContent = `Deaths ${state.deaths}`;
     phaseElement.textContent = PHASE_NAMES[state.current_phase] || 'Phase: Unknown';
+    if (state.current_phase === StagePhase.BOSS) {
+        if (!state.boss) {
+            enemyHpElement.textContent = '';
+            return;
+        }
+        enemyHpElement.textContent = `Enemy HP ${state.boss.hp} / ${state.boss.maxHp}`;
+    } else if (state.current_phase === StagePhase.MIDBOSS) {
+        if (!state.midboss) {
+            enemyHpElement.textContent = '';
+            return;
+        }
+        enemyHpElement.textContent = `Enemy HP ${state.midboss.hp} / ${state.midboss.maxHp}`;
+    } else {
+        enemyHpElement.textContent = '';
+    }
 
     // Spellcard display
+    if (!state.boss) {
+        spellcardElement.style.display = 'none';
+        return;
+    }
     if (state.boss.spellcard_on && state.boss.spellcard) {
         spellcardNameElement.textContent = `"${state.boss.spellcard}"`;
         spellcardElement.style.display = 'block';

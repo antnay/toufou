@@ -78,7 +78,7 @@
                 "x": 400,
                 "y": 100,
                 "hitbox": 2,
-                "hp": 10,
+                "hp": 100,
                 "animation": {
                     "sprite": "cirno-d.png",
                     "x": 0,
@@ -111,9 +111,9 @@
                 "x": 400,
                 "y": 100,
                 "hitbox": 2,
-                "hp": 10,
+                "hp": 75,
                 "animation": {
-                    "sprite": "cirno-d.png",
+                    "sprite": "cirno-u.png",
                     "x": 0,
                     "y": 0,
                     "width": 24,
@@ -186,13 +186,13 @@
             "y": 400
         },
         {
-            "frame": 90,
+            "frame": 1200,
             "type": "MIDBOSS",
             "x": 300,
             "y": 100
         },
         {
-            "frame": 120,
+            "frame": 2400,
             "type": "BOSS",
             "x": 300,
             "y": 100
