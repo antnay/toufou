@@ -3,6 +3,7 @@ import { Director } from "./director";
 import { Bullet, InputState, MidBoss, Boss, StagePhase } from './stageloader';
 import { updateOverlay } from "./overlay";
 import { createStarfield, updateStarfield, drawStarfield } from "./background_starfield";
+import { updatePlayerShooting } from "./patterns";
 
 const director = new Director();
 const CANVAS_W = 600;
@@ -62,6 +63,7 @@ function update(state: GameState, input: InputState) {
             state.stage.player.animation_down.frames,
             state.stage.player.animation_down.speed);
     }
+    updatePlayerShooting(state, input);
     director.update(state);
     updateBullets(state);
     updateHitboxes(state);
@@ -127,7 +129,7 @@ function draw(state: GameState, starfield: ReturnType<typeof createStarfield>) {
                 ctx,
                 bullet.x - bullet.width / 2,
                 bullet.y - bullet.height / 2,
-                state.stage.player.player_bullet.animation.scale
+                bullet.scale ?? 1
             );
         } else {
             ctx.fillStyle = "red";
@@ -350,6 +352,10 @@ function playerHit(state: GameState) {
 
 function updateHitboxes(state: GameState) {
     state.player.hitbox.updateHitbox(state.player.x, state.player.y);
+
+    for (const bullet of state.player.bullets) {
+        bullet.hitbox.updateHitbox(bullet.x, bullet.y);
+    }
 
     for (const loser of state.losers) {
         for (const bullet of loser.bullets) {
