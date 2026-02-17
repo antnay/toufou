@@ -8,6 +8,8 @@ export interface GameState {
     stage: Stage;
     current_phase: StagePhase;
     player: Player;
+    shooting: boolean;
+    _toggleShooting: boolean;
     losers: Loser[];
     midboss: MidBoss | undefined;
     boss: Boss | undefined;
@@ -41,6 +43,8 @@ export async function initState(): Promise<GameState> {
         losers: [],
         midboss: undefined,
         boss: undefined,
+        shooting: false,
+        _toggleShooting: false,
         lives: Math.min(3, Math.max(0, stage.player.initial_lives)),
         current_bomb: stage.player.initial_bombs,
         score: 0,

@@ -1,6 +1,7 @@
 import { Animator } from "./animator";
 import { HitBox } from "./hitbox";
-import type { Bullet, Loser, MidBoss, Boss, Player, Stage } from "./stageloader";
+import type { Bullet, Loser, MidBoss, Boss, Player, Stage, InputState } from "./stageloader";
+import type { GameState } from "./state";
 
 export interface BulletPatternConfig {
     originX: number;
@@ -181,7 +182,7 @@ export class BulletPatternInstance {
 
 function createBullet(
     params: {
-        owner: Loser | MidBoss | Boss;
+        owner: Player | Loser | MidBoss | Boss;
         bulletSprite: string;
         bulletAnimation: Stage["loser"]["bullet"]["animation"];
         bulletImage: HTMLImageElement;
@@ -231,3 +232,51 @@ function radToDeg(rad: number): number {
 // }
 
 const FRAMES_PER_SECOND = 60;
+const PLAYER_BULLET_SPEED = 2;
+const PLAYER_FIRE_INTERVAL = 20;
+const ORB_GAP = 6;
+let _playerFireCooldown = 0;
+
+export function createPlayerBullet(
+    state: GameState,
+    x: number,
+    y: number
+): Bullet {
+    const anim = state.stage.loser.bullet.animation;
+    const img = state.assets.getImage("test-bullet.png");
+    return createBullet(
+        {
+            owner: state.player,
+            bulletSprite: "test-bullet.png",
+            bulletAnimation: anim,
+            bulletImage: img,
+        },
+        x,
+        y,
+        0,
+        -PLAYER_BULLET_SPEED
+    );
+}
+
+function getOrbCenter(state: GameState): { x: number; y: number } {
+    const orbImg = state.assets.getImage("shooting-orb.png");
+    const orbH = orbImg.naturalHeight;
+    const y = state.player.y - state.player.height / 2 - ORB_GAP - orbH / 2;
+    return { x: state.player.x, y };
+}
+
+export function updatePlayerShooting(state: GameState, input: InputState): void {
+    if (input.shoot && !state._toggleShooting) {
+        state.shooting = !state.shooting;
+    }
+    state._toggleShooting = input.shoot;
+
+    if (!state.shooting) return;
+
+    _playerFireCooldown--;
+    if (_playerFireCooldown <= 0) {
+        _playerFireCooldown = PLAYER_FIRE_INTERVAL;
+        const { x, y } = getOrbCenter(state);
+        state.player.bullets.push(createPlayerBullet(state, x, y));
+    }
+}
