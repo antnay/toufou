@@ -1,6 +1,6 @@
 import { GameState } from "./state";
 import { Director } from "./director";
-import { Bullet, InputState, MidBoss, Boss, StagePhase } from './stageloader';
+import { Bullet, InputState, MidBoss, Boss, StagePhase, Player, Loser } from './stageloader';
 import { updateOverlay } from "./overlay";
 import { createStarfield, updateStarfield, drawStarfield } from "./background_starfield";
 import { updatePlayerShooting } from "./patterns";
@@ -271,57 +271,72 @@ function drawEnemyBullets(state: GameState, ctx: CanvasRenderingContext2D) {
     }
 }
 
-function checkCollisions(state: GameState) {
-    for (const loser of state.losers) {
-        let newBullets: Bullet[] = [];
-        for (const bullet of loser.bullets) {
-            if (bullet.hitbox.intersects(state.player.hitbox)) {
-                playerHit(state);
-                // Handle player hit (e.g., reduce lives, reset position, etc.)
-            }
-            else newBullets.push(bullet);
+// how much each enemy is worth when hit
+const loserPoints = 100;
+const midBossPoints = 1000;
+const bossPoints = 10000;
 
+function checkCollisions(state: GameState) {
+    let newPlayerBullets: Bullet[] = [];
+    if (state.losers.length != 0) {
+        for (const loser of state.losers) {
+            let newBullets: Bullet[] = [];
+            for (const bullet of loser.bullets) {
+                if (bullet.hitbox.intersects(state.player.hitbox)) {
+                    playerHit(state);
+                }
+                else newBullets.push(bullet);
+
+            }
+            loser.bullets = newBullets;
         }
-        loser.bullets = newBullets;
     }
     switch (state.current_phase) {
         case StagePhase.MIDBOSS:
             if (!state.midboss) break;
+            let newMidBossBullets: Bullet[] = [];
             for (const bullet of state.midboss.bullets) {
                 if (bullet.hitbox.intersects(state.player.hitbox)) {
                     playerHit(state);
                 }
+                else newMidBossBullets.push(bullet);
             }
+            state.midboss.bullets = newMidBossBullets;
             for (const bullet of state.player.bullets) {
                 for (const loser of state.losers) {
                     if (bullet.hitbox.intersects(loser.hitbox)) {
-                        console.log("Loser hit by player bullet!");
-                        // Handle enemy hit (e.g., reduce health, destroy enemy, etc.)
+                        enemyHit(state, loser);
+                        bullet.hitbox.bulletHit = true;
                     }
                 }
                 if (bullet.hitbox.intersects(state.midboss.hitbox)) {
-                    console.log("MidBoss hit by player bullet!");
-                    // Handle midboss hit (e.g., reduce health, destroy midboss, etc.)
+                    enemyHit(state, state.midboss);
+                    bullet.hitbox.bulletHit = true;
                 }
             }
             break;
         case StagePhase.BOSS:
             if (!state.boss) break;
+            let newBossBullets: Bullet[] = [];
             for (const bullet of state.boss.bullets) {
                 if (bullet.hitbox.intersects(state.player.hitbox)) {
                     playerHit(state);
                 }
+                else {
+                    newBossBullets.push(bullet);
+                }
             }
+            state.boss.bullets = newBossBullets;
             for (const bullet of state.player.bullets) {
                 for (const loser of state.losers) {
                     if (bullet.hitbox.intersects(loser.hitbox)) {
-                        console.log("Loser hit by player bullet!");
-                        // Handle enemy hit (e.g., reduce health, destroy enemy, etc.)
+                        enemyHit(state, loser);
+                        bullet.hitbox.bulletHit = true;
                     }
                 }
                 if (bullet.hitbox.intersects(state.boss.hitbox)) {
-                    console.log("Boss hit by player bullet!");
-                    // Handle boss hit (e.g., reduce health, destroy boss, etc.)
+                    enemyHit(state, state.boss);
+                    bullet.hitbox.bulletHit = true;
                 }
             }
             break;
@@ -329,8 +344,8 @@ function checkCollisions(state: GameState) {
             for (const bullet of state.player.bullets) {
                 for (const loser of state.losers) {
                     if (bullet.hitbox.intersects(loser.hitbox)) {
-                        console.log("Loser hit by player bullet!");
-                        // Handle enemy hit (e.g., reduce health, destroy enemy, etc.)
+                        enemyHit(state, loser);
+                        bullet.hitbox.bulletHit = true;
                     }
                 }
             }
@@ -338,15 +353,33 @@ function checkCollisions(state: GameState) {
         default:
             break;
     }
+    for (const bullet of state.player.bullets) {
+        if (!bullet.hitbox.bulletHit) {
+            newPlayerBullets.push(bullet);
+        }
+    }
+    state.player.bullets = newPlayerBullets;
 }
 
 function playerHit(state: GameState) {
     console.log("Player hit!");
-    state.player.hitbox.startInvulnerability(); // Start invulnerability frames
-    // Handle player hit (e.g., reduce lives, reset position, etc.)
+    state.player.hitbox.startInvulnerability();
     state.lives = Math.max(0, state.lives - 1);
     if (state.lives === 0) {
-        // state.deaths += 1;
+        state.deaths += 1;
+        state.lives = Math.min(3, Math.max(0, state.stage.player.initial_lives));
+        state.score = 0;
+    }
+}
+
+function enemyHit(state: GameState, enemy: MidBoss | Boss | Loser) {
+    enemy.hp = Math.max(0, enemy.hp - 1);
+    if (enemy == state.midboss && enemy.hp != 0) {
+        state.score += midBossPoints;
+    } else if (enemy == state.boss && enemy.hp != 0) {
+        state.score += bossPoints;
+    } else if (enemy.hp != 0) {
+        state.score += loserPoints;
     }
 }
 
@@ -357,8 +390,23 @@ function updateHitboxes(state: GameState) {
         bullet.hitbox.updateHitbox(bullet.x, bullet.y);
     }
 
-    for (const loser of state.losers) {
-        for (const bullet of loser.bullets) {
+    if (state.losers.length != 0) {
+        for (const loser of state.losers) {
+            loser.hitbox.updateHitbox(loser.x, loser.y);
+            for (const bullet of loser.bullets) {
+                bullet.hitbox.updateHitbox(bullet.x, bullet.y);
+            }
+        }
+    }
+    if (state.midboss != undefined) {
+        state.midboss.hitbox.updateHitbox(state.midboss.x, state.midboss.y);
+        for (const bullet of state.midboss.bullets) {
+            bullet.hitbox.updateHitbox(bullet.x, bullet.y);
+        }
+    }
+    if (state.boss != undefined) {
+        state.boss.hitbox.updateHitbox(state.boss.x, state.boss.y);
+        for (const bullet of state.boss.bullets) {
             bullet.hitbox.updateHitbox(bullet.x, bullet.y);
         }
     }
