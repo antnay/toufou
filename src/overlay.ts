@@ -301,7 +301,7 @@ export function updateOverlay(state: GameState): void {
         }
         enemyHpElement.textContent = `Enemy HP ${state.midboss.hp} / ${state.midboss.maxHp}`;
     } else {
-        enemyHpElement.textContent = '';
+        // enemyHpElement.textContent ;
     }
 
     // Spellcard display

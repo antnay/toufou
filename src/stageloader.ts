@@ -79,6 +79,7 @@ export interface Stage {
         speed: number;
         hitbox: number;
         hp: number;
+        patterns: string[];
         animation: {
             sprite: string;
             x: number;
@@ -109,7 +110,7 @@ export interface Stage {
         phases: EnemyPhase[];
     };
     pattern_index: string[];
-    timeline: { frame: number, type: string, x: number, y: number; }[];
+    timeline: Scene[];
     spellcards: {
         easy: string[];
         medium: string[];
@@ -121,10 +122,9 @@ export interface Stage {
 
 export interface EnemyPhase {
     speed: number;
-    x: number;
-    y: number;
     hitbox: number;
     hp: number;
+    patterns: string[];
     animation: {
         sprite: string;
         x: number;
@@ -193,6 +193,7 @@ export interface Loser {
     height: number;
     speed: number;
     hp: number;
+    maxHp: number;
     vx: number;
     bullets: Bullet[];
     patternInstances?: BulletPatternInstance[];
@@ -220,6 +221,7 @@ export interface MidBoss {
     maxHp: number;
     bullets: Bullet[];
     patternInstances?: BulletPatternInstance[];
+    patterns: string[];
     animator?: Animator;
     current_phase: MidBossPhase;
     hitbox: HitBox;
@@ -241,6 +243,7 @@ export interface Boss {
     maxHp: number;
     bullets: Bullet[];
     patternInstances?: BulletPatternInstance[];
+    patterns: string[];
     animator?: Animator;
     current_phase: BossPhase;
     spellcard_on: boolean;
@@ -277,4 +280,14 @@ export interface InputState {
     down: boolean;
     shoot: boolean;
     bomb: boolean;
+}
+
+export interface SceneEnemy {
+    type: string;
+    x: number;
+    y: number;
+}
+
+export interface Scene {
+    enemies: SceneEnemy[];
 }

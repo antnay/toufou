@@ -75,8 +75,6 @@
         "phases": [
             {
                 "speed": 5,
-                "x": 400,
-                "y": 100,
                 "hitbox": 2,
                 "hp": 100,
                 "animation": {
@@ -108,8 +106,6 @@
         "phases": [
             {
                 "speed": 5,
-                "x": 400,
-                "y": 100,
                 "hitbox": 2,
                 "hp": 75,
                 "animation": {
@@ -138,7 +134,7 @@
         ]
     },
     "loser": {
-        "speed": 5,
+        "speed": 1,
         "hitbox": 2,
         "hp": 10,
         "animation": {
@@ -179,22 +175,36 @@
     ],
     "timeline": [
         {
-            "frame": 60,
-            "type": "LOSER",
-            "x": 300,
-            "y": 400
+            "enemies": [
+                {
+                    "type": "LOSER",
+                    "x": 50,
+                    "y": 100
+                },
+                {
+                    "type": "LOSER",
+                    "x": 800,
+                    "y": 100
+                }
+            ]
         },
         {
-            "frame": 1200,
-            "type": "MIDBOSS",
-            "x": 300,
-            "y": 100
+            "enemies": [
+                {
+                    "type": "MIDBOSS",
+                    "x": 200,
+                    "y": 100
+                }
+            ]
         },
         {
-            "frame": 2400,
-            "type": "BOSS",
-            "x": 300,
-            "y": 100
+            "enemies": [
+                {
+                    "type": "BOSS",
+                    "x": 200,
+                    "y": 200
+                }
+            ]
         }
     ]
 }

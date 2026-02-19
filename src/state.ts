@@ -19,6 +19,7 @@ export interface GameState {
     deaths: number;
     assets: AssetManager;
     patterns: Map<string, BulletPatternDef>;
+    dt: number;
 }
 
 export async function initState(): Promise<GameState> {
@@ -51,5 +52,6 @@ export async function initState(): Promise<GameState> {
         deaths: 0,
         assets: assets,
         patterns: assets.patterns,
+        dt: 0,
     };
 }
