@@ -14,20 +14,30 @@ export function initUI(startOptions?: {
         return;
     }
 
-    if (title) title.style.display = '';
+    const uiLayer = document.getElementById('ui-layer');
+
+    function showMenu() {
+        if (uiLayer) uiLayer.classList.add('menu-visible');
+        if (title) (title as HTMLElement).style.display = '';
+        if (btn) (btn as HTMLElement).style.display = 'block';
+    }
+    function hideMenu() {
+        if (uiLayer) uiLayer.classList.remove('menu-visible');
+        if (title) (title as HTMLElement).style.display = 'none';
+        if (btn) (btn as HTMLElement).style.display = 'none';
+    }
+
+    showMenu();
     if (btn) {
-        btn.style.display = 'block';
         btn.onclick = () => {
-            (title as HTMLElement).style.display = 'none';
-            (btn as HTMLElement).style.display = 'none';
+            hideMenu();
             void startOptions.start();
         };
     }
     if (btnBack && gameOver) {
         btnBack.onclick = () => {
             (gameOver as HTMLElement).style.display = 'none';
-            if (title) (title as HTMLElement).style.display = '';
-            if (btn) (btn as HTMLElement).style.display = 'block';
+            showMenu();
             startOptions.backToMenu();
         };
     }

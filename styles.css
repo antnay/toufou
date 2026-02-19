@@ -75,6 +75,11 @@ body {
   gap: 1.5rem;
 }
 
+#ui-layer.menu-visible {
+  pointer-events: auto;
+  background: linear-gradient(180deg, #000000 0%, #000000 50%, #000000 100%);
+}
+
 #ui-layer button,
 #ui-layer h1 {
   pointer-events: auto;
