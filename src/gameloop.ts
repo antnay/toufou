@@ -86,7 +86,19 @@ function update(state: GameState, input: InputState) {
     updateHitboxes(state);
     checkCollisions(state);
     updateHitboxes(state);
+    updateHitboxes(state);
     updateBullets(state);
+    cleanupEnemies(state);
+}
+
+function cleanupEnemies(state: GameState) {
+    state.losers = state.losers.filter(l => l.hp > 0);
+    if (state.midboss && state.midboss.hp <= 0) {
+        state.midboss = undefined;
+    }
+    if (state.boss && state.boss.hp <= 0) {
+        state.boss = undefined;
+    }
 }
 
 function draw(state: GameState, starfield: ReturnType<typeof createStarfield>) {
@@ -134,9 +146,6 @@ function draw(state: GameState, starfield: ReturnType<typeof createStarfield>) {
     ctx.beginPath();
     ctx.arc(state.player.x, state.player.y, state.player.hitbox.radius, 0, Math.PI * 2);
     ctx.stroke();
-
-    // Draw Enemies (Losers)
-
 
     // Draw bullets
     for (const bullet of state.player.bullets) {
@@ -209,6 +218,9 @@ function draw(state: GameState, starfield: ReturnType<typeof createStarfield>) {
                         loser.y - loser.height / 2,
                         state.stage.loser.animation.scale
                     );
+                    if (loser.maxHp > 0) {
+                        drawCircularHealthBar(ctx, loser);
+                    }
                 } else {
                     ctx.fillStyle = "blue";
                     ctx.fillRect(loser.x - loser.width / 2, loser.y - loser.height / 2, loser.width, loser.height);
@@ -434,7 +446,7 @@ function updateHitboxes(state: GameState) {
 const TAU = 6.2831853;        // 2 * Math.PI
 const NEG_HALF_PI = -1.5707963; // -Math.PI / 2  (12 o'clock)
 
-function drawCircularHealthBar(ctx: CanvasRenderingContext2D, entity: MidBoss | Boss) {
+function drawCircularHealthBar(ctx: CanvasRenderingContext2D, entity: MidBoss | Boss | Loser) {
     // clamp ratio 0..1
     const ratio = entity.hp / entity.maxHp;
     const healthRatio = ratio > 1 ? 1 : (ratio < 0 ? 0 : ratio);
