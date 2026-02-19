@@ -1,7 +1,7 @@
 {
-    "background": "background1.png",
+    "background": "space-background.png",
     "player": {
-        "speed": 3,
+        "speed": 1.5,
         "x": 400,
         "y": 700,
         "initial_lives": 3,
@@ -9,58 +9,58 @@
         "bomb_freq": 10,
         "hitbox": 2,
         "animation_up": {
-            "sprite": "cirno-u.png",
+            "sprite": "player_1.png",
             "x": 0,
             "y": 0,
-            "width": 24,
-            "height": 31,
-            "frames": 4,
+            "width": 32,
+            "height": 50,
+            "frames": 8,
             "speed": 0.4,
             "scale": 1
         },
         "animation_down": {
-            "sprite": "cirno-d.png",
+            "sprite": "player_1.png",
             "x": 0,
             "y": 0,
-            "width": 24,
-            "height": 31,
-            "frames": 4,
+            "width": 32,
+            "height": 50,
+            "frames": 8,
             "speed": 0.4,
             "scale": 1
         },
         "animation_left": {
-            "sprite": "cirno-l.png",
-            "x": 0,
-            "y": 0,
-            "width": 24,
-            "height": 31,
+            "sprite": "player_1.png",
+            "x": 128,
+            "y": 50,
+            "width": 32,
+            "height": 50,
             "frames": 4,
             "speed": 0.4,
             "scale": 1
         },
         "animation_right": {
-            "sprite": "cirno-r.png",
-            "x": 0,
-            "y": 0,
-            "width": 23.92,
-            "height": 31,
+            "sprite": "player_1.png",
+            "x": 128,
+            "y": 100,
+            "width": 32,
+            "height": 44,
             "frames": 4,
             "speed": 0.4,
             "scale": 1
         },
         "animation_idle": {
-            "sprite": "cirno-u.png",
+            "sprite": "player_1.png",
             "x": 0,
             "y": 0,
-            "width": 24,
-            "height": 31,
-            "frames": 4,
+            "width": 32,
+            "height": 50,
+            "frames": 8,
             "speed": 0.4,
             "scale": 1
         },
         "player_bullet": {
             "animation": {
-                "sprite": "test-bullet.png",
+                "sprite": "player_bullet.png",
                 "x": 0,
                 "y": 0,
                 "width": 2,
@@ -78,20 +78,19 @@
                 "x": 400,
                 "y": 100,
                 "hitbox": 2,
-                "hp": 100,
                 "animation": {
-                    "sprite": "cirno-d.png",
+                    "sprite": "touhou1.png",
                     "x": 0,
                     "y": 0,
-                    "width": 24,
-                    "height": 32,
+                    "width": 64,
+                    "height": 87,
                     "frames": 8,
                     "speed": 0.4,
                     "scale": 2
                 },
                 "bullet": {
                     "animation": {
-                        "sprite": "test-bullet.png",
+                        "sprite": "bullet.png",
                         "x": 0,
                         "y": 0,
                         "width": 24,
@@ -111,20 +110,19 @@
                 "x": 400,
                 "y": 100,
                 "hitbox": 2,
-                "hp": 75,
                 "animation": {
-                    "sprite": "cirno-u.png",
+                    "sprite": "touhou1.png",
                     "x": 0,
                     "y": 0,
-                    "width": 24,
-                    "height": 32,
+                    "width": 64,
+                    "height": 87,
                     "frames": 8,
                     "speed": 0.4,
                     "scale": 2
                 },
                 "bullet": {
                     "animation": {
-                        "sprite": "test-bullet.png",
+                        "sprite": "bullet.png",
                         "x": 0,
                         "y": 0,
                         "width": 24,
@@ -138,18 +136,17 @@
         ]
     },
     "loser": {
-        "speed": 5,
+        "speed": 0.5,
         "hitbox": 2,
-        "hp": 10,
         "animation": {
-            "sprite": "cirno-d.png",
+            "sprite": "touhou1.png",
             "x": 0,
             "y": 0,
-            "width": 24,
-            "height": 32,
+            "width": 64,
+            "height": 87,
             "frames": 8,
             "speed": 0.3,
-            "scale": 2
+            "scale": 1.2
         },
         "bullet": {
             "animation": {
@@ -159,7 +156,7 @@
                 "width": 16,
                 "height": 16,
                 "frames": 1,
-                "speed": 0.2,
+                "speed": 0.1,
                 "scale": 1
             }
         }
@@ -179,19 +176,25 @@
     ],
     "timeline": [
         {
-            "frame": 60,
+            "frame": 200,
             "type": "LOSER",
-            "x": 300,
-            "y": 400
-        },
-        {
-            "frame": 1200,
-            "type": "MIDBOSS",
-            "x": 300,
+            "x": 50,
             "y": 100
         },
         {
-            "frame": 2400,
+            "frame": 200,
+            "type": "LOSER",
+            "x": 800,
+            "y": 100
+        },
+        {
+            "frame": 400,
+            "type": "MIDBOSS",
+            "x": 600,
+            "y": 100
+        },
+        {
+            "frame": 1200,
             "type": "BOSS",
             "x": 300,
             "y": 100

@@ -1,5 +1,5 @@
 import { Animator } from './animator';
-import { StagePhase, Loser, Stage, MidBossPhase, BossPhase, Direction } from './stageloader';
+import { StagePhase, Loser, Stage, MidBossPhase, BossPhase, Direction, MidBoss, Boss } from './stageloader';
 import { GameState } from "./state";
 import { HitBox } from "./hitbox";
 import type { BulletPatternDef, BulletPatternInstance } from "./patterns";
@@ -9,16 +9,6 @@ export class Director {
 
     async update(state: GameState) {
         this.frameCount++;
-
-        switch (state.current_phase) {
-            case StagePhase.LOSERS:
-                break;
-            case StagePhase.MID_BOSS:
-                break;
-            case StagePhase.BOSS:
-                break;
-        }
-
         if (state.stage.timeline) {
             const currentEvents = state.stage.timeline.filter(e => e.frame === this.frameCount);
             for (const event of currentEvents) {
@@ -26,9 +16,10 @@ export class Director {
             }
         }
 
+        this.updateLoserMovement(state);
         this.updateEnemyPatterns(state);
-        if (state.losers.length === 0 && this.timelineFinished(state)) {
-            state.current_phase = StagePhase.MID_BOSS;
+        if (state.losers.length === 0 && this.timelineFinished(state) && state.current_phase === StagePhase.LOSERS) {
+            state.current_phase = StagePhase.MIDBOSS;
         }
     }
 
@@ -66,13 +57,15 @@ export class Director {
         };
     }
 
-    createLoser(stage: Stage, x: number, y: number, animator?: Animator, patternNames: string[] = []): Loser {
+    createLoser(stage: Stage, x: number, y: number, hp: number, hitbox: HitBox, animator?: Animator, patternNames: string[] = []): Loser {
         return {
             x,
             y,
             width: stage.loser.animation.width * stage.loser.animation.scale,
             height: stage.loser.animation.height * stage.loser.animation.scale,
             speed: stage.loser.speed,
+            hp,
+            vx: stage.loser.speed,
             bullets: [],
             animator,
             patternNames,
@@ -81,10 +74,11 @@ export class Director {
                 activeEndFrame: 0,
                 gapEndFrame: 0,
             },
+            hitbox,
         };
     }
 
-    createMidBoss(state: GameState) {
+    createMidBoss(state: GameState): MidBoss {
         let midBossAnimator: Animator | undefined;
         try {
             const midBossImg = state.assets.getImage(state.stage.midboss.phases[MidBossPhase.ONE].animation.sprite);
@@ -101,20 +95,26 @@ export class Director {
             console.error("Failed to create mid boss animator", e);
         }
 
+        const phase = state.stage.midboss.phases[MidBossPhase.ONE];
+        const initialHp = phase.hp ?? 1000;
+
         return {
-            x: state.stage.timeline.find(e => e.type === "MID_BOSS")?.x,
-            y: state.stage.timeline.find(e => e.type === "MID_BOSS")?.y,
-            width: state.stage.midboss.phases[MidBossPhase.ONE].animation.width * state.stage.midboss.phases[MidBossPhase.ONE].animation.scale,
-            height: state.stage.midboss.phases[MidBossPhase.ONE].animation.height * state.stage.midboss.phases[MidBossPhase.ONE].animation.scale,
-            hitbox: new HitBox(0, 0, state.stage.midboss.phases[MidBossPhase.ONE].hitbox),
-            speed: state.stage.midboss.phases[MidBossPhase.ONE].speed,
+            x: state.stage.timeline.find(e => e.type === "MIDBOSS")?.x as number,
+            y: state.stage.timeline.find(e => e.type === "MIDBOSS")?.y as number,
+            width: phase.animation.width * phase.animation.scale,
+            height: phase.animation.height * phase.animation.scale,
+            hitbox: new HitBox(0, 0, phase.hitbox),
+            speed: phase.speed,
+            // TODO: dont forget to change me back to initialHp
+            hp: 50,
+            maxHp: initialHp,
             bullets: [],
             animator: midBossAnimator,
             current_phase: MidBossPhase.ONE,
         };
     }
 
-    createBoss(state: GameState) {
+    createBoss(state: GameState): Boss {
         let bossAnimator: Animator | undefined;
         try {
             const bossImg = state.assets.getImage(state.stage.boss.phases[BossPhase.ONE].animation.sprite);
@@ -131,13 +131,18 @@ export class Director {
             console.error("Failed to create boss animator", e);
         }
 
+        const phase = state.stage.boss.phases[BossPhase.ONE];
+        const initialHp = phase.hp ?? 1000;
+
         return {
-            x: state.stage.timeline.find(e => e.type === "BOSS")?.x,
-            y: state.stage.timeline.find(e => e.type === "BOSS")?.y,
-            width: state.stage.boss.phases[BossPhase.ONE].animation.width * state.stage.boss.phases[BossPhase.ONE].animation.scale,
-            height: state.stage.boss.phases[BossPhase.ONE].animation.height * state.stage.boss.phases[BossPhase.ONE].animation.scale,
-            hitbox: new HitBox(0, 0, state.stage.boss.phases[BossPhase.ONE].hitbox),
-            speed: state.stage.boss.phases[BossPhase.ONE].speed,
+            x: state.stage.timeline.find(e => e.type === "BOSS")?.x as number,
+            y: state.stage.timeline.find(e => e.type === "BOSS")?.y as number,
+            width: phase.animation.width * phase.animation.scale,
+            height: phase.animation.height * phase.animation.scale,
+            hitbox: new HitBox(0, 0, phase.hitbox),
+            speed: phase.speed,
+            hp: initialHp,
+            maxHp: initialHp,
             bullets: [],
             animator: bossAnimator,
             current_phase: BossPhase.ONE,
@@ -149,12 +154,15 @@ export class Director {
     private async spawnEvent(event: any, state: GameState) {
         switch (event.type) {
             case "LOSER": {
+                state.current_phase = StagePhase.LOSERS;
                 // name of the pattern is the file name without the extension
-                const patternNames = ["spiral", "circle"];
+                const patternNames = ["straight"];
                 state.losers.push(this.createLoser(
                     state.stage,
                     event.x,
                     event.y,
+                    state.stage.loser.hp,
+                    new HitBox(event.x, event.y, state.stage.loser.hitbox),
                     new Animator(
                         state.assets.getImage(state.stage.loser.animation.sprite),
                         state.stage.loser.animation.x,
@@ -170,10 +178,18 @@ export class Director {
                 break;
             }
             case "MIDBOSS":
-                // state.midboss = this.createMidBoss(state);
+                state.current_phase = StagePhase.MIDBOSS;
+                state.losers = [];
+                state.boss = undefined;
+                state.midboss = this.createMidBoss(state);
+                console.log(`Spawned MIDBOSS at ${event.x}, ${event.y}`);
                 break;
             case "BOSS":
-                // state.boss = this.createBoss(state);
+                state.current_phase = StagePhase.BOSS;
+                state.losers = [];
+                state.midboss = undefined;
+                state.boss = this.createBoss(state);
+                console.log(`Spawned BOSS at ${event.x}, ${event.y}`);
                 break;
             default:
                 console.warn(`Unknown event type: ${event.type}`);
@@ -220,6 +236,25 @@ export class Director {
         }
     }
 
+    private updateLoserMovement(state: GameState) {
+        if (state.losers.length === 0) return;
+
+        for (const loser of state.losers) {
+            loser.x += loser.vx;
+
+            const leftEdge = loser.x - loser.width / 2;
+            const rightEdge = loser.x + loser.width / 2;
+
+            if (leftEdge <= LOSER_LEFT_BOUND) {
+                loser.x = LOSER_LEFT_BOUND + loser.width / 2;
+                loser.vx = Math.abs(loser.vx);
+            } else if (rightEdge >= LOSER_RIGHT_BOUND) {
+                loser.x = LOSER_RIGHT_BOUND - loser.width / 2;
+                loser.vx = -Math.abs(loser.vx);
+            }
+        }
+    }
+
     private timelineFinished(state: GameState): boolean {
         if (!state.stage.timeline || state.stage.timeline.length === 0) return true;
         const lastEventFrame = Math.max(...state.stage.timeline.map(e => e.frame));
@@ -239,5 +274,9 @@ const FRAMES_PER_SECOND = 60;
 const DEFAULT_PATTERN_DURATION_SECONDS = 3;
 
 // gap between patterns
-const PATTERN_GAP_SECONDS = 3;
+const PATTERN_GAP_SECONDS = 0;
 const PATTERN_GAP_FRAMES = Math.round(PATTERN_GAP_SECONDS * FRAMES_PER_SECOND);
+
+const CANVAS_WIDTH = 600;
+const LOSER_LEFT_BOUND = 50;
+const LOSER_RIGHT_BOUND = CANVAS_WIDTH - 50;

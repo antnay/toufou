@@ -7,8 +7,10 @@ let scoreElement: HTMLElement | null = null;
 let hiScoreElement: HTMLElement | null = null;
 let bombElement: HTMLElement | null = null;
 let livesElement: HTMLElement | null = null;
+let heartElements: HTMLImageElement[] = [];
 let deathsElement: HTMLElement | null = null;
 let phaseElement: HTMLElement | null = null;
+let enemyHpElement: HTMLElement | null = null;
 let spellcardElement: HTMLElement | null = null;
 let spellcardNameElement: HTMLElement | null = null;
 
@@ -17,12 +19,15 @@ let hiScore: number = 0;
 
 const PHASE_NAMES: Record<StagePhase, string> = {
     [StagePhase.LOSERS]: 'Phase: Losers',
-    [StagePhase.MID_BOSS]: 'Phase: Mid Boss',
+    [StagePhase.MIDBOSS]: 'Phase: Mid Boss',
     [StagePhase.BOSS]: 'Phase: Boss',
+    [StagePhase.CLEAR]: 'Phase: Clear',
 };
 
-const STAT_PANEL_WIDTH = 280;
+const STAT_PANEL_WIDTH = 400;
 const SCORE_DIGITS = 9;
+const MAX_LIVES = 5;
+const HEART_IMG_SRC = `${import.meta.env.BASE_URL}assets/heart.png`;
 
 // Loads high score
 function loadHighScore(): void {
@@ -37,20 +42,16 @@ function createStatPanel(): HTMLElement {
     const statPanel = document.createElement('div');
     statPanel.id = 'stat-panel';
     statPanel.style.cssText = `
-        position: fixed;
-        top: 0;
-        right: 0;
         width: ${STAT_PANEL_WIDTH}px;
-        height: 100%;
-        background: linear-gradient(180deg, #0a0a1a 0%, #1a1a3a 50%, #0a0a1a 100%);
-        border-left: 2px solid #4a4a6a;
-        font-family: 'Courier New', monospace;
-        color: #fff;
-        z-index: 1000;
-        padding: 20px;
+        min-height: 100vh;
+        border-left: 1px solid rgba(100, 100, 180, 0.35);
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        color: #e8e8f0;
+        padding: 24px;
         box-sizing: border-box;
         overflow-y: auto;
         pointer-events: none;
+        box-shadow: -4px 0 24px rgba(0, 0, 0, 0.25);
     `;
     return statPanel;
 }
@@ -60,37 +61,41 @@ function createGameTitle(): HTMLElement {
     const gameTitle = document.createElement('div');
     gameTitle.textContent = 'TOUFOU Prototpye ver0.1';
     gameTitle.style.cssText = `
-        font-size: 24px;
-        font-weight: bold;
+        font-size: 20px;
+        font-weight: 600;
         text-align: center;
-        margin-bottom: 30px;
-        color: #a0a0ff;
-        text-shadow: 0 0 10px rgba(160, 160, 255, 0.5);
+        margin-bottom: 28px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid rgba(160, 160, 255, 0.2);
+        color: #a8b0ff;
+        letter-spacing: 0.02em;
     `;
     return gameTitle;
 }
 
 // Score display section
-function createScoreSection(): { container: HTMLElement; hiScore: HTMLElement; score: HTMLElement } {
+function createScoreSection(): { container: HTMLElement; hiScore: HTMLElement; score: HTMLElement; } {
     const scoreSection = document.createElement('div');
     scoreSection.style.cssText = `
-        margin-bottom: 25px;
-        line-height: 1.6;
+        margin-bottom: 22px;
+        line-height: 1.5;
     `;
 
     const hiScoreDiv = document.createElement('div');
     hiScoreDiv.style.cssText = `
-        font-size: 14px;
-        color: #aaa;
-        margin-bottom: 5px;
+        font-size: 12px;
+        color: #888;
+        margin-bottom: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
     `;
 
     const scoreDiv = document.createElement('div');
     scoreDiv.style.cssText = `
-        font-size: 16px;
-        font-weight: bold;
+        font-size: 18px;
+        font-weight: 600;
         color: #fff;
-        margin-bottom: 15px;
+        letter-spacing: 0.02em;
     `;
 
     scoreSection.appendChild(hiScoreDiv);
@@ -104,7 +109,7 @@ function createScoreSection(): { container: HTMLElement; hiScore: HTMLElement; s
 }
 
 // Stats display section (bomb, deaths)
-function createStatsSection(): { container: HTMLElement; bomb: HTMLElement; lives: HTMLElement; deaths: HTMLElement } {
+function createStatsSection(): { container: HTMLElement; bomb: HTMLElement; lives: HTMLElement; deaths: HTMLElement; } {
     const statsSection = document.createElement('div');
     statsSection.style.cssText = `
         margin-bottom: 25px;
@@ -114,8 +119,27 @@ function createStatsSection(): { container: HTMLElement; bomb: HTMLElement; live
 
     const bombDiv = document.createElement('div');
     bombDiv.style.cssText = 'color: #ffaa00;';
+
+    const livesLabel = document.createElement('div');
+    livesLabel.textContent = 'Lives';
+    livesLabel.style.cssText = 'color: #7dd3fc; margin-bottom: 6px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em;';
+    const livesHeartsWrap = document.createElement('div');
+    livesHeartsWrap.className = 'lives-hearts';
+    livesHeartsWrap.style.cssText = 'display: flex; gap: 4px; flex-wrap: wrap;';
+    heartElements = [];
+    for (let i = 0; i < MAX_LIVES; i++) {
+        const heart = document.createElement('img');
+        heart.src = HEART_IMG_SRC;
+        heart.alt = '';
+        heart.className = 'heart';
+        heart.style.cssText = 'width: 24px; height: 24px; display: inline-block; object-fit: contain;';
+        livesHeartsWrap.appendChild(heart);
+        heartElements.push(heart);
+    }
     const livesDiv = document.createElement('div');
-    livesDiv.style.cssText = 'color: #7dd3fc;';
+    livesDiv.appendChild(livesLabel);
+    livesDiv.appendChild(livesHeartsWrap);
+
     const deathsDiv = document.createElement('div');
     deathsDiv.style.cssText = 'color: #ff6b6b;';
 
@@ -135,14 +159,25 @@ function createStatsSection(): { container: HTMLElement; bomb: HTMLElement; live
 function createPhaseSection(): HTMLElement {
     const phaseSection = document.createElement('div');
     phaseSection.style.cssText = `
-        margin-bottom: 25px;
-        font-size: 14px;
+        margin-bottom: 22px;
+        font-size: 13px;
+        color: #b0b8d0;
     `;
     return phaseSection;
 }
 
+function createEnemyHPSection(): HTMLElement {
+    const enemyHpSection = document.createElement('div');
+    enemyHpSection.style.cssText = `
+        margin-bottom: 22px;
+        font-size: 13px;
+        color: #b0b8d0;
+    `;
+    return enemyHpSection;
+}
+
 // Spellcard display section
-function createSpellcardSection(): { container: HTMLElement; name: HTMLElement } {
+function createSpellcardSection(): { container: HTMLElement; name: HTMLElement; } {
     const spellcardSection = document.createElement('div');
     spellcardSection.style.cssText = `
         margin-bottom: 20px;
@@ -185,9 +220,10 @@ function createFooter(): HTMLElement {
     footer.style.cssText = `
         position: absolute;
         bottom: 20px;
-        right: 20px;
+        right: 24px;
         font-size: 11px;
-        color: #666;
+        color: #555;
+        letter-spacing: 0.03em;
     `;
     return footer;
 }
@@ -212,6 +248,8 @@ export function initOverlay(): void {
 
     phaseElement = createPhaseSection();
     statPanel.appendChild(phaseElement);
+    enemyHpElement = createEnemyHPSection();
+    statPanel.appendChild(enemyHpElement);
 
     const spellcardSection = createSpellcardSection();
     spellcardElement = spellcardSection.container;
@@ -230,8 +268,8 @@ function formatScore(score: number): string {
 
 // Updates the overlay with current game state
 export function updateOverlay(state: GameState): void {
-    if (!scoreElement || !hiScoreElement || !bombElement || !livesElement || !deathsElement || 
-        !phaseElement || !spellcardElement || !spellcardNameElement) {
+    if (!scoreElement || !hiScoreElement || !bombElement || !livesElement || !deathsElement ||
+        !phaseElement || !enemyHpElement || !spellcardElement || !spellcardNameElement) {
         return;
     }
 
@@ -244,11 +282,33 @@ export function updateOverlay(state: GameState): void {
     hiScoreElement.textContent = `HiScore ${formatScore(hiScore)}`;
     scoreElement.textContent = `Score ${formatScore(state.score)}`;
     bombElement.textContent = `Bomb ${state.current_bomb}`;
-    livesElement.textContent = `Lives ${state.lives}`;
+    const livesClamped = Math.min(MAX_LIVES, Math.max(0, state.lives));
+    for (let i = 0; i < heartElements.length; i++) {
+        heartElements[i].style.display = i < livesClamped ? 'inline-block' : 'none';
+    }
     deathsElement.textContent = `Deaths ${state.deaths}`;
     phaseElement.textContent = PHASE_NAMES[state.current_phase] || 'Phase: Unknown';
+    if (state.current_phase === StagePhase.BOSS) {
+        if (!state.boss) {
+            enemyHpElement.textContent = '';
+            return;
+        }
+        enemyHpElement.textContent = `Enemy HP ${state.boss.hp} / ${state.boss.maxHp}`;
+    } else if (state.current_phase === StagePhase.MIDBOSS) {
+        if (!state.midboss) {
+            enemyHpElement.textContent = '';
+            return;
+        }
+        enemyHpElement.textContent = `Enemy HP ${state.midboss.hp} / ${state.midboss.maxHp}`;
+    } else {
+        enemyHpElement.textContent = '';
+    }
 
     // Spellcard display
+    if (!state.boss) {
+        spellcardElement.style.display = 'none';
+        return;
+    }
     if (state.boss.spellcard_on && state.boss.spellcard) {
         spellcardNameElement.textContent = `"${state.boss.spellcard}"`;
         spellcardElement.style.display = 'block';

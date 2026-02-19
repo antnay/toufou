@@ -8,12 +8,15 @@
 </head>
 
 <body>
-  <canvas id="gameCanvas" width="600" height="800"></canvas>
-
-  <div id="ui-layer">
+  <main id="app-main">
+  <div id="game-viewport">
+    <canvas id="gameCanvas" width="600" height="800"></canvas>
+    <div id="ui-layer">
     <h1 id="title" style="display:none;">Toufou</h1>
     <button id="btn" style="display:none;">Start</button>
   </div>
+  </div>
+  </main>
 
   <script type="module" src="/src/main.ts"></script>
 </body>

@@ -8,9 +8,11 @@ export interface GameState {
     stage: Stage;
     current_phase: StagePhase;
     player: Player;
+    shooting: boolean;
+    _toggleShooting: boolean;
     losers: Loser[];
-    midboss: MidBoss;
-    boss: Boss;
+    midboss: MidBoss | undefined;
+    boss: Boss | undefined;
     lives: number;
     current_bomb: number;
     score: number;
@@ -20,14 +22,14 @@ export interface GameState {
 }
 
 export async function initState(): Promise<GameState> {
-    const stage = await loadStage("stages/stage1.json");
+    const stage = await loadStage("stages/stage2.json");
 
     const assets = new AssetManager();
     await assets.loadStageAssets(stage);
 
     return {
         stage: stage,
-        current_phase: StagePhase.LOSERS,
+        current_phase: StagePhase.CLEAR,
         player: {
             x: stage.player.x - stage.player.animation_idle.width / 2,
             y: stage.player.y - stage.player.animation_idle.height / 2,
@@ -39,13 +41,11 @@ export async function initState(): Promise<GameState> {
             bullets: []
         },
         losers: [],
-        midboss: {
-            x: 0, y: 0, width: 0, height: 0, speed: 0, bullets: [], current_phase: MidBossPhase.ONE,
-        },
-        boss: {
-            x: 0, y: 0, width: 0, height: 0, speed: 0, bullets: [], current_phase: BossPhase.ONE, spellcard_on: false, spellcard: "",
-        },
-        lives: stage.player.initial_lives,
+        midboss: undefined,
+        boss: undefined,
+        shooting: false,
+        _toggleShooting: false,
+        lives: Math.min(3, Math.max(0, stage.player.initial_lives)),
         current_bomb: stage.player.initial_bombs,
         score: 0,
         deaths: 0,

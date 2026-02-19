@@ -78,6 +78,7 @@ export interface Stage {
     loser: {
         speed: number;
         hitbox: number;
+        hp: number;
         animation: {
             sprite: string;
             x: number;
@@ -123,6 +124,7 @@ export interface EnemyPhase {
     x: number;
     y: number;
     hitbox: number;
+    hp: number;
     animation: {
         sprite: string;
         x: number;
@@ -157,8 +159,9 @@ export async function loadStage(path: string): Promise<Stage> {
 
 export enum StagePhase {
     LOSERS = 0,
-    MID_BOSS,
+    MIDBOSS,
     BOSS,
+    CLEAR,
 }
 
 // represents the player
@@ -189,6 +192,8 @@ export interface Loser {
     width: number;
     height: number;
     speed: number;
+    hp: number;
+    vx: number;
     bullets: Bullet[];
     patternInstances?: BulletPatternInstance[];
     patternNames?: string[];
@@ -201,6 +206,7 @@ export interface Loser {
         gapEndFrame: number;
     };
     animator?: Animator;
+    hitbox: HitBox;
 }
 
 // represents the midboss
@@ -210,10 +216,13 @@ export interface MidBoss {
     width: number;
     height: number;
     speed: number;
+    hp: number;
+    maxHp: number;
     bullets: Bullet[];
     patternInstances?: BulletPatternInstance[];
     animator?: Animator;
     current_phase: MidBossPhase;
+    hitbox: HitBox;
 }
 
 export enum MidBossPhase {
@@ -228,12 +237,15 @@ export interface Boss {
     width: number;
     height: number;
     speed: number;
+    hp: number;
+    maxHp: number;
     bullets: Bullet[];
     patternInstances?: BulletPatternInstance[];
     animator?: Animator;
     current_phase: BossPhase;
     spellcard_on: boolean;
     spellcard: string;
+    hitbox: HitBox;
 }
 
 export enum BossPhase {
@@ -255,6 +267,7 @@ export interface Bullet {
     animator?: Animator;
     skin?: string;
     scale?: number;
+    hitbox: HitBox;
 }
 
 export interface InputState {
