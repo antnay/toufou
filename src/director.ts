@@ -24,6 +24,7 @@ export class Director {
     }
 
     initGame(state: GameState) {
+        this.frameCount = 0;
         state.player = this.createPlayer(state);
     }
 
