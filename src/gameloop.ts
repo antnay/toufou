@@ -9,12 +9,16 @@ const director = new Director();
 const CANVAS_W = 600;
 const CANVAS_H = 800;
 
-export function run(state: GameState, input: InputState) {
+export function run(state: GameState, input: InputState, GG?: () => void) {
     director.initGame(state);
     const starfield = createStarfield();
 
     function loop() {
         update(state, input);
+        if (state.lives <= 0) {
+            GG?.();
+            return;
+        }
         updateStarfield(starfield, CANVAS_W, CANVAS_H);
         draw(state, starfield);
         requestAnimationFrame(loop);
