@@ -1,4 +1,5 @@
 import { Animator } from "./animator";
+import { TARGET_FPS } from "./director";
 import { HitBox } from "./hitbox";
 import type { Bullet, Loser, MidBoss, Boss, Player, Stage, InputState } from "./stageloader";
 import type { GameState } from "./state";
@@ -42,10 +43,10 @@ export class BulletPatternInstance {
     constructor(private readonly config: BulletPatternConfig) {
         this.currentBurstSize = config.burstSize;
         if (typeof config.durationSeconds === "number" && config.durationSeconds > 0) {
-            this.durationFrames = Math.max(1, Math.round(config.durationSeconds * FRAMES_PER_SECOND));
+            this.durationFrames = Math.max(1, Math.round(config.durationSeconds * TARGET_FPS));
         }
         if (typeof config.blinkSeconds === "number" && config.blinkSeconds > 0) {
-            this.blinkFrames = Math.max(1, Math.round(config.blinkSeconds * FRAMES_PER_SECOND));
+            this.blinkFrames = Math.max(1, Math.round(config.blinkSeconds * TARGET_FPS));
         }
     }
 
@@ -231,7 +232,7 @@ function radToDeg(rad: number): number {
 //     return value !== "" && !Number.isNaN(Number(value));
 // }
 
-const FRAMES_PER_SECOND = 60;
+
 const PLAYER_BULLET_SPEED = 2;
 const PLAYER_FIRE_INTERVAL = 20;
 const ORB_GAP = 6;
@@ -258,7 +259,7 @@ export function createPlayerBullet(
     );
 }
 
-function getOrbCenter(state: GameState): { x: number; y: number } {
+function getOrbCenter(state: GameState): { x: number; y: number; } {
     const orbImg = state.assets.getImage("shooting-orb.png");
     const orbH = orbImg.naturalHeight;
     const y = state.player.y - state.player.height / 2 - ORB_GAP - orbH / 2;

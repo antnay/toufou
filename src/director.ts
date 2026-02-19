@@ -4,6 +4,8 @@ import { GameState } from "./state";
 import { HitBox } from "./hitbox";
 import type { BulletPatternDef, BulletPatternInstance } from "./patterns";
 
+export const TARGET_FPS = 180;
+
 export class Director {
     private frameCount: number = 0;
 

@@ -1,5 +1,5 @@
 import { GameState } from "./state";
-import { Director } from "./director";
+import { Director, TARGET_FPS } from "./director";
 import { Bullet, InputState, MidBoss, Boss, StagePhase, Player, Loser } from './stageloader';
 import { updateOverlay } from "./overlay";
 import { createStarfield, updateStarfield, drawStarfield } from "./background_starfield";
@@ -10,25 +10,38 @@ const CANVAS_W = 600;
 const CANVAS_H = 800;
 
 export function run(state: GameState, input: InputState, GG?: () => void) {
+    const MAX_DT = 0.05;
     director.initGame(state);
     const starfield = createStarfield();
+    let lastTime = 0;
 
-    function loop() {
+    function loop(timestamp: number) {
+        if (lastTime === 0) lastTime = timestamp;
+        const rawDt = (timestamp - lastTime) / 1000;
+        lastTime = timestamp;
+        state.dt = Math.min(rawDt, MAX_DT);
+
         update(state, input);
         if (state.lives <= 0) {
             GG?.();
             return;
         }
-        updateStarfield(starfield, CANVAS_W, CANVAS_H);
+        updateStarfield(starfield, CANVAS_W, CANVAS_H, state.dt);
         draw(state, starfield);
         requestAnimationFrame(loop);
     }
-    loop();
+    requestAnimationFrame(loop);
+}
+
+// Scale factor: everything was tuned for TARGET_FPS, so dt * TARGET_FPS == 1.0 at target
+function dtScale(dt: number): number {
+    return dt * TARGET_FPS;
 }
 
 function update(state: GameState, input: InputState) {
+    const scale = dtScale(state.dt);
     if (input.left && state.player.x > state.player.width / 2) {
-        state.player.x -= state.player.speed;
+        state.player.x -= state.player.speed * scale;
         state.player.animator?.switchAnimation(state.assets.getImage(state.stage.player.animation_left.sprite),
             state.stage.player.animation_left.x,
             state.stage.player.animation_left.y,
@@ -38,7 +51,7 @@ function update(state: GameState, input: InputState) {
             state.stage.player.animation_left.speed);
     }
     if (input.right && state.player.x < CANVAS_W - state.player.width / 2) {
-        state.player.x += state.player.speed;
+        state.player.x += state.player.speed * scale;
         state.player.animator?.switchAnimation(state.assets.getImage(state.stage.player.animation_right.sprite),
             state.stage.player.animation_right.x,
             state.stage.player.animation_right.y,
@@ -48,7 +61,7 @@ function update(state: GameState, input: InputState) {
             state.stage.player.animation_right.speed);
     }
     if (input.up && state.player.y > state.player.height / 2) {
-        state.player.y -= state.player.speed;
+        state.player.y -= state.player.speed * scale;
         state.player.animator?.switchAnimation(state.assets.getImage(state.stage.player.animation_up.sprite),
             state.stage.player.animation_up.x,
             state.stage.player.animation_up.y,
@@ -58,7 +71,7 @@ function update(state: GameState, input: InputState) {
             state.stage.player.animation_up.speed);
     }
     if (input.down && state.player.y < CANVAS_H - state.player.height / 2) {
-        state.player.y += state.player.speed;
+        state.player.y += state.player.speed * scale;
         state.player.animator?.switchAnimation(state.assets.getImage(state.stage.player.animation_down.sprite),
             state.stage.player.animation_down.x,
             state.stage.player.animation_down.y,
@@ -92,7 +105,7 @@ function draw(state: GameState, starfield: ReturnType<typeof createStarfield>) {
 
     if (state.player.animator) {
         state.player.animator.drawFrameHorizontal(
-            0.016,
+            state.dt,
             ctx,
             state.player.x - state.player.width / 2,
             state.player.y - state.player.height / 2,
@@ -129,7 +142,7 @@ function draw(state: GameState, starfield: ReturnType<typeof createStarfield>) {
     for (const bullet of state.player.bullets) {
         if (bullet.animator) {
             bullet.animator.drawFrameHorizontal(
-                0.016,
+                state.dt,
                 ctx,
                 bullet.x - bullet.width / 2,
                 bullet.y - bullet.height / 2,
@@ -151,7 +164,7 @@ function draw(state: GameState, starfield: ReturnType<typeof createStarfield>) {
             }
             if (state.boss.animator) {
                 state.boss.animator.drawFrameHorizontal(
-                    0.016,
+                    state.dt,
                     ctx,
                     state.boss.x - state.boss.width / 2,
                     state.boss.y - state.boss.height / 2,
@@ -172,7 +185,7 @@ function draw(state: GameState, starfield: ReturnType<typeof createStarfield>) {
             }
             if (state.midboss.animator) {
                 state.midboss.animator.drawFrameHorizontal(
-                    0.016,
+                    state.dt,
                     ctx,
                     state.midboss.x - state.midboss.width / 2,
                     state.midboss.y - state.midboss.height / 2,
@@ -190,7 +203,7 @@ function draw(state: GameState, starfield: ReturnType<typeof createStarfield>) {
             for (const loser of state.losers) {
                 if (loser.animator) {
                     loser.animator.drawFrameHorizontal(
-                        0.016,
+                        state.dt,
                         ctx,
                         loser.x - loser.width / 2,
                         loser.y - loser.height / 2,
@@ -214,12 +227,13 @@ function updateBullets(state: GameState) {
     const maxX = canvas?.width ?? 600;
     const maxY = canvas?.height ?? 800;
 
+    const scale = dtScale(state.dt);
     const updateBulletList = (bullets: any[]) => {
         return bullets.filter((bullet) => {
             const vx = bullet.vx ?? 0;
             const vy = bullet.vy ?? bullet.speed;
-            bullet.x += vx;
-            bullet.y += vy;
+            bullet.x += vx * scale;
+            bullet.y += vy * scale;
             return bullet.x >= -bullet.width && bullet.x <= maxX + bullet.width &&
                 bullet.y >= -bullet.height && bullet.y <= maxY + bullet.height;
         });
@@ -258,7 +272,7 @@ function drawEnemyBullets(state: GameState, ctx: CanvasRenderingContext2D) {
         for (const bullet of loser.bullets) {
             if (bullet.animator) {
                 bullet.animator.drawFrameHorizontal(
-                    0.016,
+                    state.dt,
                     ctx,
                     bullet.x - bullet.width / 2,
                     bullet.y - bullet.height / 2,
