@@ -23,6 +23,7 @@ export function run(state: GameState, input: InputState, GG?: () => void) {
 
         update(state, input);
         if (state.lives <= 0) {
+            updateOverlay(state);
             GG?.();
             return;
         }
@@ -397,8 +398,6 @@ function playerHit(state: GameState) {
     state.lives = Math.max(0, state.lives - 1);
     if (state.lives === 0) {
         state.deaths += 1;
-        state.lives = Math.min(3, Math.max(0, state.stage.player.initial_lives));
-        state.score = 0;
     }
 }
 
