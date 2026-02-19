@@ -83,9 +83,7 @@ function update(state: GameState, input: InputState) {
     updatePlayerShooting(state, input);
     director.update(state);
     updateBullets(state);
-    updateHitboxes(state);
     checkCollisions(state);
-    updateHitboxes(state);
     updateHitboxes(state);
     updateBullets(state);
     cleanupEnemies(state);

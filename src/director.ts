@@ -248,6 +248,7 @@ export class Director {
                         bulletSprite: state.stage.loser.bullet.animation.sprite,
                         bulletAnimation: state.stage.loser.bullet.animation,
                         getBulletImage: (sprite) => state.assets.getImage(sprite),
+                        dt: state.dt,
                     });
                     if (bullets.length > 0) {
                         loser.bullets.push(...bullets);
