@@ -57,13 +57,14 @@ export class Director {
         };
     }
 
-    createLoser(stage: Stage, x: number, y: number, hitbox: HitBox, animator?: Animator, patternNames: string[] = []): Loser {
+    createLoser(stage: Stage, x: number, y: number, hp: number, hitbox: HitBox, animator?: Animator, patternNames: string[] = []): Loser {
         return {
             x,
             y,
             width: stage.loser.animation.width * stage.loser.animation.scale,
             height: stage.loser.animation.height * stage.loser.animation.scale,
             speed: stage.loser.speed,
+            hp,
             vx: stage.loser.speed,
             bullets: [],
             animator,
@@ -160,6 +161,7 @@ export class Director {
                     state.stage,
                     event.x,
                     event.y,
+                    state.stage.loser.hp,
                     new HitBox(event.x, event.y, state.stage.loser.hitbox),
                     new Animator(
                         state.assets.getImage(state.stage.loser.animation.sprite),

@@ -4,6 +4,7 @@ class HitBox {
     radius: number;
     invulnerabilityFrames: number;
     invulnerabilityState: boolean = false;
+    bulletHit: boolean = false;
 
 
     constructor(x: number, y: number, radius: number) {

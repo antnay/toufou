@@ -78,6 +78,7 @@ export interface Stage {
     loser: {
         speed: number;
         hitbox: number;
+        hp: number;
         animation: {
             sprite: string;
             x: number;
@@ -191,6 +192,7 @@ export interface Loser {
     width: number;
     height: number;
     speed: number;
+    hp: number;
     vx: number;
     bullets: Bullet[];
     patternInstances?: BulletPatternInstance[];
