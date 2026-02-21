@@ -17,6 +17,12 @@ export class AssetManager {
 
         await this.loadImage(stage.loser.animation.sprite);
         await this.loadImage(stage.loser.bullet.animation.sprite);
+        if (stage.loser_types) {
+            for (const config of Object.values(stage.loser_types)) {
+                await this.loadImage(config.animation.sprite);
+                await this.loadImage(config.bullet.animation.sprite);
+            }
+        }
 
         for (const phase of stage.midboss.phases) {
             await this.loadImage(phase.animation.sprite);
