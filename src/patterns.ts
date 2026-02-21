@@ -1,4 +1,5 @@
 import { Animator } from "./animator";
+import { TARGET_FPS } from "./director";
 import { HitBox } from "./hitbox";
 import type { Bullet, Loser, MidBoss, Boss, Player, Stage, InputState } from "./stageloader";
 import type { GameState } from "./state";
@@ -38,14 +39,15 @@ export class BulletPatternInstance {
     private currentBurstSize: number;
     private durationFrames?: number;
     private blinkFrames?: number;
+    private lastSpawnFrame = 0;
 
     constructor(private readonly config: BulletPatternConfig) {
         this.currentBurstSize = config.burstSize;
         if (typeof config.durationSeconds === "number" && config.durationSeconds > 0) {
-            this.durationFrames = Math.max(1, Math.round(config.durationSeconds * FRAMES_PER_SECOND));
+            this.durationFrames = Math.max(1, Math.round(config.durationSeconds * TARGET_FPS));
         }
         if (typeof config.blinkSeconds === "number" && config.blinkSeconds > 0) {
-            this.blinkFrames = Math.max(1, Math.round(config.blinkSeconds * FRAMES_PER_SECOND));
+            this.blinkFrames = Math.max(1, Math.round(config.blinkSeconds * TARGET_FPS));
         }
     }
 
@@ -55,53 +57,63 @@ export class BulletPatternInstance {
         bulletSprite: string;
         bulletAnimation: Stage["loser"]["bullet"]["animation"];
         getBulletImage: (sprite: string) => HTMLImageElement;
+        dt: number;
     }): Bullet[] {
-        this.frameCounter++;
+        const frames = params.dt * TARGET_FPS;
+        this.frameCounter += frames;
+
         if (this.durationFrames && this.frameCounter > this.durationFrames) {
             return [];
         }
-        if (this.blinkFrames) {
-            const blinkPhase = Math.floor(this.frameCounter / this.blinkFrames) % 2;
-            if (blinkPhase === 1) {
-                return [];
-            }
-        }
 
-        const frequency = Math.max(1, Math.floor(this.config.frequency));
-        if (this.config.burstCount > 0 && this.burstsFired >= this.config.burstCount) {
-            return [];
-        }
-
-        if (this.frameCounter % frequency !== 0) return [];
-
-        const originX = this.config.originX === -1 ? params.owner.x : this.config.originX;
-        const originY = this.config.originY === -1 ? params.owner.y : this.config.originY;
-        const baseAim = this.config.direction === -1
-            ? radToDeg(Math.atan2(params.player.y - originY, params.player.x - originX))
-            : this.config.direction;
-
-        const burstSize = Math.max(1, Math.round(this.currentBurstSize));
-        const direction = baseAim + this.directionOffset;
-        const spawnStep = this.config.spawnDirection + this.spawnDirectionOffset;
-        const velocity = this.config.velocity + this.velocityOffset;
-
+        const frequency = Math.max(1, this.config.frequency); // frequency is already "frames between bursts"
         const bullets: Bullet[] = [];
-        const sprite = this.config.bulletType && this.config.bulletType !== "-1"
-            ? this.config.bulletType
-            : params.bulletSprite;
-        const bulletImage = params.getBulletImage(sprite);
-        for (let i = 0; i < burstSize; i++) {
-            const angle = degToRad(direction + i * spawnStep);
-            const vx = Math.cos(angle) * velocity;
-            const vy = Math.sin(angle) * velocity;
-            bullets.push(createBullet({ ...params, bulletSprite: sprite, bulletImage }, originX, originY, vx, vy));
-        }
 
-        this.burstsFired++;
-        this.directionOffset += this.config.directionChange;
-        this.spawnDirectionOffset += this.config.spawnDirectionChange;
-        this.velocityOffset += this.config.velocityChange;
-        this.currentBurstSize += this.config.burstSizeChange;
+        // Catch up on misses
+        while (this.frameCounter >= this.lastSpawnFrame + frequency) {
+            this.lastSpawnFrame += frequency;
+
+            // Check blink against the time this spawn *should* have happened
+            if (this.blinkFrames) {
+                const blinkPhase = Math.floor(this.lastSpawnFrame / this.blinkFrames) % 2;
+                if (blinkPhase === 1) {
+                    continue;
+                }
+            }
+
+            if (this.config.burstCount > 0 && this.burstsFired >= this.config.burstCount) {
+                break;
+            }
+
+            // Execute Spawn
+            const originX = this.config.originX === -1 ? params.owner.x : this.config.originX;
+            const originY = this.config.originY === -1 ? params.owner.y : this.config.originY;
+            const baseAim = this.config.direction === -1
+                ? radToDeg(Math.atan2(params.player.y - originY, params.player.x - originX))
+                : this.config.direction;
+
+            const burstSize = Math.max(1, Math.round(this.currentBurstSize));
+            const direction = baseAim + this.directionOffset;
+            const spawnStep = this.config.spawnDirection + this.spawnDirectionOffset;
+            const velocity = this.config.velocity + this.velocityOffset;
+            const sprite = this.config.bulletType && this.config.bulletType !== "-1"
+                ? this.config.bulletType
+                : params.bulletSprite;
+            const bulletImage = params.getBulletImage(sprite);
+
+            for (let i = 0; i < burstSize; i++) {
+                const angle = degToRad(direction + i * spawnStep);
+                const vx = Math.cos(angle) * velocity;
+                const vy = Math.sin(angle) * velocity;
+                bullets.push(createBullet({ ...params, bulletSprite: sprite, bulletImage }, originX, originY, vx, vy));
+            }
+
+            this.burstsFired++;
+            this.directionOffset += this.config.directionChange;
+            this.spawnDirectionOffset += this.config.spawnDirectionChange;
+            this.velocityOffset += this.config.velocityChange;
+            this.currentBurstSize += this.config.burstSizeChange;
+        }
 
         return bullets;
     }
@@ -231,7 +243,7 @@ function radToDeg(rad: number): number {
 //     return value !== "" && !Number.isNaN(Number(value));
 // }
 
-const FRAMES_PER_SECOND = 60;
+
 const PLAYER_BULLET_SPEED = 2;
 const PLAYER_FIRE_INTERVAL = 20;
 const ORB_GAP = 6;
@@ -243,11 +255,11 @@ export function createPlayerBullet(
     y: number
 ): Bullet {
     const anim = state.stage.loser.bullet.animation;
-    const img = state.assets.getImage("test-bullet.png");
+    const img = state.assets.getImage(state.stage.player.player_bullet.animation.sprite);
     return createBullet(
         {
             owner: state.player,
-            bulletSprite: "test-bullet.png",
+            bulletSprite: state.stage.player.player_bullet.animation.sprite,
             bulletAnimation: anim,
             bulletImage: img,
         },
@@ -258,7 +270,7 @@ export function createPlayerBullet(
     );
 }
 
-function getOrbCenter(state: GameState): { x: number; y: number } {
+function getOrbCenter(state: GameState): { x: number; y: number; } {
     const orbImg = state.assets.getImage("shooting-orb.png");
     const orbH = orbImg.naturalHeight;
     const y = state.player.y - state.player.height / 2 - ORB_GAP - orbH / 2;
@@ -273,7 +285,7 @@ export function updatePlayerShooting(state: GameState, input: InputState): void 
 
     if (!state.shooting) return;
 
-    _playerFireCooldown--;
+    _playerFireCooldown -= state.dt * TARGET_FPS;
     if (_playerFireCooldown <= 0) {
         _playerFireCooldown = PLAYER_FIRE_INTERVAL;
         const { x, y } = getOrbCenter(state);

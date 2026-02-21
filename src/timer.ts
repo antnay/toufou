@@ -1,4 +1,8 @@
 class Timer {
+    gameTime: number;
+    maxStep: number;
+    lastTimestamp: number;
+
     constructor() {
         this.gameTime = 0;
         this.maxStep = 0.05;

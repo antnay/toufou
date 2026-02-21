@@ -2,14 +2,24 @@ import { initState } from "./state";
 import { run } from "./gameloop";
 import { createInput } from './input';
 import { initOverlay } from "./overlay";
-import { initUI } from "./ui";
+import { initUI, GG } from "./ui";
 
-async function main() {
-    const state = await initState();
-    initUI();
+function main() {
     initOverlay();
-    const input = createInput();
-    run(state, input);
+    const panel = document.getElementById("stat-panel");
+    if (panel) (panel as HTMLElement).style.display = "none";
+
+    initUI({
+        start: async () => {
+            if (panel) (panel as HTMLElement).style.display = "";
+            const state = await initState();
+            const input = createInput();
+            run(state, input, GG);
+        },
+        backToMenu: () => {
+            if (panel) (panel as HTMLElement).style.display = "none";
+        },
+    });
 }
 
 main();

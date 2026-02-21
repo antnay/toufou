@@ -1,3 +1,5 @@
+import { TARGET_FPS } from "./director";
+
 export interface Star {
     x: number;
     y: number;
@@ -28,9 +30,11 @@ export function createStarfield(): Star[] {
     return stars;
 }
 
-export function updateStarfield(stars: Star[], width: number, height: number): void {
+
+export function updateStarfield(stars: Star[], width: number, height: number, dt: number): void {
+    const scale = dt * TARGET_FPS;
     for (const star of stars) {
-        star.y += star.speed;
+        star.y += star.speed * scale;
         if (star.y > height) {
             star.y = 0;
             star.x = Math.random() * width;

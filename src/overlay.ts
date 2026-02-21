@@ -26,7 +26,7 @@ const PHASE_NAMES: Record<StagePhase, string> = {
 
 const STAT_PANEL_WIDTH = 400;
 const SCORE_DIGITS = 9;
-const MAX_LIVES = 5;
+const MAX_LIVES = 3;
 const HEART_IMG_SRC = `${import.meta.env.BASE_URL}assets/heart.png`;
 
 // Loads high score
@@ -301,7 +301,7 @@ export function updateOverlay(state: GameState): void {
         }
         enemyHpElement.textContent = `Enemy HP ${state.midboss.hp} / ${state.midboss.maxHp}`;
     } else {
-        enemyHpElement.textContent = '';
+        // enemyHpElement.textContent ;
     }
 
     // Spellcard display
