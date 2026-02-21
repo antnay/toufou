@@ -20,6 +20,7 @@ export interface BulletPatternConfig {
     durationSeconds?: number;
     blinkSeconds?: number;
     bulletType: string;
+    oscillateDirection?: boolean;
 }
 
 export class BulletPatternDef {
@@ -109,7 +110,11 @@ export class BulletPatternInstance {
             }
 
             this.burstsFired++;
-            this.directionOffset += this.config.directionChange;
+            if (this.config.oscillateDirection) {
+                this.directionOffset = (this.burstsFired % 2 === 0) ? 0 : this.config.directionChange;
+            } else {
+                this.directionOffset += this.config.directionChange;
+            }
             this.spawnDirectionOffset += this.config.spawnDirectionChange;
             this.velocityOffset += this.config.velocityChange;
             this.currentBurstSize += this.config.burstSizeChange;

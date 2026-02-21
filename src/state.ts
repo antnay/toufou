@@ -23,7 +23,7 @@ export interface GameState {
 }
 
 export async function initState(): Promise<GameState> {
-    const stage = await loadStage("stages/stage2.json");
+    const stage = await loadStage("stages/test.json");
 
     const assets = new AssetManager();
     await assets.loadStageAssets(stage);
