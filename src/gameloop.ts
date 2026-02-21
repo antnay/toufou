@@ -278,8 +278,14 @@ function updateBullets(state: GameState) {
 }
 
 function drawEnemyBullets(state: GameState, ctx: CanvasRenderingContext2D) {
-    for (const loser of state.losers) {
-        for (const bullet of loser.bullets) {
+    const allBulletSources = [
+        ...state.losers.map(l => l.bullets),
+        ...(state.midboss ? [state.midboss.bullets] : []),
+        ...(state.boss ? [state.boss.bullets] : []),
+    ];
+
+    for (const bulletList of allBulletSources) {
+        for (const bullet of bulletList) {
             if (bullet.animator) {
                 bullet.animator.drawFrameHorizontal(
                     state.dt,
