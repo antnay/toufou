@@ -218,11 +218,11 @@ function draw(state: GameState, starfield: ReturnType<typeof createStarfield>) {
                         ctx,
                         loser.x - loser.width / 2,
                         loser.y - loser.height / 2,
-                        state.stage.loser.animation.scale
+                        loser.animationScale
                     );
-                    if (loser.maxHp > 0) {
-                        drawCircularHealthBar(ctx, loser);
-                    }
+                    // if (loser.maxHp > 0) {
+                    //     drawCircularHealthBar(ctx, loser);
+                    // }
                 } else {
                     ctx.fillStyle = "blue";
                     ctx.fillRect(loser.x - loser.width / 2, loser.y - loser.height / 2, loser.width, loser.height);

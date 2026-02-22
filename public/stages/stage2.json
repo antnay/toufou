@@ -143,14 +143,14 @@
             "straight"
         ],
         "animation": {
-            "sprite": "touhou1.png",
+            "sprite": "touhou_enemies.png",
             "x": 0,
             "y": 0,
-            "width": 64,
-            "height": 87,
-            "frames": 8,
+            "width": 48,
+            "height": 32,
+            "frames": 4,
             "speed": 0.3,
-            "scale": 1.3
+            "scale": 1
         },
         "bullet": {
             "animation": {
@@ -162,6 +162,92 @@
                 "frames": 1,
                 "speed": 0.1,
                 "scale": 1
+            }
+        }
+    },
+    "loser_types": {
+        "red": {
+            "speed": 0.5,
+            "hitbox": 10,
+            "hp": 3,
+            "patterns": ["straight"],
+            "animation": {
+                "sprite": "touhou_enemies.png",
+                "x": 0,
+                "y": 96,
+                "width": 48,
+                "height": 32,
+                "frames": 4,
+                "speed": 0.2,
+                "scale": 1
+            },
+            "bullet": {
+                "animation": {
+                    "sprite": "test-bullet.png",
+                    "x": 0,
+                    "y": 0,
+                    "width": 16,
+                    "height": 16,
+                    "frames": 1,
+                    "speed": 1,
+                    "scale": 1.2
+                }
+            }
+        },
+        "blue": {
+            "speed": 0.5,
+            "hitbox": 10,
+            "hp": 3,
+            "patterns": ["straight"],
+            "animation": {
+                "sprite": "touhou_enemies.png",
+                "x": 0,
+                "y": 0,
+                "width": 48,
+                "height": 32,
+                "frames": 3,
+                "speed": 0.3,
+                "scale": 1
+            },
+            "bullet": {
+                "animation": {
+                    "sprite": "test-bullet.png",
+                    "x": 0,
+                    "y": 0,
+                    "width": 16,
+                    "height": 16,
+                    "frames": 1,
+                    "speed": 0.3,
+                    "scale": 1
+                }
+            }
+        },
+        "glow_blue": {
+            "speed": 0.5,
+            "hitbox": 10,
+            "hp": 10,
+            "patterns": ["straight"],
+            "animation": {
+                "sprite": "touhou_enemies.png",
+                "x": 0,
+                "y": 1090,
+                "width": 48,
+                "height": 32,
+                "frames": 3,
+                "speed": 0.2,
+                "scale": 1.5
+            },
+            "bullet": {
+                "animation": {
+                    "sprite": "test-bullet.png",
+                    "x": 0,
+                    "y": 0,
+                    "width": 16,
+                    "height": 16,
+                    "frames": 1,
+                    "speed": 0.1,
+                    "scale": 1.2
+                }
             }
         }
     },
@@ -183,13 +269,75 @@
             "enemies": [
                 {
                     "type": "LOSER",
-                    "x": 50,
+                    "loserType": "blue",
+                    "x": 100,
+                    "y": 50
+                },
+                {
+                    "type": "LOSER",
+                    "loserType": "red",
+                    "x": 150,
+                    "y": 50
+                },
+                {
+                    "type": "LOSER",
+                    "loserType": "blue",
+                    "x": 200,
+                    "y": 50
+                },
+                {
+                    "type": "LOSER",
+                    "loserType": "red",
+                    "x": 250,
+                    "y": 50
+                },
+                {
+                    "type": "LOSER",
+                    "loserType": "red",
+                    "x": 100,
                     "y": 100
                 },
                 {
                     "type": "LOSER",
-                    "x": 800,
+                    "loserType": "blue",
+                    "x": 150,
                     "y": 100
+                },
+                {
+                    "type": "LOSER",
+                    "loserType": "red",
+                    "x": 200,
+                    "y": 100
+                },
+                {
+                    "type": "LOSER",
+                    "loserType": "blue",
+                    "x": 250,
+                    "y": 100
+                },
+                {
+                    "type": "LOSER",
+                    "loserType": "blue",
+                    "x": 100,
+                    "y": 150
+                },
+                {
+                    "type": "LOSER",
+                    "loserType": "red",
+                    "x": 150,
+                    "y": 150
+                },
+                {
+                    "type": "LOSER",
+                    "loserType": "blue",
+                    "x": 200,
+                    "y": 150
+                },
+                {
+                    "type": "LOSER",
+                    "loserType": "red",
+                    "x": 250,
+                    "y": 150
                 }
             ]
         },
