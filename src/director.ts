@@ -1,5 +1,5 @@
 import { Animator } from './animator';
-import { StagePhase, Loser, Stage, MidBossPhase, BossPhase, Direction, MidBoss, Boss, Scene } from './stageloader';
+import { StagePhase, Loser, Stage, MidBossPhase, BossPhase, Direction, MidBoss, Boss, Scene, LoserConfig } from './stageloader';
 import { GameState } from "./state";
 import { HitBox } from "./hitbox";
 import type { BulletPatternDef, BulletPatternInstance } from "./patterns";
@@ -69,37 +69,47 @@ export class Director {
         };
     }
 
-    createLoser(state: GameState, x: number, y: number): Loser {
+    createLoser(state: GameState, x: number, y: number, loserType?: string): Loser {
+        const config = this.getLoserConfig(state, loserType);
         const animator = new Animator(
-            state.assets.getImage(state.stage.loser.animation.sprite),
-            state.stage.loser.animation.x,
-            state.stage.loser.animation.y,
-            state.stage.loser.animation.width,
-            state.stage.loser.animation.height,
-            state.stage.loser.animation.frames,
-            state.stage.loser.animation.speed
+            state.assets.getImage(config.animation.sprite),
+            config.animation.x,
+            config.animation.y,
+            config.animation.width,
+            config.animation.height,
+            config.animation.frames,
+            config.animation.speed
         );
-        const hp = state.stage.loser.hp;
-        const hitbox = new HitBox(x, y, state.stage.loser.hitbox);
+        const hp = config.hp;
+        const hitbox = new HitBox(x, y, config.hitbox);
         return {
             x,
             y,
-            width: state.stage.loser.animation.width * state.stage.loser.animation.scale,
-            height: state.stage.loser.animation.height * state.stage.loser.animation.scale,
-            speed: state.stage.loser.speed,
+            width: config.animation.width * config.animation.scale,
+            height: config.animation.height * config.animation.scale,
+            speed: config.speed,
             hp,
             maxHp: hp,
-            vx: state.stage.loser.speed,
+            vx: config.speed,
             bullets: [],
             animator,
-            patternNames: state.stage.loser.patterns,
+            patternNames: config.patterns,
             patternCycle: {
                 index: 0,
                 activeEndFrame: 0,
                 gapEndFrame: 0,
             },
             hitbox,
+            bulletSprite: config.bullet.animation.sprite,
+            bulletAnimation: config.bullet.animation,
+            animationScale: config.animation.scale,
         };
+    }
+
+    private getLoserConfig(state: GameState, loserType?: string): LoserConfig {
+        const types = state.stage.loser_types;
+        if (loserType && types && types[loserType]) return types[loserType];
+        return state.stage.loser;
     }
 
     createMidBoss(state: GameState, x: number, y: number): MidBoss {
@@ -176,16 +186,12 @@ export class Director {
         };
     }
 
-    private spawnEvent(event: { type: string; x: number; y: number; }, state: GameState) {
+    private spawnEvent(event: { type: string; x: number; y: number; loserType?: string }, state: GameState) {
         switch (event.type) {
             case "LOSER": {
                 state.current_phase = StagePhase.LOSERS;
-                state.losers.push(this.createLoser(
-                    state,
-                    event.x,
-                    event.y,
-                ));
-                console.log(`Spawned LOSER at ${event.x}, ${event.y}`);
+                state.losers.push(this.createLoser(state, event.x, event.y, event.loserType));
+                console.log(`Spawned LOSER${event.loserType ? ` (${event.loserType})` : ""} at ${event.x}, ${event.y}`);
                 break;
             }
             case "MIDBOSS":
@@ -245,8 +251,8 @@ export class Director {
                     const bullets = cycle.active.update({
                         owner: loser,
                         player: state.player,
-                        bulletSprite: state.stage.loser.bullet.animation.sprite,
-                        bulletAnimation: state.stage.loser.bullet.animation,
+                        bulletSprite: loser.bulletSprite,
+                        bulletAnimation: loser.bulletAnimation,
                         getBulletImage: (sprite) => state.assets.getImage(sprite),
                         dt: state.dt,
                     });
