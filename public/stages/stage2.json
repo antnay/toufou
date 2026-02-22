@@ -77,7 +77,7 @@
                 "speed": 5,
                 "hitbox": 10,
                 "hp": 125,
-                "patterns": ["spiral"],
+                "patterns": ["spiral", "hj", "player60tracking", "spin", "spiral", "player60tracking"],
                 "animation": {
                     "sprite": "touhou1.png",
                     "x": 0,
@@ -109,7 +109,7 @@
                 "speed": 5,
                 "hitbox": 10,
                 "hp": 75,
-                "patterns": ["circle"],
+                "patterns": ["circle", "spiral", "straight"],
                 "animation": {
                     "sprite": "touhou1.png",
                     "x": 0,
@@ -262,7 +262,10 @@
     "pattern_index": [
         "spiral.txt",
         "circle.txt",
-        "straight.txt"
+        "straight.txt",
+        "spin.txt",
+        "player60tracking.txt",
+        "hj.txt"
     ],
     "timeline": [
         {
