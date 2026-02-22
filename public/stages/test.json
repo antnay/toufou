@@ -76,7 +76,7 @@
             {
                 "speed": 0,
                 "hitbox": 10,
-                "hp": 999,
+                "hp": 50,
                 "patterns": ["spiral"],
                 "animation": {
                     "sprite": "touhou1.png",
