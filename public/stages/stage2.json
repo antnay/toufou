@@ -9,23 +9,23 @@
         "bomb_freq": 10,
         "hitbox": 2,
         "animation_up": {
-            "sprite": "player_1.png",
+            "sprite": "Naruto_idle.png",
             "x": 0,
             "y": 0,
-            "width": 32,
-            "height": 50,
-            "frames": 8,
-            "speed": 0.4,
+            "width": 42,
+            "height": 42,
+            "frames": 4,
+            "speed": 0.3,
             "scale": 1
         },
         "animation_down": {
-            "sprite": "player_1.png",
+            "sprite": "Naruto_idle.png",
             "x": 0,
             "y": 0,
-            "width": 32,
-            "height": 50,
-            "frames": 8,
-            "speed": 0.4,
+            "width": 42,
+            "height": 42,
+            "frames": 4,
+            "speed": 0.3,
             "scale": 1
         },
         "animation_left": {
@@ -49,13 +49,13 @@
             "scale": 1
         },
         "animation_idle": {
-            "sprite": "player_1.png",
+            "sprite": "naruto_idle.png",
             "x": 0,
             "y": 0,
-            "width": 32,
-            "height": 50,
-            "frames": 8,
-            "speed": 0.4,
+            "width": 42,
+            "height": 42,
+            "frames": 4,
+            "speed": 0.3,
             "scale": 1
         },
         "player_bullet": {
