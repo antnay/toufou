@@ -1,5 +1,5 @@
 import { Animator } from './animator';
-import { StagePhase, Loser, Stage, MidBossPhase, BossPhase, Direction, MidBoss, Boss, Scene } from './stageloader';
+import { StagePhase, Loser, Stage, MidBossPhase, BossPhase, Direction, MidBoss, Boss, Scene, LoserConfig } from './stageloader';
 import { GameState } from "./state";
 import { HitBox } from "./hitbox";
 import type { BulletPatternDef, BulletPatternInstance } from "./patterns";
@@ -69,37 +69,47 @@ export class Director {
         };
     }
 
-    createLoser(state: GameState, x: number, y: number): Loser {
+    createLoser(state: GameState, x: number, y: number, loserType?: string): Loser {
+        const config = this.getLoserConfig(state, loserType);
         const animator = new Animator(
-            state.assets.getImage(state.stage.loser.animation.sprite),
-            state.stage.loser.animation.x,
-            state.stage.loser.animation.y,
-            state.stage.loser.animation.width,
-            state.stage.loser.animation.height,
-            state.stage.loser.animation.frames,
-            state.stage.loser.animation.speed
+            state.assets.getImage(config.animation.sprite),
+            config.animation.x,
+            config.animation.y,
+            config.animation.width,
+            config.animation.height,
+            config.animation.frames,
+            config.animation.speed
         );
-        const hp = state.stage.loser.hp;
-        const hitbox = new HitBox(x, y, state.stage.loser.hitbox);
+        const hp = config.hp;
+        const hitbox = new HitBox(x, y, config.hitbox);
         return {
             x,
             y,
-            width: state.stage.loser.animation.width * state.stage.loser.animation.scale,
-            height: state.stage.loser.animation.height * state.stage.loser.animation.scale,
-            speed: state.stage.loser.speed,
+            width: config.animation.width * config.animation.scale,
+            height: config.animation.height * config.animation.scale,
+            speed: config.speed,
             hp,
             maxHp: hp,
-            vx: state.stage.loser.speed,
+            vx: config.speed,
             bullets: [],
             animator,
-            patternNames: state.stage.loser.patterns,
+            patternNames: config.patterns,
             patternCycle: {
                 index: 0,
                 activeEndFrame: 0,
                 gapEndFrame: 0,
             },
             hitbox,
+            bulletSprite: config.bullet.animation.sprite,
+            bulletAnimation: config.bullet.animation,
+            animationScale: config.animation.scale,
         };
+    }
+
+    private getLoserConfig(state: GameState, loserType?: string): LoserConfig {
+        const types = state.stage.loser_types;
+        if (loserType && types && types[loserType]) return types[loserType];
+        return state.stage.loser;
     }
 
     createMidBoss(state: GameState, x: number, y: number): MidBoss {
@@ -133,7 +143,12 @@ export class Director {
             maxHp: initialHp,
             bullets: [],
             animator: midBossAnimator,
-            patterns: phase.patterns,
+            patterns: phase.patterns ?? [],
+            patternCycle: {
+                index: 0,
+                activeEndFrame: 0,
+                gapEndFrame: 0,
+            },
             current_phase: MidBossPhase.ONE,
         };
     }
@@ -172,20 +187,21 @@ export class Director {
             current_phase: BossPhase.ONE,
             spellcard_on: false,
             spellcard: "",
-            patterns: phase.patterns,
+            patterns: phase.patterns ?? [],
+            patternCycle: {
+                index: 0,
+                activeEndFrame: 0,
+                gapEndFrame: 0,
+            },
         };
     }
 
-    private spawnEvent(event: { type: string; x: number; y: number; }, state: GameState) {
+    private spawnEvent(event: { type: string; x: number; y: number; loserType?: string }, state: GameState) {
         switch (event.type) {
             case "LOSER": {
                 state.current_phase = StagePhase.LOSERS;
-                state.losers.push(this.createLoser(
-                    state,
-                    event.x,
-                    event.y,
-                ));
-                console.log(`Spawned LOSER at ${event.x}, ${event.y}`);
+                state.losers.push(this.createLoser(state, event.x, event.y, event.loserType));
+                console.log(`Spawned LOSER${event.loserType ? ` (${event.loserType})` : ""} at ${event.x}, ${event.y}`);
                 break;
             }
             case "MIDBOSS":
@@ -233,8 +249,6 @@ export class Director {
     }
 
     private updateEnemyPatterns(state: GameState) {
-        if (state.losers.length === 0) return;
-
         for (const loser of state.losers) {
             const cycle = loser.patternCycle;
             const patternNames = loser.patternNames;
@@ -245,9 +259,10 @@ export class Director {
                     const bullets = cycle.active.update({
                         owner: loser,
                         player: state.player,
-                        bulletSprite: state.stage.loser.bullet.animation.sprite,
-                        bulletAnimation: state.stage.loser.bullet.animation,
+                        bulletSprite: loser.bulletSprite,
+                        bulletAnimation: loser.bulletAnimation,
                         getBulletImage: (sprite) => state.assets.getImage(sprite),
+                        dt: state.dt,
                     });
                     if (bullets.length > 0) {
                         loser.bullets.push(...bullets);
@@ -269,6 +284,62 @@ export class Director {
             cycle.activeEndFrame = this.frameCount + getPatternDurationFrames(def);
             cycle.index = (cycle.index + 1) % patternNames.length;
         }
+
+        if (state.midboss) {
+            this.updateBossLikePatterns(
+                state,
+                state.midboss,
+                state.stage.midboss.phases[state.midboss.current_phase].bullet.animation
+            );
+        }
+
+        if (state.boss) {
+            this.updateBossLikePatterns(
+                state,
+                state.boss,
+                state.stage.boss.phases[state.boss.current_phase].bullet.animation
+            );
+        }
+    }
+
+    private updateBossLikePatterns(
+        state: GameState,
+        entity: import('./stageloader').MidBoss | import('./stageloader').Boss,
+        bulletAnimation: import('./stageloader').Stage["loser"]["bullet"]["animation"]
+    ) {
+        const cycle = entity.patternCycle;
+        const patternNames = entity.patterns;
+        if (!cycle || !patternNames || patternNames.length === 0) return;
+
+        if (cycle.active) {
+            if (this.frameCount <= cycle.activeEndFrame) {
+                const bullets = cycle.active.update({
+                    owner: entity,
+                    player: state.player,
+                    bulletSprite: bulletAnimation.sprite,
+                    bulletAnimation,
+                    getBulletImage: (sprite) => state.assets.getImage(sprite),
+                    dt: state.dt,
+                });
+                if (bullets.length > 0) {
+                    entity.bullets.push(...bullets);
+                }
+            } else {
+                cycle.active = undefined;
+                cycle.gapEndFrame = this.frameCount + PATTERN_GAP_FRAMES;
+            }
+            return;
+        }
+
+        if (this.frameCount < cycle.gapEndFrame) return;
+
+        const nextName = patternNames[cycle.index % patternNames.length];
+        const def = state.patterns.get(nextName);
+        if (!def) return;
+
+        cycle.active = def.createInstance();
+        cycle.activeEndFrame = this.frameCount + getPatternDurationFrames(def);
+        cycle.index = (cycle.index + 1) % patternNames.length;
     }
 
     private updateLoserMovement(state: GameState) {

@@ -2,7 +2,7 @@ import { initState } from "./state";
 import { run } from "./gameloop";
 import { createInput } from './input';
 import { initOverlay } from "./overlay";
-import { initUI, GG } from "./ui";
+import { initUI, GG, WIN } from "./ui";
 
 function main() {
     initOverlay();
@@ -14,7 +14,7 @@ function main() {
             if (panel) (panel as HTMLElement).style.display = "";
             const state = await initState();
             const input = createInput();
-            run(state, input, GG);
+            run(state, input, GG, WIN);
         },
         backToMenu: () => {
             if (panel) (panel as HTMLElement).style.display = "none";

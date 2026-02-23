@@ -9,7 +9,7 @@ const director = new Director();
 const CANVAS_W = 600;
 const CANVAS_H = 800;
 
-export function run(state: GameState, input: InputState, GG?: () => void) {
+export function run(state: GameState, input: InputState, GG?: () => void, WIN?: () => void) {
     const MAX_DT = 0.05;
     director.initGame(state);
     const starfield = createStarfield();
@@ -25,6 +25,10 @@ export function run(state: GameState, input: InputState, GG?: () => void) {
         if (state.lives <= 0) {
             updateOverlay(state);
             GG?.();
+            return;
+        }
+        if (state.current_phase === StagePhase.CLEAR) {
+            WIN?.();
             return;
         }
         updateStarfield(starfield, CANVAS_W, CANVAS_H, state.dt);
@@ -84,9 +88,7 @@ function update(state: GameState, input: InputState) {
     updatePlayerShooting(state, input);
     director.update(state);
     updateBullets(state);
-    updateHitboxes(state);
     checkCollisions(state);
-    updateHitboxes(state);
     updateHitboxes(state);
     updateBullets(state);
     cleanupEnemies(state);
@@ -217,11 +219,11 @@ function draw(state: GameState, starfield: ReturnType<typeof createStarfield>) {
                         ctx,
                         loser.x - loser.width / 2,
                         loser.y - loser.height / 2,
-                        state.stage.loser.animation.scale
+                        loser.animationScale
                     );
-                    if (loser.maxHp > 0) {
-                        drawCircularHealthBar(ctx, loser);
-                    }
+                    // if (loser.maxHp > 0) {
+                    //     drawCircularHealthBar(ctx, loser);
+                    // }
                 } else {
                     ctx.fillStyle = "blue";
                     ctx.fillRect(loser.x - loser.width / 2, loser.y - loser.height / 2, loser.width, loser.height);
@@ -281,8 +283,14 @@ function updateBullets(state: GameState) {
 }
 
 function drawEnemyBullets(state: GameState, ctx: CanvasRenderingContext2D) {
-    for (const loser of state.losers) {
-        for (const bullet of loser.bullets) {
+    const allBulletSources = [
+        ...state.losers.map(l => l.bullets),
+        ...(state.midboss ? [state.midboss.bullets] : []),
+        ...(state.boss ? [state.boss.bullets] : []),
+    ];
+
+    for (const bulletList of allBulletSources) {
+        for (const bullet of bulletList) {
             if (bullet.animator) {
                 bullet.animator.drawFrameHorizontal(
                     state.dt,

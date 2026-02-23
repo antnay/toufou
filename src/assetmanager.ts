@@ -17,6 +17,12 @@ export class AssetManager {
 
         await this.loadImage(stage.loser.animation.sprite);
         await this.loadImage(stage.loser.bullet.animation.sprite);
+        if (stage.loser_types) {
+            for (const config of Object.values(stage.loser_types)) {
+                await this.loadImage(config.animation.sprite);
+                await this.loadImage(config.bullet.animation.sprite);
+            }
+        }
 
         for (const phase of stage.midboss.phases) {
             await this.loadImage(phase.animation.sprite);
@@ -123,7 +129,11 @@ function parsePatternFile(fileName: string, text: string): BulletPatternDef[] {
         const raw = lines[i].trim();
         if (!raw || raw.startsWith("#") || raw.startsWith("//")) continue;
 
-        const tokens = raw.split(/\s+/);
+        let oscillateDirection = false;
+        const tokens = raw.split(/\s+/).filter(t => {
+            if (t === "osc") { oscillateDirection = true; return false; }
+            return true;
+        });
         if (tokens.length < 12) continue;
 
         const numbers = tokens.slice(0, 12).map((value) => Number(value));
@@ -159,6 +169,7 @@ function parsePatternFile(fileName: string, text: string): BulletPatternDef[] {
             durationSeconds,
             blinkSeconds,
             bulletType,
+            oscillateDirection,
         }));
     }
     return defs;

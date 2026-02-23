@@ -117,7 +117,37 @@ export interface Stage {
         hard: string[];
     };
 
-    // add more stuff as needed
+    // optional: named loser variants (different sprites/bullets). key = loserType in timeline.
+    loser_types?: Record<string, LoserConfig>;
+}
+
+export interface LoserConfig {
+    speed: number;
+    hitbox: number;
+    hp: number;
+    patterns: string[];
+    animation: {
+        sprite: string;
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+        frames: number;
+        speed: number;
+        scale: number;
+    };
+    bullet: {
+        animation: {
+            sprite: string;
+            x: number;
+            y: number;
+            width: number;
+            height: number;
+            frames: number;
+            speed: number;
+            scale: number;
+        };
+    };
 }
 
 export interface EnemyPhase {
@@ -208,6 +238,12 @@ export interface Loser {
     };
     animator?: Animator;
     hitbox: HitBox;
+    /** Bullet sprite for this loser type (used by patterns). */
+    bulletSprite: string;
+    /** Bullet animation for this loser type (used by patterns). */
+    bulletAnimation: LoserConfig["bullet"]["animation"];
+    /** Scale when drawing this loser. */
+    animationScale: number;
 }
 
 // represents the midboss
@@ -222,6 +258,12 @@ export interface MidBoss {
     bullets: Bullet[];
     patternInstances?: BulletPatternInstance[];
     patterns: string[];
+    patternCycle?: {
+        index: number;
+        active?: BulletPatternInstance;
+        activeEndFrame: number;
+        gapEndFrame: number;
+    };
     animator?: Animator;
     current_phase: MidBossPhase;
     hitbox: HitBox;
@@ -244,6 +286,12 @@ export interface Boss {
     bullets: Bullet[];
     patternInstances?: BulletPatternInstance[];
     patterns: string[];
+    patternCycle?: {
+        index: number;
+        active?: BulletPatternInstance;
+        activeEndFrame: number;
+        gapEndFrame: number;
+    };
     animator?: Animator;
     current_phase: BossPhase;
     spellcard_on: boolean;
@@ -286,6 +334,8 @@ export interface SceneEnemy {
     type: string;
     x: number;
     y: number;
+    /** Which loser config to use when type is LOSER. Omit or use "default" for stage.loser. */
+    loserType?: string;
 }
 
 export interface Scene {
