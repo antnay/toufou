@@ -129,7 +129,11 @@ function parsePatternFile(fileName: string, text: string): BulletPatternDef[] {
         const raw = lines[i].trim();
         if (!raw || raw.startsWith("#") || raw.startsWith("//")) continue;
 
-        const tokens = raw.split(/\s+/);
+        let oscillateDirection = false;
+        const tokens = raw.split(/\s+/).filter(t => {
+            if (t === "osc") { oscillateDirection = true; return false; }
+            return true;
+        });
         if (tokens.length < 12) continue;
 
         const numbers = tokens.slice(0, 12).map((value) => Number(value));
@@ -165,6 +169,7 @@ function parsePatternFile(fileName: string, text: string): BulletPatternDef[] {
             durationSeconds,
             blinkSeconds,
             bulletType,
+            oscillateDirection,
         }));
     }
     return defs;

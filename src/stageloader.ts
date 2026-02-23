@@ -258,6 +258,12 @@ export interface MidBoss {
     bullets: Bullet[];
     patternInstances?: BulletPatternInstance[];
     patterns: string[];
+    patternCycle?: {
+        index: number;
+        active?: BulletPatternInstance;
+        activeEndFrame: number;
+        gapEndFrame: number;
+    };
     animator?: Animator;
     current_phase: MidBossPhase;
     hitbox: HitBox;
@@ -280,6 +286,12 @@ export interface Boss {
     bullets: Bullet[];
     patternInstances?: BulletPatternInstance[];
     patterns: string[];
+    patternCycle?: {
+        index: number;
+        active?: BulletPatternInstance;
+        activeEndFrame: number;
+        gapEndFrame: number;
+    };
     animator?: Animator;
     current_phase: BossPhase;
     spellcard_on: boolean;

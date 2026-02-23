@@ -85,7 +85,8 @@ body {
   pointer-events: auto;
 }
 
-#game-over-layer {
+#game-over-layer,
+#you-won-layer {
   position: absolute;
   inset: 0;
   background: #000;
@@ -95,7 +96,8 @@ body {
   justify-content: center;
   gap: 2rem;
 }
-#game-over-layer .game-over-text {
+#game-over-layer .game-over-text,
+#you-won-layer .game-over-text {
   margin: 0;
   font-size: 2rem;
   color: #fff;

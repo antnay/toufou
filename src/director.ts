@@ -143,7 +143,12 @@ export class Director {
             maxHp: initialHp,
             bullets: [],
             animator: midBossAnimator,
-            patterns: phase.patterns,
+            patterns: phase.patterns ?? [],
+            patternCycle: {
+                index: 0,
+                activeEndFrame: 0,
+                gapEndFrame: 0,
+            },
             current_phase: MidBossPhase.ONE,
         };
     }
@@ -182,7 +187,12 @@ export class Director {
             current_phase: BossPhase.ONE,
             spellcard_on: false,
             spellcard: "",
-            patterns: phase.patterns,
+            patterns: phase.patterns ?? [],
+            patternCycle: {
+                index: 0,
+                activeEndFrame: 0,
+                gapEndFrame: 0,
+            },
         };
     }
 
@@ -239,8 +249,6 @@ export class Director {
     }
 
     private updateEnemyPatterns(state: GameState) {
-        if (state.losers.length === 0) return;
-
         for (const loser of state.losers) {
             const cycle = loser.patternCycle;
             const patternNames = loser.patternNames;
@@ -276,6 +284,62 @@ export class Director {
             cycle.activeEndFrame = this.frameCount + getPatternDurationFrames(def);
             cycle.index = (cycle.index + 1) % patternNames.length;
         }
+
+        if (state.midboss) {
+            this.updateBossLikePatterns(
+                state,
+                state.midboss,
+                state.stage.midboss.phases[state.midboss.current_phase].bullet.animation
+            );
+        }
+
+        if (state.boss) {
+            this.updateBossLikePatterns(
+                state,
+                state.boss,
+                state.stage.boss.phases[state.boss.current_phase].bullet.animation
+            );
+        }
+    }
+
+    private updateBossLikePatterns(
+        state: GameState,
+        entity: import('./stageloader').MidBoss | import('./stageloader').Boss,
+        bulletAnimation: import('./stageloader').Stage["loser"]["bullet"]["animation"]
+    ) {
+        const cycle = entity.patternCycle;
+        const patternNames = entity.patterns;
+        if (!cycle || !patternNames || patternNames.length === 0) return;
+
+        if (cycle.active) {
+            if (this.frameCount <= cycle.activeEndFrame) {
+                const bullets = cycle.active.update({
+                    owner: entity,
+                    player: state.player,
+                    bulletSprite: bulletAnimation.sprite,
+                    bulletAnimation,
+                    getBulletImage: (sprite) => state.assets.getImage(sprite),
+                    dt: state.dt,
+                });
+                if (bullets.length > 0) {
+                    entity.bullets.push(...bullets);
+                }
+            } else {
+                cycle.active = undefined;
+                cycle.gapEndFrame = this.frameCount + PATTERN_GAP_FRAMES;
+            }
+            return;
+        }
+
+        if (this.frameCount < cycle.gapEndFrame) return;
+
+        const nextName = patternNames[cycle.index % patternNames.length];
+        const def = state.patterns.get(nextName);
+        if (!def) return;
+
+        cycle.active = def.createInstance();
+        cycle.activeEndFrame = this.frameCount + getPatternDurationFrames(def);
+        cycle.index = (cycle.index + 1) % patternNames.length;
     }
 
     private updateLoserMovement(state: GameState) {

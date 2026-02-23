@@ -9,7 +9,7 @@ const director = new Director();
 const CANVAS_W = 600;
 const CANVAS_H = 800;
 
-export function run(state: GameState, input: InputState, GG?: () => void) {
+export function run(state: GameState, input: InputState, GG?: () => void, WIN?: () => void) {
     const MAX_DT = 0.05;
     director.initGame(state);
     const starfield = createStarfield();
@@ -24,6 +24,10 @@ export function run(state: GameState, input: InputState, GG?: () => void) {
         update(state, input);
         if (state.lives <= 0) {
             GG?.();
+            return;
+        }
+        if (state.current_phase === StagePhase.CLEAR) {
+            WIN?.();
             return;
         }
         updateStarfield(starfield, CANVAS_W, CANVAS_H, state.dt);
@@ -278,8 +282,14 @@ function updateBullets(state: GameState) {
 }
 
 function drawEnemyBullets(state: GameState, ctx: CanvasRenderingContext2D) {
-    for (const loser of state.losers) {
-        for (const bullet of loser.bullets) {
+    const allBulletSources = [
+        ...state.losers.map(l => l.bullets),
+        ...(state.midboss ? [state.midboss.bullets] : []),
+        ...(state.boss ? [state.boss.bullets] : []),
+    ];
+
+    for (const bulletList of allBulletSources) {
+        for (const bullet of bulletList) {
             if (bullet.animator) {
                 bullet.animator.drawFrameHorizontal(
                     state.dt,

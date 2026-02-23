@@ -7,6 +7,8 @@ export function initUI(startOptions?: {
     const btn = document.getElementById('btn');
     const gameOver = document.getElementById('game-over-layer');
     const btnBack = document.getElementById('btn-back');
+    const youWon = document.getElementById('you-won-layer');
+    const btnWonBack = document.getElementById('btn-won-back');
 
     if (!startOptions) {
         if (title) title.style.display = 'none';
@@ -41,9 +43,21 @@ export function initUI(startOptions?: {
             startOptions.backToMenu();
         };
     }
+    if (btnWonBack && youWon) {
+        btnWonBack.onclick = () => {
+            (youWon as HTMLElement).style.display = 'none';
+            showMenu();
+            startOptions.backToMenu();
+        };
+    }
 }
 
 export function GG(): void {
     const el = document.getElementById('game-over-layer');
+    if (el) (el as HTMLElement).style.display = 'flex';
+}
+
+export function WIN(): void {
+    const el = document.getElementById('you-won-layer');
     if (el) (el as HTMLElement).style.display = 'flex';
 }
