@@ -1,7 +1,7 @@
 {
     "background": "space-background.png",
     "player": {
-        "speed": 1.5,
+        "speed": 1.2,
         "x": 400,
         "y": 700,
         "initial_lives": 3,
@@ -75,7 +75,7 @@
         "phases": [
             {
                 "speed": 5,
-                "hitbox": 10,
+                "hitbox": 15,
                 "hp": 125,
                 "patterns": ["spiral", "hj", "player60tracking", "spin", "spiral", "player60tracking"],
                 "animation": {
@@ -107,7 +107,7 @@
         "phases": [
             {
                 "speed": 5,
-                "hitbox": 10,
+                "hitbox": 15,
                 "hp": 75,
                 "patterns": ["circle", "spiral"],
                 "animation": {
