@@ -90,14 +90,14 @@
                 },
                 "bullet": {
                     "animation": {
-                        "sprite": "test-bullet.png",
+                        "sprite": "boss-bullet.png",
                         "x": 0,
                         "y": 0,
-                        "width": 16,
-                        "height": 16,
+                        "width": 64,
+                        "height": 64,
                         "frames": 1,
                         "speed": 0.4,
-                        "scale": 2
+                        "scale": 0.5
                     }
                 }
             }
@@ -109,7 +109,7 @@
                 "speed": 5,
                 "hitbox": 10,
                 "hp": 75,
-                "patterns": ["circle", "spiral", "straight"],
+                "patterns": ["circle", "spiral"],
                 "animation": {
                     "sprite": "touhou_enemies.png",
                     "x": 0,
@@ -122,14 +122,14 @@
                 },
                 "bullet": {
                     "animation": {
-                        "sprite": "test-bullet.png",
+                        "sprite": "midboss-bullet.png",
                         "x": 0,
                         "y": 0,
-                        "width": 16,
-                        "height": 16,
+                        "width": 64,
+                        "height": 64,
                         "frames": 1,
                         "speed": 0.4,
-                        "scale": 2
+                        "scale": 0.5
                     }
                 }
             }
