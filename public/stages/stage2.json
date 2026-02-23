@@ -111,14 +111,14 @@
                 "hp": 75,
                 "patterns": ["circle", "spiral", "straight"],
                 "animation": {
-                    "sprite": "touhou1.png",
+                    "sprite": "touhou_enemies.png",
                     "x": 0,
-                    "y": 0,
+                    "y": 1740,
                     "width": 64,
-                    "height": 87,
-                    "frames": 8,
-                    "speed": 0.4,
-                    "scale": 1.5
+                    "height": 54,
+                    "frames": 7,
+                    "speed": 0.3,
+                    "scale": 2
                 },
                 "bullet": {
                     "animation": {
