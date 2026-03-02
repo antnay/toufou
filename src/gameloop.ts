@@ -53,6 +53,8 @@ function update(state: GameState, input: InputState) {
             state.stage.player.animation_left.height,
             state.stage.player.animation_left.frames,
             state.stage.player.animation_left.speed);
+        state.player.width = state.stage.player.animation_left.width * state.stage.player.animation_left.scale;
+        state.player.height = state.stage.player.animation_left.height * state.stage.player.animation_left.scale;
     }
     if (input.right && state.player.x < CANVAS_W - state.player.width / 2) {
         state.player.x += state.player.speed * scale;
@@ -63,6 +65,8 @@ function update(state: GameState, input: InputState) {
             state.stage.player.animation_right.height,
             state.stage.player.animation_right.frames,
             state.stage.player.animation_right.speed);
+        state.player.width = state.stage.player.animation_right.width * state.stage.player.animation_right.scale;
+        state.player.height = state.stage.player.animation_right.height * state.stage.player.animation_right.scale;
     }
     if (input.up && state.player.y > state.player.height / 2) {
         state.player.y -= state.player.speed * scale;
@@ -73,6 +77,8 @@ function update(state: GameState, input: InputState) {
             state.stage.player.animation_up.height,
             state.stage.player.animation_up.frames,
             state.stage.player.animation_up.speed);
+        state.player.width = state.stage.player.animation_up.width * state.stage.player.animation_up.scale;
+        state.player.height = state.stage.player.animation_up.height * state.stage.player.animation_up.scale;
     }
     if (input.down && state.player.y < CANVAS_H - state.player.height / 2) {
         state.player.y += state.player.speed * scale;
@@ -83,6 +89,8 @@ function update(state: GameState, input: InputState) {
             state.stage.player.animation_down.height,
             state.stage.player.animation_down.frames,
             state.stage.player.animation_down.speed);
+        state.player.width = state.stage.player.animation_down.width * state.stage.player.animation_down.scale;
+        state.player.height = state.stage.player.animation_down.height * state.stage.player.animation_down.scale;
     }
     updatePlayerShooting(state, input);
     director.update(state);
@@ -138,7 +146,7 @@ function draw(state: GameState, starfield: ReturnType<typeof createStarfield>) {
     const orbImg = state.assets.getImage("shooting-orb.png");
     const orbW = orbImg.naturalWidth;
     const orbH = orbImg.naturalHeight;
-    const gap = 6;
+    const gap = 0;
     const orbX = state.player.x - orbW / 2;
     const orbY = state.player.y - state.player.height / 2 - gap - orbH;
     ctx.drawImage(orbImg, orbX, orbY, orbW, orbH);
