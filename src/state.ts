@@ -4,6 +4,12 @@ import { loadStage, Loser, MidBoss, Boss, StagePhase, Player, Stage, MidBossPhas
 import { AssetManager } from "./assetmanager";
 import { BulletPatternDef } from "./patterns";
 
+export interface BombEffect {
+    flashAlpha: number;
+    shockRadius: number;
+    shockAlpha: number;
+}
+
 export interface GameState {
     stage: Stage;
     current_phase: StagePhase;
@@ -21,6 +27,7 @@ export interface GameState {
     assets: AssetManager;
     patterns: Map<string, BulletPatternDef>;
     dt: number;
+    bombEffect: BombEffect | null;
 }
 
 export async function initState(): Promise<GameState> {
@@ -55,5 +62,6 @@ export async function initState(): Promise<GameState> {
         assets: assets,
         patterns: assets.patterns,
         dt: 0,
+        bombEffect: null,
     };
 }

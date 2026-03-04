@@ -1,4 +1,4 @@
-import { GameState } from "./state";
+import { GameState, BombEffect } from "./state";
 import { Director, TARGET_FPS } from "./director";
 import { Bullet, InputState, MidBoss, Boss, StagePhase, Player, Loser } from './stageloader';
 import { updateOverlay } from "./overlay";
@@ -87,6 +87,7 @@ function update(state: GameState, input: InputState) {
     }
     updatePlayerShooting(state, input);
     useBomb(state, input);
+    updateBombEffect(state);
     director.update(state);
     updateBullets(state);
     checkCollisions(state);
@@ -107,6 +108,21 @@ function useBomb(state: GameState, input: InputState): void {
     }
     if (state.midboss) state.midboss.bullets = [];
     if (state.boss) state.boss.bullets = [];
+
+    state.bombEffect = { flashAlpha: 0.6, shockRadius: 10, shockAlpha: 1.0 };
+}
+
+function updateBombEffect(state: GameState): void {
+    const e = state.bombEffect;
+    if (!e) return;
+
+    e.flashAlpha  -= state.dt / 0.28;
+    e.shockRadius += state.dt * 1100;
+    e.shockAlpha  -= state.dt / 0.55;
+
+    if (e.flashAlpha <= 0 && e.shockAlpha <= 0) {
+        state.bombEffect = null;
+    }
 }
 
 function cleanupEnemies(state: GameState) {
@@ -249,6 +265,7 @@ function draw(state: GameState, starfield: ReturnType<typeof createStarfield>) {
             break;
     }
 
+    drawBombEffect(state, ctx);
     updateOverlay(state);
 }
 
@@ -461,6 +478,41 @@ function updateHitboxes(state: GameState) {
         for (const bullet of state.boss.bullets) {
             bullet.hitbox.updateHitbox(bullet.x, bullet.y);
         }
+    }
+}
+
+function drawBombEffect(state: GameState, ctx: CanvasRenderingContext2D): void {
+    const e = state.bombEffect;
+    if (!e) return;
+
+    // Flash
+    const fa = Math.max(0, e.flashAlpha);
+    if (fa > 0) {
+        ctx.fillStyle = `rgba(160, 200, 255, ${fa})`;
+        ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
+    }
+
+    // Shockwave
+    const sa = Math.max(0, e.shockAlpha);
+    if (sa > 0) {
+        ctx.save();
+
+        ctx.beginPath();
+        ctx.arc(state.player.x, state.player.y, e.shockRadius, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(200, 230, 255, ${sa})`;
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        const innerR = e.shockRadius - 45;
+        if (innerR > 0) {
+            ctx.beginPath();
+            ctx.arc(state.player.x, state.player.y, innerR, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(255, 255, 255, ${sa * 0.45})`;
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+        }
+
+        ctx.restore();
     }
 }
 
