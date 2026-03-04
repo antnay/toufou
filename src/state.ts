@@ -28,6 +28,7 @@ export interface GameState {
     patterns: Map<string, BulletPatternDef>;
     dt: number;
     bombEffect: BombEffect | null;
+    hitEffect: number;
 }
 
 export async function initState(): Promise<GameState> {
@@ -63,5 +64,6 @@ export async function initState(): Promise<GameState> {
         patterns: assets.patterns,
         dt: 0,
         bombEffect: null,
+        hitEffect: 0,
     };
 }

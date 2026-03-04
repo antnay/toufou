@@ -5,6 +5,7 @@ import { StagePhase } from "./stageloader";
 let scoreElement: HTMLElement | null = null;
 let hiScoreElement: HTMLElement | null = null;
 let bombElement: HTMLElement | null = null;
+let bombElements: HTMLImageElement[] = [];
 let livesElement: HTMLElement | null = null;
 let heartElements: HTMLImageElement[] = [];
 let deathsElement: HTMLElement | null = null;
@@ -34,7 +35,9 @@ const PHASE_COLORS: Record<StagePhase, string> = {
 const STAT_PANEL_WIDTH = 400;
 const SCORE_DIGITS = 9;
 const MAX_LIVES = 3;
+const MAX_BOMBS = 2;
 const HEART_IMG_SRC = `${import.meta.env.BASE_URL}assets/heart.png`;
+const BOMB_IMG_SRC  = `${import.meta.env.BASE_URL}assets/bomb.png`;
 
 function loadHighScore(): void {
     const savedHiScore = localStorage.getItem('toufou_hiscore');
@@ -163,15 +166,20 @@ function createStatsSection(): { container: HTMLElement; bomb: HTMLElement; live
 
     // Bomb
     const bombLabel = makeSectionLabel('Bomb');
+    const bombsWrap = document.createElement('div');
+    bombsWrap.style.cssText = 'display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px;';
+    bombElements = [];
+    for (let i = 0; i < MAX_BOMBS; i++) {
+        const bomb = document.createElement('img');
+        bomb.src = BOMB_IMG_SRC;
+        bomb.alt = '';
+        bomb.style.cssText = 'width: 30px; height: 30px; display: inline-block; object-fit: contain;';
+        bombsWrap.appendChild(bomb);
+        bombElements.push(bomb);
+    }
     const bombDiv = document.createElement('div');
-    bombDiv.style.cssText = `
-        font-size: 24px;
-        font-weight: 700;
-        color: #ffaa00;
-        font-family: 'Courier New', monospace;
-        letter-spacing: 0.06em;
-        margin-bottom: 18px;
-    `;
+    bombDiv.appendChild(bombLabel);
+    bombDiv.appendChild(bombsWrap);
 
     // Deaths
     const deathsLabel = makeSectionLabel('Deaths');
@@ -184,7 +192,6 @@ function createStatsSection(): { container: HTMLElement; bomb: HTMLElement; live
     `;
 
     container.appendChild(livesDiv);
-    container.appendChild(bombLabel);
     container.appendChild(bombDiv);
     container.appendChild(deathsLabel);
     container.appendChild(deathsDiv);
@@ -395,7 +402,9 @@ export function updateOverlay(state: GameState): void {
     hiScoreElement.textContent = formatScore(hiScore);
     scoreElement.textContent = formatScore(state.score);
 
-    bombElement.textContent = `${state.current_bomb}`;
+    for (let i = 0; i < bombElements.length; i++) {
+        bombElements[i].style.opacity = i < state.current_bomb ? '1' : '0.15';
+    }
 
     const livesClamped = Math.min(MAX_LIVES, Math.max(0, state.lives));
     for (let i = 0; i < heartElements.length; i++) {

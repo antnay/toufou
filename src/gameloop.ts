@@ -88,6 +88,7 @@ function update(state: GameState, input: InputState) {
     updatePlayerShooting(state, input);
     useBomb(state, input);
     updateBombEffect(state);
+    if (state.hitEffect > 0) state.hitEffect = Math.max(0, state.hitEffect - state.dt / 0.35);
     director.update(state);
     updateBullets(state);
     checkCollisions(state);
@@ -265,6 +266,14 @@ function draw(state: GameState, starfield: ReturnType<typeof createStarfield>) {
             break;
     }
 
+    if (state.hitEffect > 0 || state.player.hitbox.invulnerabilityState) {
+        const pulse = state.player.hitbox.invulnerabilityState
+            ? (Math.sin(state.player.hitbox.invulnerabilityTimer * 8) * 0.5 + 0.5) * 0.18
+            : 0;
+        const alpha = Math.max(state.hitEffect, pulse);
+        ctx.fillStyle = `rgba(255, 40, 40, ${alpha})`;
+        ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
+    }
     drawBombEffect(state, ctx);
     updateOverlay(state);
 }
@@ -439,6 +448,7 @@ function playerHit(state: GameState) {
     if (state.lives === 0) {
         state.deaths += 1;
     }
+    state.hitEffect = 0.55;
 }
 
 function enemyHit(state: GameState, enemy: MidBoss | Boss | Loser) {
@@ -453,30 +463,31 @@ function enemyHit(state: GameState, enemy: MidBoss | Boss | Loser) {
 }
 
 function updateHitboxes(state: GameState) {
-    state.player.hitbox.updateHitbox(state.player.x, state.player.y);
+    const dt = state.dt;
+    state.player.hitbox.updateHitbox(state.player.x, state.player.y, dt);
 
     for (const bullet of state.player.bullets) {
-        bullet.hitbox.updateHitbox(bullet.x, bullet.y);
+        bullet.hitbox.updateHitbox(bullet.x, bullet.y, dt);
     }
 
     if (state.losers.length != 0) {
         for (const loser of state.losers) {
-            loser.hitbox.updateHitbox(loser.x, loser.y);
+            loser.hitbox.updateHitbox(loser.x, loser.y, dt);
             for (const bullet of loser.bullets) {
-                bullet.hitbox.updateHitbox(bullet.x, bullet.y);
+                bullet.hitbox.updateHitbox(bullet.x, bullet.y, dt);
             }
         }
     }
     if (state.midboss != undefined) {
-        state.midboss.hitbox.updateHitbox(state.midboss.x, state.midboss.y);
+        state.midboss.hitbox.updateHitbox(state.midboss.x, state.midboss.y, dt);
         for (const bullet of state.midboss.bullets) {
-            bullet.hitbox.updateHitbox(bullet.x, bullet.y);
+            bullet.hitbox.updateHitbox(bullet.x, bullet.y, dt);
         }
     }
     if (state.boss != undefined) {
-        state.boss.hitbox.updateHitbox(state.boss.x, state.boss.y);
+        state.boss.hitbox.updateHitbox(state.boss.x, state.boss.y, dt);
         for (const bullet of state.boss.bullets) {
-            bullet.hitbox.updateHitbox(bullet.x, bullet.y);
+            bullet.hitbox.updateHitbox(bullet.x, bullet.y, dt);
         }
     }
 }
