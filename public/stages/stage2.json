@@ -1,10 +1,11 @@
 {
     "background": "space-background.png",
+    "useStarfield": true,
     "player": {
         "speed": 1.5,
         "x": 400,
         "y": 700,
-        "initial_lives": 3,
+        "initial_lives": 999,
         "initial_bombs": 2,
         "bomb_freq": 10,
         "hitbox": 2,
