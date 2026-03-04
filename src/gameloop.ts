@@ -86,12 +86,27 @@ function update(state: GameState, input: InputState) {
             state.stage.player.animation_down.speed);
     }
     updatePlayerShooting(state, input);
+    useBomb(state, input);
     director.update(state);
     updateBullets(state);
     checkCollisions(state);
     updateHitboxes(state);
     updateBullets(state);
     cleanupEnemies(state);
+}
+
+function useBomb(state: GameState, input: InputState): void {
+    const pressed = input.bomb && !state._toggleBomb;
+    state._toggleBomb = input.bomb;
+
+    if (!pressed || state.current_bomb <= 0) return;
+
+    state.current_bomb -= 1;
+    for (const loser of state.losers) {
+        loser.bullets = [];
+    }
+    if (state.midboss) state.midboss.bullets = [];
+    if (state.boss) state.boss.bullets = [];
 }
 
 function cleanupEnemies(state: GameState) {
