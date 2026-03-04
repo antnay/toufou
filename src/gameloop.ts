@@ -44,8 +44,9 @@ function dtScale(dt: number): number {
 
 function update(state: GameState, input: InputState) {
     const scale = dtScale(state.dt);
+    const speedScale = input.slow ? 0.5 : 1.0;
     if (input.left && state.player.x > state.player.width / 2) {
-        state.player.x -= state.player.speed * scale;
+        state.player.x -= state.player.speed * speedScale * scale;
         state.player.animator?.switchAnimation(state.assets.getImage(state.stage.player.animation_left.sprite),
             state.stage.player.animation_left.x,
             state.stage.player.animation_left.y,
@@ -55,7 +56,7 @@ function update(state: GameState, input: InputState) {
             state.stage.player.animation_left.speed);
     }
     if (input.right && state.player.x < CANVAS_W - state.player.width / 2) {
-        state.player.x += state.player.speed * scale;
+        state.player.x += state.player.speed * speedScale * scale;
         state.player.animator?.switchAnimation(state.assets.getImage(state.stage.player.animation_right.sprite),
             state.stage.player.animation_right.x,
             state.stage.player.animation_right.y,
@@ -65,7 +66,7 @@ function update(state: GameState, input: InputState) {
             state.stage.player.animation_right.speed);
     }
     if (input.up && state.player.y > state.player.height / 2) {
-        state.player.y -= state.player.speed * scale;
+        state.player.y -= state.player.speed * speedScale * scale;
         state.player.animator?.switchAnimation(state.assets.getImage(state.stage.player.animation_up.sprite),
             state.stage.player.animation_up.x,
             state.stage.player.animation_up.y,
@@ -75,7 +76,7 @@ function update(state: GameState, input: InputState) {
             state.stage.player.animation_up.speed);
     }
     if (input.down && state.player.y < CANVAS_H - state.player.height / 2) {
-        state.player.y += state.player.speed * scale;
+        state.player.y += state.player.speed * speedScale * scale;
         state.player.animator?.switchAnimation(state.assets.getImage(state.stage.player.animation_down.sprite),
             state.stage.player.animation_down.x,
             state.stage.player.animation_down.y,

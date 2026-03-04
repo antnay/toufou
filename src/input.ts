@@ -8,6 +8,7 @@ export function createInput(): InputState {
         right: false,
         shoot: false,
         bomb: false,
+        slow: false,
     };
 
     window.addEventListener("keydown", (e) => {
@@ -35,6 +36,9 @@ export function createInput(): InputState {
             case "Enter":
                 e.preventDefault();
                 input.bomb = true; break;
+            case "Shift":
+                e.preventDefault();
+                input.slow = true; break;
         }
     });
     
@@ -57,6 +61,8 @@ export function createInput(): InputState {
                 input.shoot = false; break;
             case "Enter":
                 input.bomb = false; break;
+            case "Shift":
+                input.slow = false; break;
         }
     });
 

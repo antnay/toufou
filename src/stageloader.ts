@@ -328,6 +328,7 @@ export interface InputState {
     down: boolean;
     shoot: boolean;
     bomb: boolean;
+    slow: boolean;
 }
 
 export interface SceneEnemy {
