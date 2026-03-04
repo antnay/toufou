@@ -14,15 +14,24 @@
       <canvas id="gameCanvas" width="600" height="800"></canvas>
       <div id="ui-layer">
         <h1 id="title">Toufou</h1>
+        <p id="subtitle">Bullet Hell</p>
         <button id="btn">Start</button>
+        <button id="btn-leaderboard">Leaderboard</button>
       </div>
       <div id="game-over-layer" style="display:none;">
         <p class="game-over-text">You died</p>
+        <p id="game-over-score" class="game-over-score">000000000</p>
         <button id="btn-back">Back to menu</button>
       </div>
       <div id="you-won-layer" style="display:none;">
         <p class="game-over-text">You won</p>
+        <p id="you-won-score" class="game-over-score">000000000</p>
         <button id="btn-won-back">Back to menu</button>
+      </div>
+      <div id="leaderboard-layer" style="display:none;">
+        <p class="leaderboard-title">Leaderboard</p>
+        <ol id="leaderboard-list"></ol>
+        <button id="btn-leaderboard-close">Back</button>
       </div>
     </div>
   </main>

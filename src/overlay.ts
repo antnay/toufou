@@ -2,7 +2,6 @@
 import { GameState } from "./state";
 import { StagePhase } from "./stageloader";
 
-// DOM element references for overlay components
 let scoreElement: HTMLElement | null = null;
 let hiScoreElement: HTMLElement | null = null;
 let bombElement: HTMLElement | null = null;
@@ -11,17 +10,25 @@ let heartElements: HTMLImageElement[] = [];
 let deathsElement: HTMLElement | null = null;
 let phaseElement: HTMLElement | null = null;
 let enemyHpElement: HTMLElement | null = null;
+let enemyHpBarFill: HTMLElement | null = null;
+let enemyHpContainer: HTMLElement | null = null;
 let spellcardElement: HTMLElement | null = null;
 let spellcardNameElement: HTMLElement | null = null;
 
-// High score
 let hiScore: number = 0;
 
-const PHASE_NAMES: Record<StagePhase, string> = {
-    [StagePhase.LOSERS]: 'Phase: Losers',
-    [StagePhase.MIDBOSS]: 'Phase: Mid Boss',
-    [StagePhase.BOSS]: 'Phase: Boss',
-    [StagePhase.CLEAR]: 'Phase: Clear',
+const PHASE_LABELS: Record<StagePhase, string> = {
+    [StagePhase.LOSERS]: 'Losers',
+    [StagePhase.MIDBOSS]: 'Mid Boss',
+    [StagePhase.BOSS]: 'Boss',
+    [StagePhase.CLEAR]: 'Clear',
+};
+
+const PHASE_COLORS: Record<StagePhase, string> = {
+    [StagePhase.LOSERS]: '#7dd3fc',
+    [StagePhase.MIDBOSS]: '#fb923c',
+    [StagePhase.BOSS]: '#f87171',
+    [StagePhase.CLEAR]: '#4ade80',
 };
 
 const STAT_PANEL_WIDTH = 400;
@@ -29,7 +36,6 @@ const SCORE_DIGITS = 9;
 const MAX_LIVES = 3;
 const HEART_IMG_SRC = `${import.meta.env.BASE_URL}assets/heart.png`;
 
-// Loads high score
 function loadHighScore(): void {
     const savedHiScore = localStorage.getItem('toufou_hiscore');
     if (savedHiScore) {
@@ -37,279 +43,394 @@ function loadHighScore(): void {
     }
 }
 
-// Stats panel container
+function makeDivider(): HTMLElement {
+    const el = document.createElement('div');
+    el.style.cssText = 'border-top: 1px solid rgba(160,160,255,0.12); margin: 20px 0;';
+    return el;
+}
+
+function makeSectionLabel(text: string): HTMLElement {
+    const el = document.createElement('div');
+    el.textContent = text;
+    el.style.cssText = `
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: #556688;
+        margin-bottom: 8px;
+    `;
+    return el;
+}
+
 function createStatPanel(): HTMLElement {
-    const statPanel = document.createElement('div');
-    statPanel.id = 'stat-panel';
-    statPanel.style.cssText = `
+    const panel = document.createElement('div');
+    panel.id = 'stat-panel';
+    panel.style.cssText = `
         width: ${STAT_PANEL_WIDTH}px;
         min-height: 100vh;
-        border-left: 1px solid rgba(100, 100, 180, 0.35);
+        border-left: 1px solid rgba(100, 100, 180, 0.3);
         font-family: 'Segoe UI', system-ui, sans-serif;
         color: #e8e8f0;
-        padding: 24px;
+        padding: 28px 28px 24px;
         box-sizing: border-box;
         overflow-y: auto;
         pointer-events: none;
-        box-shadow: -4px 0 24px rgba(0, 0, 0, 0.25);
+        box-shadow: -6px 0 32px rgba(0, 0, 0, 0.3);
+        display: flex;
+        flex-direction: column;
     `;
-    return statPanel;
+    return panel;
 }
 
-// Game title
 function createGameTitle(): HTMLElement {
-    const gameTitle = document.createElement('div');
-    gameTitle.textContent = 'TOUFOU Prototpye ver0.1';
-    gameTitle.style.cssText = `
-        font-size: 20px;
-        font-weight: 600;
+    const wrap = document.createElement('div');
+    wrap.style.cssText = `
         text-align: center;
         margin-bottom: 28px;
-        padding-bottom: 16px;
-        border-bottom: 1px solid rgba(160, 160, 255, 0.2);
-        color: #a8b0ff;
-        letter-spacing: 0.02em;
+        padding-bottom: 22px;
+        border-bottom: 1px solid rgba(160, 160, 255, 0.18);
     `;
-    return gameTitle;
+
+    const title = document.createElement('div');
+    title.textContent = 'TOUFOU';
+    title.style.cssText = `
+        font-size: 36px;
+        font-weight: 900;
+        color: #c8d0ff;
+        letter-spacing: 0.18em;
+        text-shadow: 0 0 24px rgba(168,176,255,0.45), 0 0 48px rgba(168,176,255,0.2);
+    `;
+
+    wrap.appendChild(title);
+    return wrap;
 }
 
-// Score display section
 function createScoreSection(): { container: HTMLElement; hiScore: HTMLElement; score: HTMLElement; } {
-    const scoreSection = document.createElement('div');
-    scoreSection.style.cssText = `
-        margin-bottom: 22px;
-        line-height: 1.5;
-    `;
+    const container = document.createElement('div');
+    container.style.marginBottom = '4px';
 
+    const hiLabel = makeSectionLabel('Hi Score');
     const hiScoreDiv = document.createElement('div');
     hiScoreDiv.style.cssText = `
-        font-size: 12px;
-        color: #888;
-        margin-bottom: 4px;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
+        font-size: 20px;
+        font-weight: 700;
+        color: #f0c040;
+        font-family: 'Courier New', monospace;
+        letter-spacing: 0.06em;
+        margin-bottom: 16px;
     `;
 
+    const scoreLabel = makeSectionLabel('Score');
     const scoreDiv = document.createElement('div');
     scoreDiv.style.cssText = `
-        font-size: 18px;
-        font-weight: 600;
-        color: #fff;
-        letter-spacing: 0.02em;
+        font-size: 28px;
+        font-weight: 700;
+        color: #ffffff;
+        font-family: 'Courier New', monospace;
+        letter-spacing: 0.06em;
     `;
 
-    scoreSection.appendChild(hiScoreDiv);
-    scoreSection.appendChild(scoreDiv);
+    container.appendChild(hiLabel);
+    container.appendChild(hiScoreDiv);
+    container.appendChild(scoreLabel);
+    container.appendChild(scoreDiv);
 
-    return {
-        container: scoreSection,
-        hiScore: hiScoreDiv,
-        score: scoreDiv,
-    };
+    return { container, hiScore: hiScoreDiv, score: scoreDiv };
 }
 
-// Stats display section (bomb, deaths)
 function createStatsSection(): { container: HTMLElement; bomb: HTMLElement; lives: HTMLElement; deaths: HTMLElement; } {
-    const statsSection = document.createElement('div');
-    statsSection.style.cssText = `
-        margin-bottom: 25px;
-        line-height: 1.8;
-        font-size: 14px;
-    `;
+    const container = document.createElement('div');
 
-    const bombDiv = document.createElement('div');
-    bombDiv.style.cssText = 'color: #ffaa00;';
-
-    const livesLabel = document.createElement('div');
-    livesLabel.textContent = 'Lives';
-    livesLabel.style.cssText = 'color: #7dd3fc; margin-bottom: 6px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em;';
-    const livesHeartsWrap = document.createElement('div');
-    livesHeartsWrap.className = 'lives-hearts';
-    livesHeartsWrap.style.cssText = 'display: flex; gap: 4px; flex-wrap: wrap;';
+    // Lives
+    const livesLabel = makeSectionLabel('Lives');
+    const heartsWrap = document.createElement('div');
+    heartsWrap.className = 'lives-hearts';
+    heartsWrap.style.cssText = 'display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px;';
     heartElements = [];
     for (let i = 0; i < MAX_LIVES; i++) {
         const heart = document.createElement('img');
         heart.src = HEART_IMG_SRC;
         heart.alt = '';
         heart.className = 'heart';
-        heart.style.cssText = 'width: 24px; height: 24px; display: inline-block; object-fit: contain;';
-        livesHeartsWrap.appendChild(heart);
+        heart.style.cssText = 'width: 30px; height: 30px; display: inline-block; object-fit: contain;';
+        heartsWrap.appendChild(heart);
         heartElements.push(heart);
     }
     const livesDiv = document.createElement('div');
     livesDiv.appendChild(livesLabel);
-    livesDiv.appendChild(livesHeartsWrap);
+    livesDiv.appendChild(heartsWrap);
 
+    // Bomb
+    const bombLabel = makeSectionLabel('Bomb');
+    const bombDiv = document.createElement('div');
+    bombDiv.style.cssText = `
+        font-size: 24px;
+        font-weight: 700;
+        color: #ffaa00;
+        font-family: 'Courier New', monospace;
+        letter-spacing: 0.06em;
+        margin-bottom: 18px;
+    `;
+
+    // Deaths
+    const deathsLabel = makeSectionLabel('Deaths');
     const deathsDiv = document.createElement('div');
-    deathsDiv.style.cssText = 'color: #ff6b6b;';
+    deathsDiv.style.cssText = `
+        font-size: 22px;
+        font-weight: 600;
+        color: #ff6b6b;
+        font-family: 'Courier New', monospace;
+    `;
 
-    statsSection.appendChild(bombDiv);
-    statsSection.appendChild(livesDiv);
-    statsSection.appendChild(deathsDiv);
+    container.appendChild(livesDiv);
+    container.appendChild(bombLabel);
+    container.appendChild(bombDiv);
+    container.appendChild(deathsLabel);
+    container.appendChild(deathsDiv);
 
-    return {
-        container: statsSection,
-        bomb: bombDiv,
-        lives: livesDiv,
-        deaths: deathsDiv,
-    };
+    return { container, bomb: bombDiv, lives: livesDiv, deaths: deathsDiv };
 }
 
-// Phase display section
 function createPhaseSection(): HTMLElement {
-    const phaseSection = document.createElement('div');
-    phaseSection.style.cssText = `
-        margin-bottom: 22px;
+    const badge = document.createElement('div');
+    badge.style.cssText = `
+        display: inline-block;
         font-size: 13px;
-        color: #b0b8d0;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        padding: 5px 12px;
+        border-radius: 4px;
+        background: rgba(120,130,200,0.12);
+        border: 1px solid rgba(120,130,200,0.25);
+        color: #7dd3fc;
+        margin-bottom: 4px;
     `;
-    return phaseSection;
+    return badge;
 }
 
-function createEnemyHPSection(): HTMLElement {
-    const enemyHpSection = document.createElement('div');
-    enemyHpSection.style.cssText = `
-        margin-bottom: 22px;
+function createEnemyHPSection(): { container: HTMLElement; label: HTMLElement; barFill: HTMLElement; } {
+    const container = document.createElement('div');
+    container.style.cssText = 'margin-bottom: 4px; display: none;';
+
+    const label = document.createElement('div');
+    label.style.cssText = `
         font-size: 13px;
-        color: #b0b8d0;
+        color: #c0c8e0;
+        margin-bottom: 8px;
+        font-weight: 600;
     `;
-    return enemyHpSection;
+
+    const barTrack = document.createElement('div');
+    barTrack.style.cssText = `
+        width: 100%;
+        height: 6px;
+        background: rgba(255,255,255,0.08);
+        border-radius: 3px;
+        overflow: hidden;
+    `;
+
+    const barFill = document.createElement('div');
+    barFill.style.cssText = `
+        height: 100%;
+        width: 100%;
+        background: linear-gradient(90deg, #f87171 0%, #fb923c 100%);
+        border-radius: 3px;
+        transition: width 0.12s ease;
+    `;
+
+    barTrack.appendChild(barFill);
+    container.appendChild(label);
+    container.appendChild(barTrack);
+
+    return { container, label, barFill };
 }
 
-// Spellcard display section
 function createSpellcardSection(): { container: HTMLElement; name: HTMLElement; } {
-    const spellcardSection = document.createElement('div');
-    spellcardSection.style.cssText = `
-        margin-bottom: 20px;
-        padding: 15px;
-        background: rgba(255, 100, 100, 0.1);
-        border: 1px solid rgba(255, 100, 100, 0.3);
-        border-radius: 5px;
+    const container = document.createElement('div');
+    container.style.cssText = `
+        padding: 14px 16px;
+        background: rgba(255, 80, 80, 0.07);
+        border: 1px solid rgba(255, 80, 80, 0.28);
+        border-radius: 6px;
         display: none;
     `;
 
-    const spellcardLabel = document.createElement('div');
-    spellcardLabel.textContent = 'Spell Card';
-    spellcardLabel.style.cssText = `
-        font-size: 12px;
-        color: #ff6b6b;
-        margin-bottom: 5px;
-    `;
-
-    const spellcardNameDiv = document.createElement('div');
-    spellcardNameDiv.style.cssText = `
-        font-size: 16px;
-        font-weight: bold;
-        color: #ffaaaa;
-        text-shadow: 0 0 5px rgba(255, 170, 170, 0.5);
-    `;
-
-    spellcardSection.appendChild(spellcardLabel);
-    spellcardSection.appendChild(spellcardNameDiv);
-
-    return {
-        container: spellcardSection,
-        name: spellcardNameDiv,
-    };
-}
-
-// Footer
-function createFooter(): HTMLElement {
-    const footer = document.createElement('div');
-    footer.textContent = 'Bullet Hell';
-    footer.style.cssText = `
-        position: absolute;
-        bottom: 20px;
-        right: 24px;
+    const spellLabel = document.createElement('div');
+    spellLabel.textContent = '✦  SPELL CARD';
+    spellLabel.style.cssText = `
         font-size: 11px;
-        color: #555;
-        letter-spacing: 0.03em;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        color: #ff6b6b;
+        margin-bottom: 8px;
     `;
-    return footer;
+
+    const nameDiv = document.createElement('div');
+    nameDiv.style.cssText = `
+        font-size: 17px;
+        font-weight: 700;
+        color: #ffbbbb;
+        text-shadow: 0 0 10px rgba(255,160,160,0.5);
+        font-style: italic;
+        line-height: 1.4;
+    `;
+
+    container.appendChild(spellLabel);
+    container.appendChild(nameDiv);
+    return { container, name: nameDiv };
 }
 
-// Initializes the overlay and all UI elements
+function createControlsGuide(): HTMLElement {
+    const container = document.createElement('div');
+    container.style.cssText = `
+        margin-top: auto;
+        padding-top: 22px;
+        border-top: 1px solid rgba(160,160,255,0.1);
+    `;
+
+    container.appendChild(makeSectionLabel('Controls'));
+
+    const rows: [string, string][] = [
+        ['Move', 'WASD  /  ↑↓←→'],
+        ['Slow', 'Shift'],
+        ['Shoot (toggle)', 'Space'],
+        ['Bomb', 'Enter'],
+    ];
+
+    const table = document.createElement('div');
+    table.style.cssText = 'display: flex; flex-direction: column; gap: 7px;';
+
+    for (const [action, key] of rows) {
+        const row = document.createElement('div');
+        row.style.cssText = 'display: flex; justify-content: space-between; align-items: center;';
+
+        const actionEl = document.createElement('span');
+        actionEl.textContent = action;
+        actionEl.style.cssText = 'font-size: 15px; color: #6677aa;';
+
+        const keyEl = document.createElement('span');
+        keyEl.textContent = key;
+        keyEl.style.cssText = `
+            font-size: 14px;
+            color: #9999cc;
+            font-family: 'Courier New', monospace;
+            background: rgba(255,255,255,0.04);
+            padding: 2px 8px;
+            border-radius: 3px;
+            border: 1px solid rgba(255,255,255,0.08);
+        `;
+
+        row.appendChild(actionEl);
+        row.appendChild(keyEl);
+        table.appendChild(row);
+    }
+
+    container.appendChild(table);
+    return container;
+}
+
 export function initOverlay(): void {
     loadHighScore();
 
-    const statPanel = createStatPanel();
-    statPanel.appendChild(createGameTitle());
+    const panel = createStatPanel();
+    panel.appendChild(createGameTitle());
 
     const scoreSection = createScoreSection();
     hiScoreElement = scoreSection.hiScore;
     scoreElement = scoreSection.score;
-    statPanel.appendChild(scoreSection.container);
+    panel.appendChild(scoreSection.container);
+
+    panel.appendChild(makeDivider());
 
     const statsSection = createStatsSection();
     bombElement = statsSection.bomb;
     livesElement = statsSection.lives;
     deathsElement = statsSection.deaths;
-    statPanel.appendChild(statsSection.container);
+    panel.appendChild(statsSection.container);
 
+    panel.appendChild(makeDivider());
+
+    const phaseWrap = document.createElement('div');
+    phaseWrap.style.marginBottom = '16px';
+    phaseWrap.appendChild(makeSectionLabel('Phase'));
     phaseElement = createPhaseSection();
-    statPanel.appendChild(phaseElement);
-    enemyHpElement = createEnemyHPSection();
-    statPanel.appendChild(enemyHpElement);
+    phaseWrap.appendChild(phaseElement);
+    panel.appendChild(phaseWrap);
+
+    const enemyHpSection = createEnemyHPSection();
+    enemyHpElement = enemyHpSection.label;
+    enemyHpBarFill = enemyHpSection.barFill;
+    enemyHpContainer = enemyHpSection.container;
+    panel.appendChild(enemyHpContainer);
+
+    panel.appendChild(makeDivider());
 
     const spellcardSection = createSpellcardSection();
     spellcardElement = spellcardSection.container;
     spellcardNameElement = spellcardSection.name;
-    statPanel.appendChild(spellcardSection.container);
+    panel.appendChild(spellcardSection.container);
 
-    statPanel.appendChild(createFooter());
+    panel.appendChild(createControlsGuide());
 
-    document.body.appendChild(statPanel);
+    document.body.appendChild(panel);
 }
 
-// Score string with leading zeros
 function formatScore(score: number): string {
     return score.toString().padStart(SCORE_DIGITS, '0');
 }
 
-// Updates the overlay with current game state
 export function updateOverlay(state: GameState): void {
     if (!scoreElement || !hiScoreElement || !bombElement || !livesElement || !deathsElement ||
-        !phaseElement || !enemyHpElement || !spellcardElement || !spellcardNameElement) {
+        !phaseElement || !enemyHpElement || !enemyHpContainer || !enemyHpBarFill ||
+        !spellcardElement || !spellcardNameElement) {
         return;
     }
 
-    // Update high score if current score is higher
     if (state.score > hiScore) {
         hiScore = state.score;
         localStorage.setItem('toufou_hiscore', hiScore.toString());
     }
 
-    hiScoreElement.textContent = `HiScore ${formatScore(hiScore)}`;
-    scoreElement.textContent = `Score ${formatScore(state.score)}`;
-    bombElement.textContent = `Bomb ${state.current_bomb}`;
+    hiScoreElement.textContent = formatScore(hiScore);
+    scoreElement.textContent = formatScore(state.score);
+
+    bombElement.textContent = `${state.current_bomb}`;
+
     const livesClamped = Math.min(MAX_LIVES, Math.max(0, state.lives));
     for (let i = 0; i < heartElements.length; i++) {
-        heartElements[i].style.display = i < livesClamped ? 'inline-block' : 'none';
-    }
-    deathsElement.textContent = `Deaths ${state.deaths}`;
-    phaseElement.textContent = PHASE_NAMES[state.current_phase] || 'Phase: Unknown';
-    if (state.current_phase === StagePhase.BOSS) {
-        if (!state.boss) {
-            enemyHpElement.textContent = '';
-            return;
-        }
-        enemyHpElement.textContent = `Enemy HP ${state.boss.hp} / ${state.boss.maxHp}`;
-    } else if (state.current_phase === StagePhase.MIDBOSS) {
-        if (!state.midboss) {
-            enemyHpElement.textContent = '';
-            return;
-        }
-        enemyHpElement.textContent = `Enemy HP ${state.midboss.hp} / ${state.midboss.maxHp}`;
-    } else {
-        // enemyHpElement.textContent ;
+        heartElements[i].style.opacity = i < livesClamped ? '1' : '0.15';
+        heartElements[i].style.display = 'inline-block';
     }
 
-    // Spellcard display
-    if (!state.boss) {
-        spellcardElement.style.display = 'none';
-        return;
+    deathsElement.textContent = `${state.deaths}`;
+
+    // Phase badge
+    const phase = state.current_phase;
+    phaseElement.textContent = `◆  ${PHASE_LABELS[phase] ?? 'Unknown'}`;
+    phaseElement.style.color = PHASE_COLORS[phase] ?? '#aaa';
+    phaseElement.style.borderColor = `${PHASE_COLORS[phase] ?? '#aaa'}44`;
+    phaseElement.style.background = `${PHASE_COLORS[phase] ?? '#aaa'}14`;
+
+    // Enemy HP bar
+    let hpEntity: { hp: number; maxHp: number } | undefined;
+    if (phase === StagePhase.BOSS && state.boss) {
+        hpEntity = state.boss;
+    } else if (phase === StagePhase.MIDBOSS && state.midboss) {
+        hpEntity = state.midboss;
     }
-    if (state.boss.spellcard_on && state.boss.spellcard) {
+
+    if (hpEntity) {
+        enemyHpContainer.style.display = 'block';
+        const pct = Math.max(0, Math.min(1, hpEntity.hp / hpEntity.maxHp));
+        enemyHpElement.textContent = `HP  ${hpEntity.hp} / ${hpEntity.maxHp}`;
+        enemyHpBarFill.style.width = `${pct * 100}%`;
+    } else {
+        enemyHpContainer.style.display = 'none';
+    }
+
+    // Spellcard
+    if (state.boss?.spellcard_on && state.boss.spellcard) {
         spellcardNameElement.textContent = `"${state.boss.spellcard}"`;
         spellcardElement.style.display = 'block';
     } else {

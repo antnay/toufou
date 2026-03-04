@@ -9,7 +9,7 @@ const director = new Director();
 const CANVAS_W = 600;
 const CANVAS_H = 800;
 
-export function run(state: GameState, input: InputState, GG?: () => void, WIN?: () => void) {
+export function run(state: GameState, input: InputState, GG?: (score: number) => void, WIN?: (score: number) => void) {
     const MAX_DT = 0.05;
     director.initGame(state);
     const starfield = createStarfield();
@@ -23,11 +23,11 @@ export function run(state: GameState, input: InputState, GG?: () => void, WIN?: 
 
         update(state, input);
         if (state.lives <= 0) {
-            GG?.();
+            GG?.(state.score);
             return;
         }
         if (state.current_phase === StagePhase.CLEAR) {
-            WIN?.();
+            WIN?.(state.score);
             return;
         }
         updateStarfield(starfield, CANVAS_W, CANVAS_H, state.dt);

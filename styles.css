@@ -1,14 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap');
+
 :root {
   --game-width: 600;
   --game-height: 800;
   --game-aspect: 0.75;
 
-
-  
   --page-bg-image: none;
   --sidebar-bg-image: none;
   /* --page-bg-image: url('/assets/bg.png'); */
   /* --sidebar-bg-image: url('/assets/sidebar.png'); */
+
+  --accent: #a8b0ff;
+  --accent-dim: rgba(168, 176, 255, 0.3);
 }
 
 html, body {
@@ -16,8 +19,8 @@ html, body {
   padding: 0;
   width: 100%;
   min-height: 100vh;
-  font-family: sans-serif;
-  background-image: var(--page-bg-image), linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background-image: var(--page-bg-image), linear-gradient(180deg, #0d0d1a 0%, #12122a 50%, #0a0a1e 100%);
   background-size: cover, auto;
   background-position: center, 0 0;
   color: #eee;
@@ -44,12 +47,12 @@ body {
   width: min(600px, 100vw, 75vh);
   aspect-ratio: 600 / 800;
   flex-shrink: 0;
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 0 60px rgba(0,0,0,0.6);
 }
 
 #stat-panel {
   flex-shrink: 0;
-  background-image: var(--sidebar-bg-image), linear-gradient(180deg, #0e0e1a 0%, #16162a 40%, #1a1a32 100%);
+  background-image: var(--sidebar-bg-image), linear-gradient(180deg, #0a0a18 0%, #0e0e20 40%, #0c0c1c 100%);
   background-size: cover, auto;
   background-position: center, 0 0;
 }
@@ -60,6 +63,8 @@ body {
   height: 100%;
   background-color: black;
 }
+
+/* ─── Start Menu ─────────────────────────────────────────── */
 
 #ui-layer {
   position: absolute;
@@ -72,38 +77,243 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 #ui-layer.menu-visible {
   pointer-events: auto;
-  background: linear-gradient(180deg, #000000 0%, #000000 50%, #000000 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 12, 0.96) 0%,
+    rgba(4, 4, 20, 0.97) 60%,
+    rgba(0, 0, 8, 0.98) 100%
+  );
 }
 
 #ui-layer button,
-#ui-layer h1 {
+#ui-layer h1,
+#ui-layer p {
   pointer-events: auto;
 }
+
+#title {
+  margin: 0;
+  font-size: 4.2rem;
+  font-weight: 900;
+  letter-spacing: 0.22em;
+  color: #c8d0ff;
+  text-transform: uppercase;
+  text-shadow:
+    0 0 20px rgba(168, 176, 255, 0.7),
+    0 0 50px rgba(168, 176, 255, 0.3),
+    0 0 100px rgba(120, 130, 255, 0.15);
+}
+
+#subtitle {
+  margin: 0;
+  font-size: 0.85rem;
+  letter-spacing: 0.35em;
+  color: #3a3a60;
+  text-transform: uppercase;
+}
+
+/* ─── Buttons ─────────────────────────────────────────────── */
+
+button {
+  cursor: pointer;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+#btn,
+#btn-back,
+#btn-won-back,
+#btn-leaderboard,
+#btn-leaderboard-close {
+  margin-top: 0.5rem;
+  padding: 0.7rem 2.8rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  background: transparent;
+  border: 1px solid rgba(168, 176, 255, 0.4);
+  color: #a8b0ff;
+  border-radius: 3px;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+}
+
+#btn:hover,
+#btn-back:hover,
+#btn-won-back:hover,
+#btn-leaderboard:hover,
+#btn-leaderboard-close:hover {
+  background: rgba(168, 176, 255, 0.1);
+  border-color: rgba(168, 176, 255, 0.75);
+  color: #dde0ff;
+  box-shadow: 0 0 18px rgba(168, 176, 255, 0.25), inset 0 0 12px rgba(168, 176, 255, 0.05);
+}
+
+/* Start — subtle green */
+#btn {
+  border-color: rgba(100, 220, 130, 0.4);
+  color: #88ddaa;
+}
+#btn:hover {
+  background: rgba(100, 220, 130, 0.08);
+  border-color: rgba(100, 220, 130, 0.75);
+  color: #aaeebb;
+  box-shadow: 0 0 18px rgba(100, 220, 130, 0.22), inset 0 0 12px rgba(100, 220, 130, 0.05);
+}
+
+/* Back buttons — subtle red */
+#btn-back,
+#btn-won-back,
+#btn-leaderboard-close {
+  border-color: rgba(220, 100, 100, 0.4);
+  color: #dd8888;
+}
+#btn-back:hover,
+#btn-won-back:hover,
+#btn-leaderboard-close:hover {
+  background: rgba(220, 100, 100, 0.08);
+  border-color: rgba(220, 100, 100, 0.75);
+  color: #ffaaaa;
+  box-shadow: 0 0 18px rgba(220, 100, 100, 0.22), inset 0 0 12px rgba(220, 100, 100, 0.05);
+}
+
+/* ─── Game Over / You Won ─────────────────────────────────── */
 
 #game-over-layer,
 #you-won-layer {
   position: absolute;
   inset: 0;
-  background: #000;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2rem;
-}
-#game-over-layer .game-over-text,
-#you-won-layer .game-over-text {
-  margin: 0;
-  font-size: 2rem;
-  color: #fff;
+  gap: 1.8rem;
 }
 
-button {
-  padding: 0.5rem 1rem;
-  cursor: pointer;
+#game-over-layer {
+  background: linear-gradient(180deg, rgba(0,0,0,0.97) 0%, rgba(14,0,0,0.98) 100%);
+}
+
+#you-won-layer {
+  background: linear-gradient(180deg, rgba(0,0,0,0.97) 0%, rgba(0,8,14,0.98) 100%);
+}
+
+#game-over-layer .game-over-text {
+  margin: 0;
+  font-size: 3.2rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ff6666;
+  text-shadow:
+    0 0 20px rgba(255, 80, 80, 0.6),
+    0 0 50px rgba(255, 80, 80, 0.25);
+}
+
+.game-over-score {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.1em;
+  color: rgba(255, 180, 180, 0.75);
+}
+
+#you-won-layer .game-over-text {
+  margin: 0;
+  font-size: 3.2rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #88ddff;
+  text-shadow:
+    0 0 20px rgba(100, 200, 255, 0.6),
+    0 0 50px rgba(100, 200, 255, 0.25);
+}
+
+/* ─── Leaderboard ─────────────────────────────────────────── */
+
+#leaderboard-layer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.97) 0%, rgba(0,4,16,0.98) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.leaderboard-title {
+  margin: 0 0 0.4rem;
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #c8d0ff;
+  text-shadow:
+    0 0 18px rgba(168, 176, 255, 0.55),
+    0 0 40px rgba(168, 176, 255, 0.2);
+}
+
+#leaderboard-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+#leaderboard-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 16px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(168, 176, 255, 0.08);
+}
+
+#leaderboard-list li:first-child {
+  background: rgba(255, 215, 0, 0.07);
+  border-color: rgba(255, 215, 0, 0.2);
+}
+
+#leaderboard-list li:nth-child(2) {
+  background: rgba(192, 192, 192, 0.06);
+  border-color: rgba(192, 192, 192, 0.18);
+}
+
+#leaderboard-list li:nth-child(3) {
+  background: rgba(205, 127, 50, 0.06);
+  border-color: rgba(205, 127, 50, 0.18);
+}
+
+.lb-rank {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #556688;
+  min-width: 28px;
+}
+
+#leaderboard-list li:first-child .lb-rank  { color: #f0c040; }
+#leaderboard-list li:nth-child(2) .lb-rank { color: #b0b8c8; }
+#leaderboard-list li:nth-child(3) .lb-rank { color: #cd7f32; }
+
+.lb-score {
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.08em;
+  color: #c8d0ff;
 }
