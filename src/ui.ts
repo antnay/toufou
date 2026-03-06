@@ -6,11 +6,12 @@ function formatScore(score: number): string {
     return score.toString().padStart(SCORE_DIGITS, '0');
 }
 
-function populateLeaderboard(): void {
+async function populateLeaderboard(): Promise<void> {
     const list = document.getElementById('leaderboard-list');
     if (!list) return;
-    list.innerHTML = '';
-    const scores = getScores();
+    list.innerHTML = '<li>Loading scores...</li>';
+    const scores = await getScores();
+    list.innerHTML = ''; // Clear loading text
     for (let i = 0; i < 10; i++) {
         const li = document.createElement('li');
         const rank = document.createElement('span');
@@ -18,7 +19,7 @@ function populateLeaderboard(): void {
         rank.textContent = `#${i + 1}`;
         const score = document.createElement('span');
         score.className = 'lb-score';
-        score.textContent = scores[i] !== undefined ? formatScore(scores[i]) : '—————————';
+        score.textContent = scores[i] !== undefined ? scores[i].username + ' ' + formatScore(scores[i].score) : '—————————';
         li.appendChild(rank);
         li.appendChild(score);
         list.appendChild(li);
@@ -74,10 +75,10 @@ export function initUI(startOptions?: {
     }
 
     if (btnLeaderboard && leaderboardLayer) {
-        btnLeaderboard.onclick = () => {
+        btnLeaderboard.onclick = async () => {
             hideMenu();
-            populateLeaderboard();
             leaderboardLayer.style.display = 'flex';
+            await populateLeaderboard();
         };
     }
 
@@ -104,20 +105,66 @@ export function initUI(startOptions?: {
     }
 }
 
+const SAVED_USERNAME_KEY = 'toufou_last_username';
+
+function setupScoreSubmission(
+    score: number,
+    inputId: string,
+    submitBtnId: string,
+    backBtnId: string
+) {
+    const usernameInput = document.getElementById(inputId) as HTMLInputElement | null;
+    const submitBtn = document.getElementById(submitBtnId);
+    const backBtn = document.getElementById(backBtnId);
+
+    if (usernameInput) {
+        // Pre-fill with last used name
+        const lastSaved = localStorage.getItem(SAVED_USERNAME_KEY);
+        usernameInput.value = lastSaved || '';
+        setTimeout(() => usernameInput.focus(), 100);
+    }
+
+    if (submitBtn) {
+        // Reset state from previous runs
+        submitBtn.textContent = 'Submit Score';
+        submitBtn.style.pointerEvents = 'auto';
+
+        submitBtn.onclick = async () => {
+            const rawName = usernameInput ? usernameInput.value.trim() : '';
+            const finalName = rawName.length > 0 ? rawName : 'Anonymous';
+
+            // Save for next play
+            if (rawName.length > 0) {
+                localStorage.setItem(SAVED_USERNAME_KEY, rawName);
+            }
+
+            submitBtn.textContent = 'Saving...';
+            submitBtn.style.pointerEvents = 'none';
+            await saveScore(score, finalName);
+
+            if (backBtn) {
+                backBtn.click();
+            }
+        };
+    }
+}
+
 export function GG(score: number): void {
-    saveScore(score);
     const el = document.getElementById('game-over-layer');
     if (!el) return;
     el.style.display = 'flex';
     const scoreEl = document.getElementById('game-over-score');
     if (scoreEl) scoreEl.textContent = formatScore(score);
+
+    setupScoreSubmission(score, 'username-input-gg', 'btn-submit-score-gg', 'btn-back');
 }
 
 export function WIN(score: number): void {
-    saveScore(score);
     const el = document.getElementById('you-won-layer');
     if (!el) return;
     el.style.display = 'flex';
     const scoreEl = document.getElementById('you-won-score');
     if (scoreEl) scoreEl.textContent = formatScore(score);
+
+    setupScoreSubmission(score, 'username-input', 'btn-submit-score', 'btn-won-back');
 }

@@ -12,6 +12,11 @@ export function createInput(): InputState {
     };
 
     window.addEventListener("keydown", (e) => {
+        // Prevent game input when user is typing in the username box
+        if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+            return;
+        }
+
         const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
         switch (key) {
             case "w":
@@ -41,8 +46,12 @@ export function createInput(): InputState {
                 input.slow = true; break;
         }
     });
-    
+
     window.addEventListener("keyup", (e) => {
+        if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+            return;
+        }
+
         const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
         switch (key) {
             case "w":

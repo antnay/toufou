@@ -235,6 +235,38 @@ button {
     0 0 50px rgba(100, 200, 255, 0.25);
 }
 
+.username-input {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(136, 221, 255, 0.4);
+  color: #c8d0ff;
+  padding: 0.8rem 1.2rem;
+  font-size: 1.1rem;
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  border-radius: 4px;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  width: 250px;
+}
+
+.username-input:focus {
+  border-color: rgba(136, 221, 255, 0.9);
+  box-shadow: 0 0 15px rgba(136, 221, 255, 0.3);
+}
+
+#btn-submit-score {
+  border-color: rgba(136, 221, 255, 0.4);
+  color: #88ddff;
+}
+
+#btn-submit-score:hover {
+  background: rgba(136, 221, 255, 0.08);
+  border-color: rgba(136, 221, 255, 0.75);
+  color: #ccf0ff;
+  box-shadow: 0 0 18px rgba(136, 221, 255, 0.22), inset 0 0 12px rgba(136, 221, 255, 0.05);
+}
+
 /* ─── Leaderboard ─────────────────────────────────────────── */
 
 #leaderboard-layer {
