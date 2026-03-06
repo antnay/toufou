@@ -68,9 +68,13 @@ export function initUI(startOptions?: {
     showMenu();
 
     if (btn) {
-        btn.onclick = () => {
+        btn.onclick = async () => {
+            btn.textContent = 'Loading...';
+            btn.style.pointerEvents = 'none';
+            await startOptions.start();
             hideMenu();
-            void startOptions.start();
+            btn.textContent = 'Start';
+            btn.style.pointerEvents = 'auto';
         };
     }
 

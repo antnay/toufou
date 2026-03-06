@@ -3,6 +3,10 @@ import { run } from "./gameloop";
 import { createInput } from './input';
 import { initOverlay } from "./overlay";
 import { initUI, GG, WIN } from "./ui";
+import { registerSW } from 'virtual:pwa-register';
+
+// Register the service worker to cache assets aggressively
+registerSW({ immediate: true });
 
 function main() {
     initOverlay();
