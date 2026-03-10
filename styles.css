@@ -14,7 +14,8 @@
   --accent-dim: rgba(168, 176, 255, 0.3);
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   width: 100%;
@@ -47,7 +48,7 @@ body {
   width: min(600px, 100vw, 75vh);
   aspect-ratio: 600 / 800;
   flex-shrink: 0;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 0 60px rgba(0,0,0,0.6);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 0 60px rgba(0, 0, 0, 0.6);
 }
 
 #stat-panel {
@@ -82,12 +83,10 @@ body {
 
 #ui-layer.menu-visible {
   pointer-events: auto;
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 12, 0.96) 0%,
-    rgba(4, 4, 20, 0.97) 60%,
-    rgba(0, 0, 8, 0.98) 100%
-  );
+  background: linear-gradient(180deg,
+      rgba(0, 0, 12, 0.96) 0%,
+      rgba(4, 4, 20, 0.97) 60%,
+      rgba(0, 0, 8, 0.98) 100%);
 }
 
 #ui-layer button,
@@ -124,11 +123,13 @@ button {
   font-family: 'Segoe UI', system-ui, sans-serif;
 }
 
-#btn,
+.stage-btn,
 #btn-back,
 #btn-won-back,
 #btn-leaderboard,
-#btn-leaderboard-close {
+#btn-leaderboard-close,
+#btn-submit-score,
+#btn-submit-score-gg {
   margin-top: 0.5rem;
   padding: 0.7rem 2.8rem;
   font-size: 0.9rem;
@@ -142,27 +143,45 @@ button {
   transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
 }
 
-#btn:hover,
+.stage-btn:hover,
 #btn-back:hover,
 #btn-won-back:hover,
 #btn-leaderboard:hover,
-#btn-leaderboard-close:hover {
+#btn-leaderboard-close:hover,
+#btn-submit-score:hover,
+#btn-submit-score-gg:hover {
   background: rgba(168, 176, 255, 0.1);
   border-color: rgba(168, 176, 255, 0.75);
   color: #dde0ff;
   box-shadow: 0 0 18px rgba(168, 176, 255, 0.25), inset 0 0 12px rgba(168, 176, 255, 0.05);
 }
 
-/* Start — subtle green */
-#btn {
+/* Submit buttons — subtle green */
+#btn-submit-score,
+#btn-submit-score-gg {
   border-color: rgba(100, 220, 130, 0.4);
   color: #88ddaa;
 }
-#btn:hover {
+
+#btn-submit-score:hover,
+#btn-submit-score-gg:hover {
   background: rgba(100, 220, 130, 0.08);
   border-color: rgba(100, 220, 130, 0.75);
   color: #aaeebb;
   box-shadow: 0 0 18px rgba(100, 220, 130, 0.22), inset 0 0 12px rgba(100, 220, 130, 0.05);
+}
+
+
+.stages-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.stage-btn {
+  width: 100%;
 }
 
 /* Back buttons — subtle red */
@@ -172,6 +191,7 @@ button {
   border-color: rgba(220, 100, 100, 0.4);
   color: #dd8888;
 }
+
 #btn-back:hover,
 #btn-won-back:hover,
 #btn-leaderboard-close:hover {
@@ -195,11 +215,11 @@ button {
 }
 
 #game-over-layer {
-  background: linear-gradient(180deg, rgba(0,0,0,0.97) 0%, rgba(14,0,0,0.98) 100%);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.97) 0%, rgba(14, 0, 0, 0.98) 100%);
 }
 
 #you-won-layer {
-  background: linear-gradient(180deg, rgba(0,0,0,0.97) 0%, rgba(0,8,14,0.98) 100%);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.97) 0%, rgba(0, 8, 14, 0.98) 100%);
 }
 
 #game-over-layer .game-over-text {
@@ -255,24 +275,14 @@ button {
   box-shadow: 0 0 15px rgba(136, 221, 255, 0.3);
 }
 
-#btn-submit-score {
-  border-color: rgba(136, 221, 255, 0.4);
-  color: #88ddff;
-}
 
-#btn-submit-score:hover {
-  background: rgba(136, 221, 255, 0.08);
-  border-color: rgba(136, 221, 255, 0.75);
-  color: #ccf0ff;
-  box-shadow: 0 0 18px rgba(136, 221, 255, 0.22), inset 0 0 12px rgba(136, 221, 255, 0.05);
-}
 
 /* ─── Leaderboard ─────────────────────────────────────────── */
 
 #leaderboard-layer {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,0.97) 0%, rgba(0,4,16,0.98) 100%);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.97) 0%, rgba(0, 4, 16, 0.98) 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -311,7 +321,7 @@ button {
   align-items: center;
   padding: 7px 16px;
   border-radius: 4px;
-  background: rgba(255,255,255,0.03);
+  background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(168, 176, 255, 0.08);
 }
 
@@ -338,9 +348,17 @@ button {
   min-width: 28px;
 }
 
-#leaderboard-list li:first-child .lb-rank  { color: #f0c040; }
-#leaderboard-list li:nth-child(2) .lb-rank { color: #b0b8c8; }
-#leaderboard-list li:nth-child(3) .lb-rank { color: #cd7f32; }
+#leaderboard-list li:first-child .lb-rank {
+  color: #f0c040;
+}
+
+#leaderboard-list li:nth-child(2) .lb-rank {
+  color: #b0b8c8;
+}
+
+#leaderboard-list li:nth-child(3) .lb-rank {
+  color: #cd7f32;
+}
 
 .lb-score {
   font-size: 1.1rem;

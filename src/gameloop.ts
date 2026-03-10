@@ -9,7 +9,7 @@ const director = new Director();
 const CANVAS_W = 600;
 const CANVAS_H = 800;
 
-export function run(state: GameState, input: InputState, GG?: (score: number) => void, WIN?: (score: number) => void) {
+export function run(state: GameState, input: InputState, GG?: (score: number, isInfinite: boolean) => void, WIN?: (score: number, isInfinite: boolean) => void) {
     const MAX_DT = 0.05;
     director.initGame(state);
     const starfield = createStarfield();
@@ -23,11 +23,11 @@ export function run(state: GameState, input: InputState, GG?: (score: number) =>
 
         update(state, input);
         if (state.lives <= 0) {
-            GG?.(state.score);
+            GG?.(state.score, state.isInfinite);
             return;
         }
         if (state.current_phase === StagePhase.CLEAR) {
-            WIN?.(state.score);
+            WIN?.(state.score, state.isInfinite);
             return;
         }
         updateStarfield(starfield, CANVAS_W, CANVAS_H, state.dt);
@@ -37,7 +37,6 @@ export function run(state: GameState, input: InputState, GG?: (score: number) =>
     requestAnimationFrame(loop);
 }
 
-// Scale factor: everything was tuned for TARGET_FPS, so dt * TARGET_FPS == 1.0 at target
 function dtScale(dt: number): number {
     return dt * TARGET_FPS;
 }
@@ -117,9 +116,9 @@ function updateBombEffect(state: GameState): void {
     const e = state.bombEffect;
     if (!e) return;
 
-    e.flashAlpha  -= state.dt / 0.28;
+    e.flashAlpha -= state.dt / 0.28;
     e.shockRadius += state.dt * 1100;
-    e.shockAlpha  -= state.dt / 0.55;
+    e.shockAlpha -= state.dt / 0.55;
 
     if (e.flashAlpha <= 0 && e.shockAlpha <= 0) {
         state.bombEffect = null;

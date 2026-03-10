@@ -1,5 +1,4 @@
 import { HitBox } from "./hitbox";
-import { Animator } from "./animator";
 import { loadStage, Loser, MidBoss, Boss, StagePhase, Player, Stage, MidBossPhase, BossPhase, Direction } from './stageloader';
 import { AssetManager } from "./assetmanager";
 import { BulletPatternDef } from "./patterns";
@@ -12,6 +11,7 @@ export interface BombEffect {
 
 export interface GameState {
     stage: Stage;
+    isInfinite: boolean;
     current_phase: StagePhase;
     player: Player;
     shooting: boolean;
@@ -31,14 +31,15 @@ export interface GameState {
     hitEffect: number;
 }
 
-export async function initState(): Promise<GameState> {
-    const stage = await loadStage("stages/stage2.json");
+export async function initState(stagePath: string = "stages/one.json"): Promise<GameState> {
+    const stage = await loadStage(stagePath);
 
     const assets = new AssetManager();
     await assets.loadStageAssets(stage);
 
     return {
         stage: stage,
+        isInfinite: stagePath.includes("infinite"),
         current_phase: StagePhase.CLEAR,
         player: {
             x: stage.player.x - stage.player.animation_idle.width / 2,

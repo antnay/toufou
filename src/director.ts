@@ -196,7 +196,7 @@ export class Director {
         };
     }
 
-    private spawnEvent(event: { type: string; x: number; y: number; loserType?: string }, state: GameState) {
+    private spawnEvent(event: { type: string; x: number; y: number; loserType?: string; }, state: GameState) {
         switch (event.type) {
             case "LOSER": {
                 state.current_phase = StagePhase.LOSERS;
@@ -243,7 +243,12 @@ export class Director {
         if (state.boss && state.boss.hp > 0) return false;
         this.sceneIndex++;
         if (this.sceneIndex >= this.sceneQueue.length) {
-            state.current_phase = StagePhase.CLEAR;
+            if (state.stage.infinite) {
+                console.log("Timeline finished, restarting infinite loop!");
+                this.sceneIndex = 0;
+            } else {
+                state.current_phase = StagePhase.CLEAR;
+            }
         }
         return true;
     }

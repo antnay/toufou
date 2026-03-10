@@ -18,7 +18,6 @@ export async function saveScore(score: number, username: string = 'Anonymous'): 
         console.error('Failed to save score to API, falling back to local.', e);
     }
 
-    // Fallback
     const scores = await getScores();
     scores.push({ username, score });
     scores.sort((a, b) => b.score - a.score);
@@ -42,7 +41,6 @@ export async function getScores(): Promise<{ username: string, score: number; }[
         const parsed: unknown = JSON.parse(raw);
         if (Array.isArray(parsed)) return parsed as { username: string, score: number; }[];
     } catch {
-        // ignore malformed data
     }
     return [];
 }

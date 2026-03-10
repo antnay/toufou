@@ -111,6 +111,7 @@ export interface Stage {
     };
     pattern_index: string[];
     timeline: Scene[];
+    infinite?: boolean;
     spellcards: {
         easy: string[];
         medium: string[];

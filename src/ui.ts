@@ -28,11 +28,12 @@ async function populateLeaderboard(): Promise<void> {
 
 // Initializes the UI system and hides default HTML elements
 export function initUI(startOptions?: {
-    start: () => void | Promise<void>;
+    start: (stage: string) => void | Promise<void>;
     backToMenu: () => void;
+    stages: string[];
 }): void {
     const title = document.getElementById('title');
-    const btn = document.getElementById('btn');
+    const stagesContainer = document.getElementById('stages-container');
     const gameOver = document.getElementById('game-over-layer');
     const btnBack = document.getElementById('btn-back');
     const youWon = document.getElementById('you-won-layer');
@@ -43,7 +44,7 @@ export function initUI(startOptions?: {
 
     if (!startOptions) {
         if (title) title.style.display = 'none';
-        if (btn) btn.style.display = 'none';
+        if (stagesContainer) stagesContainer.style.display = 'none';
         return;
     }
 
@@ -54,28 +55,53 @@ export function initUI(startOptions?: {
         if (uiLayer) uiLayer.classList.add('menu-visible');
         if (title) (title as HTMLElement).style.display = '';
         if (subtitle) (subtitle as HTMLElement).style.display = '';
-        if (btn) (btn as HTMLElement).style.display = 'block';
+        if (stagesContainer) (stagesContainer as HTMLElement).style.display = 'flex';
         if (btnLeaderboard) (btnLeaderboard as HTMLElement).style.display = 'block';
     }
     function hideMenu() {
         if (uiLayer) uiLayer.classList.remove('menu-visible');
         if (title) (title as HTMLElement).style.display = 'none';
         if (subtitle) (subtitle as HTMLElement).style.display = 'none';
-        if (btn) (btn as HTMLElement).style.display = 'none';
+        if (stagesContainer) (stagesContainer as HTMLElement).style.display = 'none';
         if (btnLeaderboard) (btnLeaderboard as HTMLElement).style.display = 'none';
     }
 
     showMenu();
 
-    if (btn) {
-        btn.onclick = async () => {
-            btn.textContent = 'Loading...';
-            btn.style.pointerEvents = 'none';
-            await startOptions.start();
-            hideMenu();
-            btn.textContent = 'Start';
-            btn.style.pointerEvents = 'auto';
-        };
+    if (stagesContainer && startOptions) {
+        stagesContainer.innerHTML = '';
+
+        startOptions.stages.forEach(stageName => {
+            const stageBtn = document.createElement('button');
+            stageBtn.className = 'stage-btn';
+            stageBtn.textContent = stageName.replace('.json', '');
+
+            stageBtn.onclick = async () => {
+                const buttons = stagesContainer.querySelectorAll('button');
+                buttons.forEach(b => {
+                    (b as HTMLButtonElement).disabled = true;
+                    b.style.pointerEvents = 'none';
+                });
+
+                const originalText = stageBtn.textContent;
+                stageBtn.textContent = 'Loading...';
+
+                try {
+                    await startOptions.start(stageName);
+                    hideMenu();
+                } catch (e) {
+                    console.error("Failed to start stage", e);
+                } finally {
+                    stageBtn.textContent = originalText;
+                    buttons.forEach(b => {
+                        (b as HTMLButtonElement).disabled = false;
+                        b.style.pointerEvents = 'auto';
+                    });
+                }
+            };
+
+            stagesContainer.appendChild(stageBtn);
+        });
     }
 
     if (btnLeaderboard && leaderboardLayer) {
@@ -117,6 +143,7 @@ function setupScoreSubmission(
     submitBtnId: string,
     backBtnId: string
 ) {
+    console.log("Setting up score submission for score", score);
     const usernameInput = document.getElementById(inputId) as HTMLInputElement | null;
     const submitBtn = document.getElementById(submitBtnId);
     const backBtn = document.getElementById(backBtnId);
@@ -153,22 +180,40 @@ function setupScoreSubmission(
     }
 }
 
-export function GG(score: number): void {
+export function GG(score: number, isInfinite: boolean): void {
     const el = document.getElementById('game-over-layer');
     if (!el) return;
     el.style.display = 'flex';
     const scoreEl = document.getElementById('game-over-score');
     if (scoreEl) scoreEl.textContent = formatScore(score);
 
-    setupScoreSubmission(score, 'username-input-gg', 'btn-submit-score-gg', 'btn-back');
+    const usernameInput = document.getElementById('username-input-gg');
+    const submitBtn = document.getElementById('btn-submit-score-gg');
+    const displayStyle = isInfinite ? '' : 'none';
+
+    if (usernameInput) (usernameInput as HTMLElement).style.display = displayStyle;
+    if (submitBtn) (submitBtn as HTMLElement).style.display = displayStyle;
+
+    if (isInfinite) {
+        setupScoreSubmission(score, 'username-input-gg', 'btn-submit-score-gg', 'btn-back');
+    }
 }
 
-export function WIN(score: number): void {
+export function WIN(score: number, isInfinite: boolean): void {
     const el = document.getElementById('you-won-layer');
     if (!el) return;
     el.style.display = 'flex';
     const scoreEl = document.getElementById('you-won-score');
     if (scoreEl) scoreEl.textContent = formatScore(score);
 
-    setupScoreSubmission(score, 'username-input', 'btn-submit-score', 'btn-won-back');
+    const usernameInput = document.getElementById('username-input');
+    const submitBtn = document.getElementById('btn-submit-score');
+    const displayStyle = isInfinite ? '' : 'none';
+
+    if (usernameInput) (usernameInput as HTMLElement).style.display = displayStyle;
+    if (submitBtn) (submitBtn as HTMLElement).style.display = displayStyle;
+
+    if (isInfinite) {
+        setupScoreSubmission(score, 'username-input', 'btn-submit-score', 'btn-won-back');
+    }
 }
