@@ -426,85 +426,85 @@
             "enemies": [
                 {
                     "type": "LOSER",
-                    "loserType": "blue2",
+                    "loserType": "blue",
                     "x": 100,
                     "y": 100
                 },
                 {
                     "type": "LOSER",
-                    "loserType": "blue2",
+                    "loserType": "blue",
                     "x": 150,
                     "y": 150
                 },
                 {
                     "type": "LOSER",
-                    "loserType": "blue2",
+                    "loserType": "blue",
                     "x": 200,
                     "y": 200
                 },
                 {
                     "type": "LOSER",
-                    "loserType": "blue2",
+                    "loserType": "blue",
                     "x": 250,
                     "y": 250
                 },
                 {
                     "type": "LOSER",
-                    "loserType": "blue2",
+                    "loserType": "blue",
                     "x": 300,
                     "y": 300
                 },
                 {
                     "type": "LOSER",
-                    "loserType": "blue2",
+                    "loserType": "blue",
                     "x": 350,
                     "y": 350
                 },
                 {
                     "type": "LOSER",
-                    "loserType": "blue2",
+                    "loserType": "blue",
                     "x": 400,
                     "y": 400
                 },
                 {
                     "type": "LOSER",
-                    "loserType": "red2",
+                    "loserType": "red",
                     "x": 500,
                     "y": 100
                 },
                 {
                     "type": "LOSER",
-                    "loserType": "red2",
+                    "loserType": "red",
                     "x": 450,
                     "y": 150
                 },
                 {
                     "type": "LOSER",
-                    "loserType": "red2",
+                    "loserType": "red",
                     "x": 400,
                     "y": 200
                 },
                 {
                     "type": "LOSER",
-                    "loserType": "red2",
+                    "loserType": "red",
                     "x": 350,
                     "y": 250
                 },
                 {
                     "type": "LOSER",
-                    "loserType": "red2",
+                    "loserType": "red",
                     "x": 300,
                     "y": 300
                 },
                 {
                     "type": "LOSER",
-                    "loserType": "red2",
+                    "loserType": "red",
                     "x": 250,
                     "y": 350
                 },
                 {
                     "type": "LOSER",
-                    "loserType": "red2",
+                    "loserType": "red",
                     "x": 200,
                     "y": 400
                 }
