@@ -207,70 +207,66 @@ function draw(state: GameState, starfield: ReturnType<typeof createStarfield>) {
 
     drawEnemyBullets(state, ctx);
 
-    switch (state.current_phase) {
-        case StagePhase.BOSS:
-            if (!state.boss) {
-                console.log("OH MAN IM BREAKING OUT OF BOSS LOOP BECAUSE THERE IS NO BOSS EVEN THOUGH ITS BOSS PHASE WHERE IS THE BOSS AHHHHHHHHHHHHHhh");
-                break;
+    // Draw enemies (a scene can include any combination)
+    for (const loser of state.losers) {
+        if (loser.animator) {
+            loser.animator.drawFrameHorizontal(
+                state.dt,
+                ctx,
+                loser.x - loser.width / 2,
+                loser.y - loser.height / 2,
+                loser.animationScale
+            );
+        } else {
+            ctx.fillStyle = "blue";
+            ctx.fillRect(loser.x - loser.width / 2, loser.y - loser.height / 2, loser.width, loser.height);
+        }
+    }
+
+    if (state.midboss) {
+        if (state.midboss.animator) {
+            state.midboss.animator.drawFrameHorizontal(
+                state.dt,
+                ctx,
+                state.midboss.x - state.midboss.width / 2,
+                state.midboss.y - state.midboss.height / 2,
+                state.midboss.phases[state.midboss.current_phase].animation.scale
+            );
+            if (state.midboss.maxHp > 0) {
+                drawCircularHealthBar(ctx, state.midboss);
             }
-            if (state.boss.animator) {
-                state.boss.animator.drawFrameHorizontal(
-                    state.dt,
-                    ctx,
-                    state.boss.x - state.boss.width / 2,
-                    state.boss.y - state.boss.height / 2,
-                    state.boss.phases[state.boss.current_phase].animation.scale
-                );
-                if (state.boss.maxHp > 0) {
-                    drawCircularHealthBar(ctx, state.boss);
-                }
-            } else {
-                ctx.fillStyle = "blue";
-                ctx.fillRect(state.boss.x - state.boss.width / 2, state.boss.y - state.boss.height / 2, state.boss.width, state.boss.height);
+        } else {
+            ctx.fillStyle = "blue";
+            ctx.fillRect(
+                state.midboss.x - state.midboss.width / 2,
+                state.midboss.y - state.midboss.height / 2,
+                state.midboss.width,
+                state.midboss.height
+            );
+        }
+    }
+
+    if (state.boss) {
+        if (state.boss.animator) {
+            state.boss.animator.drawFrameHorizontal(
+                state.dt,
+                ctx,
+                state.boss.x - state.boss.width / 2,
+                state.boss.y - state.boss.height / 2,
+                state.boss.phases[state.boss.current_phase].animation.scale
+            );
+            if (state.boss.maxHp > 0) {
+                drawCircularHealthBar(ctx, state.boss);
             }
-            break;
-        case StagePhase.MIDBOSS:
-            if (!state.midboss) {
-                console.log("OH MAN IM BREAKING OUT OF MIDBOSS LOOP BECAUSE THERE IS NO MIDBOSS EVEN THOUGH ITS MIDBOSS PHASE WHERE IS THE MIDBOSS AHHHHHHHHHHHHHhh");
-                break;
-            }
-            if (state.midboss.animator) {
-                state.midboss.animator.drawFrameHorizontal(
-                    state.dt,
-                    ctx,
-                    state.midboss.x - state.midboss.width / 2,
-                    state.midboss.y - state.midboss.height / 2,
-                    state.midboss.phases[state.midboss.current_phase].animation.scale
-                );
-                if (state.midboss.maxHp > 0) {
-                    drawCircularHealthBar(ctx, state.midboss);
-                }
-            } else {
-                ctx.fillStyle = "blue";
-                ctx.fillRect(state.midboss.x - state.midboss.width / 2, state.midboss.y - state.midboss.height / 2, state.midboss.width, state.midboss.height);
-            }
-            break;
-        case StagePhase.LOSERS:
-            for (const loser of state.losers) {
-                if (loser.animator) {
-                    loser.animator.drawFrameHorizontal(
-                        state.dt,
-                        ctx,
-                        loser.x - loser.width / 2,
-                        loser.y - loser.height / 2,
-                        loser.animationScale
-                    );
-                    // if (loser.maxHp > 0) {
-                    //     drawCircularHealthBar(ctx, loser);
-                    // }
-                } else {
-                    ctx.fillStyle = "blue";
-                    ctx.fillRect(loser.x - loser.width / 2, loser.y - loser.height / 2, loser.width, loser.height);
-                }
-            }
-            break;
-        default:
-            break;
+        } else {
+            ctx.fillStyle = "blue";
+            ctx.fillRect(
+                state.boss.x - state.boss.width / 2,
+                state.boss.y - state.boss.height / 2,
+                state.boss.width,
+                state.boss.height
+            );
+        }
     }
 
     if (state.hitEffect > 0 || state.player.hitbox.invulnerabilityState) {
@@ -302,29 +298,14 @@ function updateBullets(state: GameState) {
         });
     };
 
-    switch (state.current_phase) {
-        case StagePhase.LOSERS:
-            for (const loser of state.losers) {
-                if (!loser) break;
-                loser.bullets = updateBulletList(loser.bullets);
-            }
-            break;
-        case StagePhase.MIDBOSS:
-            if (!state.midboss) break;
-            for (const loser of state.losers) {
-                if (!loser) break;
-                loser.bullets = updateBulletList(loser.bullets);
-            }
-            state.midboss.bullets = updateBulletList(state.midboss.bullets);
-            break;
-        case StagePhase.BOSS:
-            if (!state.boss) break;
-            for (const loser of state.losers) {
-                if (!loser) break;
-                loser.bullets = updateBulletList(loser.bullets);
-            }
-            state.boss.bullets = updateBulletList(state.boss.bullets);
-            break;
+    for (const loser of state.losers) {
+        loser.bullets = updateBulletList(loser.bullets);
+    }
+    if (state.midboss) {
+        state.midboss.bullets = updateBulletList(state.midboss.bullets);
+    }
+    if (state.boss) {
+        state.boss.bullets = updateBulletList(state.boss.bullets);
     }
 
     state.player.bullets = updateBulletList(state.player.bullets);
@@ -378,68 +359,49 @@ function checkCollisions(state: GameState) {
             loser.bullets = newBullets;
         }
     }
-    switch (state.current_phase) {
-        case StagePhase.MIDBOSS:
-            if (!state.midboss) break;
-            let newMidBossBullets: Bullet[] = [];
-            for (const bullet of state.midboss.bullets) {
-                if (bullet.hitbox.intersects(state.player.hitbox)) {
-                    playerHit(state);
-                }
-                else newMidBossBullets.push(bullet);
+
+    if (state.midboss) {
+        const newMidBossBullets: Bullet[] = [];
+        for (const bullet of state.midboss.bullets) {
+            if (bullet.hitbox.intersects(state.player.hitbox)) {
+                playerHit(state);
+            } else {
+                newMidBossBullets.push(bullet);
             }
-            state.midboss.bullets = newMidBossBullets;
-            for (const bullet of state.player.bullets) {
-                for (const loser of state.losers) {
-                    if (bullet.hitbox.intersects(loser.hitbox)) {
-                        enemyHit(state, loser);
-                        bullet.hitbox.bulletHit = true;
-                    }
-                }
-                if (bullet.hitbox.intersects(state.midboss.hitbox)) {
-                    enemyHit(state, state.midboss);
-                    bullet.hitbox.bulletHit = true;
-                }
-            }
-            break;
-        case StagePhase.BOSS:
-            if (!state.boss) break;
-            let newBossBullets: Bullet[] = [];
-            for (const bullet of state.boss.bullets) {
-                if (bullet.hitbox.intersects(state.player.hitbox)) {
-                    playerHit(state);
-                }
-                else {
-                    newBossBullets.push(bullet);
-                }
-            }
-            state.boss.bullets = newBossBullets;
-            for (const bullet of state.player.bullets) {
-                for (const loser of state.losers) {
-                    if (bullet.hitbox.intersects(loser.hitbox)) {
-                        enemyHit(state, loser);
-                        bullet.hitbox.bulletHit = true;
-                    }
-                }
-                if (bullet.hitbox.intersects(state.boss.hitbox)) {
-                    enemyHit(state, state.boss);
-                    bullet.hitbox.bulletHit = true;
-                }
-            }
-            break;
-        case StagePhase.LOSERS:
-            for (const bullet of state.player.bullets) {
-                for (const loser of state.losers) {
-                    if (bullet.hitbox.intersects(loser.hitbox)) {
-                        enemyHit(state, loser);
-                        bullet.hitbox.bulletHit = true;
-                    }
-                }
-            }
-            break;
-        default:
-            break;
+        }
+        state.midboss.bullets = newMidBossBullets;
     }
+
+    if (state.boss) {
+        const newBossBullets: Bullet[] = [];
+        for (const bullet of state.boss.bullets) {
+            if (bullet.hitbox.intersects(state.player.hitbox)) {
+                playerHit(state);
+            } else {
+                newBossBullets.push(bullet);
+            }
+        }
+        state.boss.bullets = newBossBullets;
+    }
+
+    // Player bullets vs enemies (any combination can exist)
+    for (const bullet of state.player.bullets) {
+        for (const loser of state.losers) {
+            if (bullet.hitbox.intersects(loser.hitbox)) {
+                enemyHit(state, loser);
+                bullet.hitbox.bulletHit = true;
+            }
+        }
+        if (state.midboss && bullet.hitbox.intersects(state.midboss.hitbox)) {
+            enemyHit(state, state.midboss);
+            bullet.hitbox.bulletHit = true;
+        }
+        if (state.boss && bullet.hitbox.intersects(state.boss.hitbox)) {
+            enemyHit(state, state.boss);
+            bullet.hitbox.bulletHit = true;
+        }
+    }
+
     for (const bullet of state.player.bullets) {
         if (!bullet.hitbox.bulletHit) {
             newPlayerBullets.push(bullet);

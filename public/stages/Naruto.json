@@ -533,10 +533,12 @@
     "timeline": [
         {
             "enemies": [
+                { "type": "LOSER", "loserType": "red", "x": 220, "y": 140 },
                 { "type": "LOSER", "loserType": "blue", "x": 300, "y": 80 },
                 { "type": "LOSER", "loserType": "red", "x": 260, "y": 110 },
+                { "type": "LOSER", "loserType": "red", "x": 300, "y": 80 },
+                { "type": "LOSER", "loserType": "blue", "x": 300, "y": 80 },
                 { "type": "LOSER", "loserType": "blue", "x": 340, "y": 110 },
-                { "type": "LOSER", "loserType": "red", "x": 220, "y": 140 },
                 { "type": "LOSER", "loserType": "blue", "x": 380, "y": 140 }
             ]
         },

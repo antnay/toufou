@@ -222,14 +222,12 @@ export class Director {
             }
             case "MIDBOSS":
                 state.current_phase = StagePhase.MIDBOSS;
-                state.losers = [];
                 state.boss = undefined;
                 state.midboss = this.createMidBoss(state, event.x, event.y, event.midbossType);
                 console.log(`Spawned MIDBOSS${event.midbossType ? ` (${event.midbossType})` : ""} at ${event.x}, ${event.y}`);
                 break;
             case "BOSS":
                 state.current_phase = StagePhase.BOSS;
-                state.losers = [];
                 state.midboss = undefined;
                 state.boss = this.createBoss(state, event.x, event.y, event.bossType);
                 console.log(`Spawned BOSS${event.bossType ? ` (${event.bossType})` : ""} at ${event.x}, ${event.y}`);
