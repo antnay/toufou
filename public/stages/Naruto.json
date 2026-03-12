@@ -145,6 +145,72 @@
             }
         ]
     },
+    "midboss_types": {
+        "midboss1": {
+            "phases": [
+                {
+                    "speed": 5,
+                    "hitbox": 10,
+                    "hp": 75,
+                    "patterns": ["straight", "spin"],
+                    "animation": {
+                    "sprite": "touhou_enemies.png",
+                    "x": 0,
+                    "y": 1540,
+                    "width": 64,
+                    "height": 60,
+                    "frames": 5,
+                    "speed": 0.15,
+                    "scale": 2
+                    },
+                    "bullet": {
+                        "animation": {
+                            "sprite": "test-bullet.png",
+                            "x": 0,
+                            "y": 0,
+                            "width": 20,
+                            "height": 20,
+                            "frames": 1,
+                            "speed": 0.2,
+                            "scale": 1
+                        }
+                    }
+                }
+            ]
+        },
+        "midboss2": {
+            "phases": [
+                {
+                    "speed": 5,
+                    "hitbox": 10,
+                    "hp": 75,
+                    "patterns": ["pattern_name_1", "pattern_name_2"],
+                    "animation": {
+                    "sprite": "touhou_enemies2.png",
+                    "x": 0,
+                    "y": 0,
+                    "width": 64,
+                    "height": 64,
+                    "frames": 1,
+                    "speed": 0.2,
+                    "scale": 1
+                    },
+                    "bullet": {
+                        "animation": {
+                            "sprite": "test-bullet.png",
+                            "x": 0,
+                            "y": 0,
+                            "width": 8,
+                            "height": 8,
+                            "frames": 1,
+                            "speed": 0.4,
+                            "scale": 2
+                        }
+                    }
+                }
+            ]
+        }
+    },
     "loser": {
         "speed": 0.5,
         "hitbox": 10,
@@ -186,10 +252,10 @@
             "animation": {
                 "sprite": "touhou_enemies.png",
                 "x": 0,
-                "y": 1440,
-                "width": 32,
-                "height": 32,
-                "frames": 5,
+                "y": 95,
+                "width": 48,
+                "height": 34,
+                "frames": 4,
                 "speed": 0.2,
                 "scale": 1
             },
@@ -216,10 +282,10 @@
             "animation": {
                 "sprite": "touhou_enemies.png",
                 "x": 0,
-                "y": 1410,
-                "width": 32,
-                "height": 32,
-                "frames": 5,
+                "y": 0,
+                "width": 48,
+                "height": 33,
+                "frames": 4,
                 "speed": 0.2,
                 "scale": 1
             },

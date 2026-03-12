@@ -219,7 +219,7 @@ function draw(state: GameState, starfield: ReturnType<typeof createStarfield>) {
                     ctx,
                     state.boss.x - state.boss.width / 2,
                     state.boss.y - state.boss.height / 2,
-                    state.stage.boss.phases[state.boss.current_phase].animation.scale
+                    state.boss.phases[state.boss.current_phase].animation.scale
                 );
                 if (state.boss.maxHp > 0) {
                     drawCircularHealthBar(ctx, state.boss);
@@ -240,7 +240,7 @@ function draw(state: GameState, starfield: ReturnType<typeof createStarfield>) {
                     ctx,
                     state.midboss.x - state.midboss.width / 2,
                     state.midboss.y - state.midboss.height / 2,
-                    state.stage.midboss.phases[state.midboss.current_phase].animation.scale
+                    state.midboss.phases[state.midboss.current_phase].animation.scale
                 );
                 if (state.midboss.maxHp > 0) {
                     drawCircularHealthBar(ctx, state.midboss);

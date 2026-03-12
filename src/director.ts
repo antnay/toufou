@@ -1,5 +1,5 @@
 import { Animator } from './animator';
-import { StagePhase, Loser, Stage, MidBossPhase, BossPhase, Direction, MidBoss, Boss, Scene, LoserConfig } from './stageloader';
+import { StagePhase, Loser, Stage, MidBossPhase, BossPhase, Direction, MidBoss, Boss, Scene, LoserConfig, EnemyPhase } from './stageloader';
 import { GameState } from "./state";
 import { HitBox } from "./hitbox";
 import type { BulletPatternDef, BulletPatternInstance } from "./patterns";
@@ -112,24 +112,37 @@ export class Director {
         return state.stage.loser;
     }
 
-    createMidBoss(state: GameState, x: number, y: number): MidBoss {
+    private getMidBossPhases(state: GameState, midbossType?: string): EnemyPhase[] {
+        const types = state.stage.midboss_types;
+        if (midbossType && types && types[midbossType]) return types[midbossType].phases;
+        return state.stage.midboss.phases;
+    }
+
+    private getBossPhases(state: GameState, bossType?: string): EnemyPhase[] {
+        const types = state.stage.boss_types;
+        if (bossType && types && types[bossType]) return types[bossType].phases;
+        return state.stage.boss.phases;
+    }
+
+    createMidBoss(state: GameState, x: number, y: number, midbossType?: string): MidBoss {
+        const phases = this.getMidBossPhases(state, midbossType);
         let midBossAnimator: Animator | undefined;
         try {
-            const midBossImg = state.assets.getImage(state.stage.midboss.phases[MidBossPhase.ONE].animation.sprite);
+            const midBossImg = state.assets.getImage(phases[MidBossPhase.ONE].animation.sprite);
             midBossAnimator = new Animator(
                 midBossImg,
-                state.stage.midboss.phases[MidBossPhase.ONE].animation.x,
-                state.stage.midboss.phases[MidBossPhase.ONE].animation.y,
-                state.stage.midboss.phases[MidBossPhase.ONE].animation.width,
-                state.stage.midboss.phases[MidBossPhase.ONE].animation.height,
-                state.stage.midboss.phases[MidBossPhase.ONE].animation.frames,
-                state.stage.midboss.phases[MidBossPhase.ONE].animation.speed
+                phases[MidBossPhase.ONE].animation.x,
+                phases[MidBossPhase.ONE].animation.y,
+                phases[MidBossPhase.ONE].animation.width,
+                phases[MidBossPhase.ONE].animation.height,
+                phases[MidBossPhase.ONE].animation.frames,
+                phases[MidBossPhase.ONE].animation.speed
             );
         } catch (e) {
             console.error("Failed to create mid boss animator", e);
         }
 
-        const phase = state.stage.midboss.phases[MidBossPhase.ONE];
+        const phase = phases[MidBossPhase.ONE];
         const initialHp = phase.hp ?? 75;
 
         return {
@@ -144,6 +157,7 @@ export class Director {
             bullets: [],
             animator: midBossAnimator,
             patterns: phase.patterns ?? [],
+            phases,
             patternCycle: {
                 index: 0,
                 activeEndFrame: 0,
@@ -153,24 +167,25 @@ export class Director {
         };
     }
 
-    createBoss(state: GameState, x: number, y: number): Boss {
+    createBoss(state: GameState, x: number, y: number, bossType?: string): Boss {
+        const phases = this.getBossPhases(state, bossType);
         let bossAnimator: Animator | undefined;
         try {
-            const bossImg = state.assets.getImage(state.stage.boss.phases[BossPhase.ONE].animation.sprite);
+            const bossImg = state.assets.getImage(phases[BossPhase.ONE].animation.sprite);
             bossAnimator = new Animator(
                 bossImg,
-                state.stage.boss.phases[BossPhase.ONE].animation.x,
-                state.stage.boss.phases[BossPhase.ONE].animation.y,
-                state.stage.boss.phases[BossPhase.ONE].animation.width,
-                state.stage.boss.phases[BossPhase.ONE].animation.height,
-                state.stage.boss.phases[BossPhase.ONE].animation.frames,
-                state.stage.boss.phases[BossPhase.ONE].animation.speed
+                phases[BossPhase.ONE].animation.x,
+                phases[BossPhase.ONE].animation.y,
+                phases[BossPhase.ONE].animation.width,
+                phases[BossPhase.ONE].animation.height,
+                phases[BossPhase.ONE].animation.frames,
+                phases[BossPhase.ONE].animation.speed
             );
         } catch (e) {
             console.error("Failed to create boss animator", e);
         }
 
-        const phase = state.stage.boss.phases[BossPhase.ONE];
+        const phase = phases[BossPhase.ONE];
         const initialHp = phase.hp ?? 125;
 
         return {
@@ -188,6 +203,7 @@ export class Director {
             spellcard_on: false,
             spellcard: "",
             patterns: phase.patterns ?? [],
+            phases,
             patternCycle: {
                 index: 0,
                 activeEndFrame: 0,
@@ -196,7 +212,7 @@ export class Director {
         };
     }
 
-    private spawnEvent(event: { type: string; x: number; y: number; loserType?: string; }, state: GameState) {
+    private spawnEvent(event: { type: string; x: number; y: number; loserType?: string; midbossType?: string; bossType?: string; }, state: GameState) {
         switch (event.type) {
             case "LOSER": {
                 state.current_phase = StagePhase.LOSERS;
@@ -208,15 +224,15 @@ export class Director {
                 state.current_phase = StagePhase.MIDBOSS;
                 state.losers = [];
                 state.boss = undefined;
-                state.midboss = this.createMidBoss(state, event.x, event.y);
-                console.log(`Spawned MIDBOSS at ${event.x}, ${event.y}`);
+                state.midboss = this.createMidBoss(state, event.x, event.y, event.midbossType);
+                console.log(`Spawned MIDBOSS${event.midbossType ? ` (${event.midbossType})` : ""} at ${event.x}, ${event.y}`);
                 break;
             case "BOSS":
                 state.current_phase = StagePhase.BOSS;
                 state.losers = [];
                 state.midboss = undefined;
-                state.boss = this.createBoss(state, event.x, event.y);
-                console.log(`Spawned BOSS at ${event.x}, ${event.y}`);
+                state.boss = this.createBoss(state, event.x, event.y, event.bossType);
+                console.log(`Spawned BOSS${event.bossType ? ` (${event.bossType})` : ""} at ${event.x}, ${event.y}`);
                 break;
             default:
                 console.warn(`Unknown event type: ${event.type}`);
@@ -294,7 +310,7 @@ export class Director {
             this.updateBossLikePatterns(
                 state,
                 state.midboss,
-                state.stage.midboss.phases[state.midboss.current_phase].bullet.animation
+                state.midboss.phases[state.midboss.current_phase].bullet.animation
             );
         }
 
@@ -302,7 +318,7 @@ export class Director {
             this.updateBossLikePatterns(
                 state,
                 state.boss,
-                state.stage.boss.phases[state.boss.current_phase].bullet.animation
+                state.boss.phases[state.boss.current_phase].bullet.animation
             );
         }
     }

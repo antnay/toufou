@@ -120,6 +120,11 @@ export interface Stage {
 
     // optional: named loser variants (different sprites/bullets). key = loserType in timeline.
     loser_types?: Record<string, LoserConfig>;
+
+    // optional: named midboss variants. key = midbossType in timeline.
+    midboss_types?: Record<string, { phases: EnemyPhase[] }>;
+    // optional: named boss variants. key = bossType in timeline.
+    boss_types?: Record<string, { phases: EnemyPhase[] }>;
 }
 
 export interface LoserConfig {
@@ -259,6 +264,8 @@ export interface MidBoss {
     bullets: Bullet[];
     patternInstances?: BulletPatternInstance[];
     patterns: string[];
+    /** The phase configs this midboss is using (can vary by midbossType). */
+    phases: EnemyPhase[];
     patternCycle?: {
         index: number;
         active?: BulletPatternInstance;
@@ -287,6 +294,8 @@ export interface Boss {
     bullets: Bullet[];
     patternInstances?: BulletPatternInstance[];
     patterns: string[];
+    /** The phase configs this boss is using (can vary by bossType). */
+    phases: EnemyPhase[];
     patternCycle?: {
         index: number;
         active?: BulletPatternInstance;
@@ -338,6 +347,10 @@ export interface SceneEnemy {
     y: number;
     /** Which loser config to use when type is LOSER. Omit or use "default" for stage.loser. */
     loserType?: string;
+    /** Which midboss config to use when type is MIDBOSS. Omit or use "default" for stage.midboss. */
+    midbossType?: string;
+    /** Which boss config to use when type is BOSS. Omit or use "default" for stage.boss. */
+    bossType?: string;
 }
 
 export interface Scene {

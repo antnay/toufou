@@ -28,9 +28,25 @@ export class AssetManager {
             await this.loadImage(phase.animation.sprite);
             await this.loadImage(phase.bullet.animation.sprite);
         }
+        if (stage.midboss_types) {
+            for (const cfg of Object.values(stage.midboss_types)) {
+                for (const phase of cfg.phases) {
+                    await this.loadImage(phase.animation.sprite);
+                    await this.loadImage(phase.bullet.animation.sprite);
+                }
+            }
+        }
         for (const phase of stage.boss.phases) {
             await this.loadImage(phase.animation.sprite);
             await this.loadImage(phase.bullet.animation.sprite);
+        }
+        if (stage.boss_types) {
+            for (const cfg of Object.values(stage.boss_types)) {
+                for (const phase of cfg.phases) {
+                    await this.loadImage(phase.animation.sprite);
+                    await this.loadImage(phase.bullet.animation.sprite);
+                }
+            }
         }
 
 
