@@ -184,27 +184,27 @@
                     "speed": 5,
                     "hitbox": 10,
                     "hp": 75,
-                    "patterns": ["pattern_name_1", "pattern_name_2"],
+                    "patterns": ["spin", "hj"],
                     "animation": {
                     "sprite": "touhou_enemies2.png",
-                    "x": 0,
-                    "y": 0,
+                    "x": 2,
+                    "y": 774,
                     "width": 64,
-                    "height": 64,
-                    "frames": 1,
+                    "height": 58,
+                    "frames": 5,
                     "speed": 0.2,
-                    "scale": 1
+                    "scale": 2
                     },
                     "bullet": {
                         "animation": {
-                            "sprite": "test-bullet.png",
+                            "sprite": "midboss-bullet.png",
                             "x": 0,
                             "y": 0,
-                            "width": 8,
-                            "height": 8,
+                            "width": 64,
+                            "height": 64,
                             "frames": 1,
                             "speed": 0.4,
-                            "scale": 2
+                            "scale": 0.8
                         }
                     }
                 }
@@ -243,7 +243,7 @@
     },
     "loser_types": {
         "red": {
-            "speed": -0.5,
+            "speed": 0,
             "hitbox": 10,
             "hp": 3,
             "patterns": [
@@ -273,7 +273,7 @@
             }
         },
         "blue": {
-            "speed": 0.5,
+            "speed": 0,
             "hitbox": 10,
             "hp": 3,
             "patterns": [
@@ -303,7 +303,7 @@
             }
         },
         "red2": {
-            "speed": -0.5,
+            "speed": 0,
             "hitbox": 10,
             "hp": 2,
             "patterns": [
@@ -321,19 +321,19 @@
             },
             "bullet": {
                 "animation": {
-                    "sprite": "test-bullet.png",
+                    "sprite": "red2_bullet.png",
                     "x": 0,
                     "y": 0,
-                    "width": 16,
-                    "height": 16,
+                    "width": 10,
+                    "height": 10,
                     "frames": 1,
                     "speed": 1,
-                    "scale": 1.2
+                    "scale": 2
                 }
             }
         },
         "blue2": {
-            "speed": 0.5,
+            "speed": 0,
             "hitbox": 10,
             "hp": 2,
             "patterns": [
@@ -351,14 +351,104 @@
             },
             "bullet": {
                 "animation": {
-                    "sprite": "test-bullet.png",
+                    "sprite": "blue2_bullet.png",
                     "x": 0,
                     "y": 0,
-                    "width": 16,
-                    "height": 16,
+                    "width": 10,
+                    "height": 10,
                     "frames": 1,
                     "speed": 1,
-                    "scale": 1.2
+                    "scale": 2
+                }
+            }
+        },
+        "blue3": {
+            "speed": 0,
+            "hitbox": 10,
+            "hp": 2,
+            "patterns": [
+                "straight"
+            ],
+            "animation": {
+                "sprite": "touhou_enemies2.png",
+                "x": 0,
+                "y": 645,
+                "width": 33,
+                "height": 32,
+                "frames": 2,
+                "speed": 0.2,
+                "scale": 1.3
+            },
+            "bullet": {
+                "animation": {
+                    "sprite": "pale_purple_bullet.png",
+                    "x": 0,
+                    "y": 0,
+                    "width": 12,
+                    "height": 12,
+                    "frames": 1,
+                    "speed": 1,
+                    "scale": 1.5
+                }
+            }
+        },
+        "red3": {
+            "speed": 0,
+            "hitbox": 10,
+            "hp": 2,
+            "patterns": [
+                "straight"
+            ],
+            "animation": {
+                "sprite": "touhou_enemies2.png",
+                "x": 0,
+                "y": 675,
+                "width": 33,
+                "height": 32,
+                "frames": 2,
+                "speed": 0.2,
+                "scale": 1.3
+            },
+            "bullet": {
+                "animation": {
+                    "sprite": "pale_purple_bullet.png",
+                    "x": 0,
+                    "y": 0,
+                    "width": 12,
+                    "height": 12,
+                    "frames": 1,
+                    "speed": 1,
+                    "scale": 1.5
+                }
+            }
+        },
+            "yellow3": {
+                "speed": 0,
+                "hitbox": 10,
+                "hp": 2,
+                "patterns": [
+                    "straight"
+                ],
+                "animation": {
+                    "sprite": "touhou_enemies2.png",
+                    "x": 0,
+                    "y": 708,
+                    "width": 33,
+                    "height": 32,
+                    "frames": 2,
+                    "speed": 0.2,
+                    "scale": 1.3
+                },
+            "bullet": {
+                "animation": {
+                    "sprite": "pale_purple_bullet.png",
+                    "x": 0,
+                    "y": 0,
+                    "width": 12,
+                    "height": 12,
+                    "frames": 1,
+                    "speed": 1,
+                    "scale": 1.5
                 }
             }
         },
@@ -411,14 +501,14 @@
             },
             "bullet": {
                 "animation": {
-                    "sprite": "blue_bullet.png",
+                    "sprite": "red_orange_ufo_bullet.png",
                     "x": 0,
                     "y": 0,
-                    "width": 16,
-                    "height": 16,
+                    "width": 15,
+                    "height": 30,
                     "frames": 1,
                     "speed": 0.1,
-                    "scale": 1.2
+                    "scale": 1.5
                 }
             }
         },
@@ -441,14 +531,14 @@
             },
             "bullet": {
                 "animation": {
-                    "sprite": "blue_bullet.png",
+                    "sprite": "blue_ufo_bullet.png",
                     "x": 0,
                     "y": 0,
-                    "width": 16,
-                    "height": 16,
+                    "width": 15,
+                    "height": 30,
                     "frames": 1,
                     "speed": 0.1,
-                    "scale": 1.2
+                    "scale": 1.5
                 }
             }
         },
@@ -471,14 +561,14 @@
             },
             "bullet": {
                 "animation": {
-                    "sprite": "blue_bullet.png",
+                    "sprite": "green_ufo_bullet.png",
                     "x": 0,
                     "y": 0,
-                    "width": 16,
-                    "height": 16,
+                    "width": 15,
+                    "height": 30,
                     "frames": 1,
                     "speed": 0.1,
-                    "scale": 1.2
+                    "scale": 1.5
                 }
             }
         },
@@ -501,14 +591,14 @@
             },
             "bullet": {
                 "animation": {
-                    "sprite": "blue_bullet.png",
+                    "sprite": "yellow_ufo_bullet.png",
                     "x": 0,
                     "y": 0,
-                    "width": 16,
-                    "height": 16,
+                    "width": 15,
+                    "height": 30,
                     "frames": 1,
                     "speed": 0.1,
-                    "scale": 1.2
+                    "scale": 1.5
                 }
             }
         }
@@ -533,93 +623,74 @@
     "timeline": [
         {
             "enemies": [
-                { "type": "LOSER", "loserType": "red", "x": 220, "y": 140 },
-                { "type": "LOSER", "loserType": "blue", "x": 300, "y": 80 },
-                { "type": "LOSER", "loserType": "red", "x": 260, "y": 110 },
-                { "type": "LOSER", "loserType": "red", "x": 300, "y": 80 },
-                { "type": "LOSER", "loserType": "blue", "x": 300, "y": 80 },
-                { "type": "LOSER", "loserType": "blue", "x": 340, "y": 110 },
-                { "type": "LOSER", "loserType": "blue", "x": 380, "y": 140 }
+                { "type": "LOSER", "loserType": "red", "x": 180, "y": 170, "vx": -0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "red", "x": 220, "y": 140, "vx": -0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "red", "x": 260, "y": 110, "vx": -0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "red", "x": 300, "y": 80, "vx": -0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "blue", "x": 300, "y": 80, "vx": 0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "blue", "x": 340, "y": 110, "vx": 0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "blue", "x": 380, "y": 140, "vx": 0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "blue", "x": 420, "y": 170, "vx": 0.5, "vy": 0}
             ]
         },
         {
             "enemies": [
-                { "type": "LOSER", "loserType": "blue", "x": 120, "y": 90 },
-                { "type": "LOSER", "loserType": "blue", "x": 480, "y": 90 },
-                { "type": "LOSER", "loserType": "red", "x": 160, "y": 130 },
-                { "type": "LOSER", "loserType": "red", "x": 440, "y": 130 },
-                { "type": "LOSER", "loserType": "blue", "x": 200, "y": 170 },
-                { "type": "LOSER", "loserType": "blue", "x": 400, "y": 170 }
-            ]
-        },
-        {
-            "enemies": [
-                { "type": "LOSER", "loserType": "purple", "x": 150, "y": 80 },
-                { "type": "LOSER", "loserType": "purple", "x": 450, "y": 80 },
-                { "type": "LOSER", "loserType": "red2", "x": 220, "y": 120 },
-                { "type": "LOSER", "loserType": "blue2", "x": 380, "y": 120 }
-            ]
-        },
-        {
-            "enemies": [
-                { "type": "LOSER", "loserType": "red", "x": 100, "y": 110 },
-                { "type": "LOSER", "loserType": "red", "x": 150, "y": 150 },
-                { "type": "LOSER", "loserType": "red", "x": 200, "y": 190 },
-                { "type": "LOSER", "loserType": "blue", "x": 500, "y": 110 },
-                { "type": "LOSER", "loserType": "blue", "x": 450, "y": 150 },
-                { "type": "LOSER", "loserType": "blue", "x": 400, "y": 190 }
-            ]
-        },
-        {
-            "enemies": [
-                { "type": "LOSER", "loserType": "red2", "x": 140, "y": 90 },
-                { "type": "LOSER", "loserType": "blue2", "x": 460, "y": 90 },
-                { "type": "LOSER", "loserType": "red2", "x": 180, "y": 140 },
-                { "type": "LOSER", "loserType": "blue2", "x": 420, "y": 140 },
-                { "type": "LOSER", "loserType": "purple", "x": 300, "y": 110 }
-            ]
-        },
+                { "type": "LOSER", "loserType": "red2", "x": 180, "y": 150, "vx": 0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "red2", "x": 180, "y": 120, "vx": 0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "red2", "x": 180, "y": 90, "vx": 0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "red2", "x": 180, "y": 60, "vx": 0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "red2", "x": 140, "y": 150, "vx": 0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "red2", "x": 140, "y": 120, "vx": 0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "red2", "x": 140, "y": 90, "vx": 0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "red2", "x": 140, "y": 60, "vx": 0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "red2", "x": 100, "y": 150, "vx": 0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "red2", "x": 100, "y": 120, "vx": 0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "red2", "x": 100, "y": 90, "vx": 0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "red2", "x": 100, "y": 60, "vx": 0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "red2", "x": 60, "y": 150, "vx": 0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "red2", "x": 60, "y": 120, "vx": 0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "red2", "x": 60, "y": 90, "vx": 0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "red2", "x": 60, "y": 60, "vx": 0.5, "vy": 0},
 
-        {
-            "enemies": [
-                { "type": "MIDBOSS", "x": 300, "y": 120 }
-            ]
-        },
-        {
-            "enemies": [
-                { "type": "LOSER", "loserType": "purple", "x": 120, "y": 80 },
-                { "type": "LOSER", "loserType": "purple", "x": 480, "y": 80 },
-                { "type": "LOSER", "loserType": "red2", "x": 200, "y": 130 },
-                { "type": "LOSER", "loserType": "blue2", "x": 400, "y": 130 },
-                { "type": "LOSER", "loserType": "red2", "x": 260, "y": 170 },
-                { "type": "LOSER", "loserType": "blue2", "x": 340, "y": 170 }
-            ]
-        },
-        {
-            "enemies": [
-                { "type": "LOSER", "loserType": "blue", "x": 110, "y": 110 },
-                { "type": "LOSER", "loserType": "blue", "x": 170, "y": 140 },
-                { "type": "LOSER", "loserType": "blue", "x": 230, "y": 170 },
-                { "type": "LOSER", "loserType": "red", "x": 490, "y": 110 },
-                { "type": "LOSER", "loserType": "red", "x": 430, "y": 140 },
-                { "type": "LOSER", "loserType": "red", "x": 370, "y": 170 },
-                { "type": "LOSER", "loserType": "purple", "x": 300, "y": 90 }
-            ]
-        },
-        {
-            "enemies": [
-                { "type": "LOSER", "loserType": "red2", "x": 120, "y": 90 },
-                { "type": "LOSER", "loserType": "red2", "x": 180, "y": 120 },
-                { "type": "LOSER", "loserType": "red2", "x": 240, "y": 150 },
-                { "type": "LOSER", "loserType": "blue2", "x": 480, "y": 90 },
-                { "type": "LOSER", "loserType": "blue2", "x": 420, "y": 120 },
-                { "type": "LOSER", "loserType": "blue2", "x": 360, "y": 150 }
-            ]
-        },
 
+                { "type": "LOSER", "loserType": "blue2", "x": 420, "y": 60, "vx": -0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "blue2", "x": 420, "y": 90, "vx": -0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "blue2", "x": 420, "y": 120, "vx": -0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "blue2", "x": 420, "y": 150, "vx": -0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "blue2", "x": 460, "y": 60, "vx": -0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "blue2", "x": 460, "y": 90, "vx": -0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "blue2", "x": 460, "y": 120, "vx": -0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "blue2", "x": 460, "y": 150, "vx": -0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "blue2", "x": 500, "y": 60, "vx": -0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "blue2", "x": 500, "y": 90, "vx": -0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "blue2", "x": 500, "y": 120, "vx": -0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "blue2", "x": 500, "y": 150, "vx": -0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "blue2", "x": 540, "y": 60, "vx": -0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "blue2", "x": 540, "y": 90, "vx": -0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "blue2", "x": 540, "y": 120, "vx": -0.5, "vy": 0},
+                { "type": "LOSER", "loserType": "blue2", "x": 540, "y": 150, "vx": -0.5, "vy": 0}
+            ]
+        },
         {
             "enemies": [
-                { "type": "BOSS", "x": 300, "y": 120 }
+                { "type": "LOSER", "loserType": "red_ufo",    "x": 200, "y":  80, "vx":  0.35, "vy": 0.25, "xRange": 100, "yRange": 40 },
+                { "type": "LOSER", "loserType": "blue_ufo",   "x": 400, "y":  80, "vx": -0.35, "vy": 0.25, "xRange": 100, "yRange": 40 },
+                { "type": "LOSER", "loserType": "green_ufo",  "x": 260, "y": 130, "vx":  0.30, "vy": 0.25, "xRange": 100, "yRange": 40 },
+                { "type": "LOSER", "loserType": "yellow_ufo", "x": 340, "y": 130, "vx": -0.30, "vy": 0.25, "xRange": 100, "yRange": 40 },
+                { "type": "LOSER", "loserType": "red_ufo",    "x": 200, "y": 180, "vx":  0.35, "vy": 0.25, "xRange": 100, "yRange": 40 },
+                { "type": "LOSER", "loserType": "blue_ufo",   "x": 400, "y": 180, "vx": -0.35, "vy": 0.25, "xRange": 100, "yRange": 40 },
+                { "type": "LOSER", "loserType": "green_ufo",  "x": 260, "y": 230, "vx":  0.30, "vy": 0.25, "xRange": 100, "yRange": 40 },
+                { "type": "LOSER", "loserType": "yellow_ufo", "x": 340, "y": 230, "vx": -0.30, "vy": 0.25, "xRange": 100, "yRange": 40 }
+            ]
+          },
+        {
+            "enemies": [
+                { "type": "MIDBOSS", "midbossType": "midboss2", "x": 300, "y": 120, "vx": 0.1, "vy": 0.1, "xRange": 10, "yRange": 30}
+            ]
+        },
+        {
+            "enemies": [ 
+                { "type": "BOSS", "x": 300, "y": 120, "vx": -0.15, "vy": 0.1, "xRange": 80, "yRange": 20 }
             ]
         }
     ]

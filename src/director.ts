@@ -24,7 +24,7 @@ export class Director {
             this.sceneActive = false;
         }
 
-        this.updateLoserMovement(state);
+        this.updateEnemyMovement(state);
         this.updateEnemyPatterns(state);
     }
 
@@ -69,7 +69,16 @@ export class Director {
         };
     }
 
-    createLoser(state: GameState, x: number, y: number, loserType?: string): Loser {
+    createLoser(
+        state: GameState,
+        x: number,
+        y: number,
+        loserType?: string,
+        vx?: number,
+        vy?: number,
+        xRange?: number,
+        yRange?: number
+    ): Loser {
         const config = this.getLoserConfig(state, loserType);
         const animator = new Animator(
             state.assets.getImage(config.animation.sprite),
@@ -85,12 +94,17 @@ export class Director {
         return {
             x,
             y,
+            originX: x,
+            originY: y,
             width: config.animation.width * config.animation.scale,
             height: config.animation.height * config.animation.scale,
             speed: config.speed,
             hp,
             maxHp: hp,
-            vx: config.speed,
+            vx: typeof vx === "number" ? vx : config.speed,
+            vy: typeof vy === "number" ? vy : 0,
+            xRange,
+            yRange,
             bullets: [],
             animator,
             patternNames: config.patterns,
@@ -124,7 +138,16 @@ export class Director {
         return state.stage.boss.phases;
     }
 
-    createMidBoss(state: GameState, x: number, y: number, midbossType?: string): MidBoss {
+    createMidBoss(
+        state: GameState,
+        x: number,
+        y: number,
+        midbossType?: string,
+        vx?: number,
+        vy?: number,
+        xRange?: number,
+        yRange?: number
+    ): MidBoss {
         const phases = this.getMidBossPhases(state, midbossType);
         let midBossAnimator: Animator | undefined;
         try {
@@ -148,6 +171,12 @@ export class Director {
         return {
             x: x,
             y: y,
+            originX: x,
+            originY: y,
+            vx: typeof vx === "number" ? vx : 0,
+            vy: typeof vy === "number" ? vy : 0,
+            xRange,
+            yRange,
             width: phase.animation.width * phase.animation.scale,
             height: phase.animation.height * phase.animation.scale,
             hitbox: new HitBox(0, 0, phase.hitbox),
@@ -167,7 +196,16 @@ export class Director {
         };
     }
 
-    createBoss(state: GameState, x: number, y: number, bossType?: string): Boss {
+    createBoss(
+        state: GameState,
+        x: number,
+        y: number,
+        bossType?: string,
+        vx?: number,
+        vy?: number,
+        xRange?: number,
+        yRange?: number
+    ): Boss {
         const phases = this.getBossPhases(state, bossType);
         let bossAnimator: Animator | undefined;
         try {
@@ -191,6 +229,12 @@ export class Director {
         return {
             x: x,
             y: y,
+            originX: x,
+            originY: y,
+            vx: typeof vx === "number" ? vx : 0,
+            vy: typeof vy === "number" ? vy : 0,
+            xRange,
+            yRange,
             width: phase.animation.width * phase.animation.scale,
             height: phase.animation.height * phase.animation.scale,
             hitbox: new HitBox(0, 0, phase.hitbox),
@@ -212,24 +256,62 @@ export class Director {
         };
     }
 
-    private spawnEvent(event: { type: string; x: number; y: number; loserType?: string; midbossType?: string; bossType?: string; }, state: GameState) {
+    private spawnEvent(event: {
+        type: string;
+        x: number;
+        y: number;
+        vx?: number;
+        vy?: number;
+        xRange?: number;
+        yRange?: number;
+        loserType?: string;
+        midbossType?: string;
+        bossType?: string;
+    }, state: GameState) {
         switch (event.type) {
             case "LOSER": {
                 state.current_phase = StagePhase.LOSERS;
-                state.losers.push(this.createLoser(state, event.x, event.y, event.loserType));
+                state.losers.push(this.createLoser(
+                    state,
+                    event.x,
+                    event.y,
+                    event.loserType,
+                    event.vx,
+                    event.vy,
+                    event.xRange,
+                    event.yRange
+                ));
                 console.log(`Spawned LOSER${event.loserType ? ` (${event.loserType})` : ""} at ${event.x}, ${event.y}`);
                 break;
             }
             case "MIDBOSS":
                 state.current_phase = StagePhase.MIDBOSS;
                 state.boss = undefined;
-                state.midboss = this.createMidBoss(state, event.x, event.y, event.midbossType);
+                state.midboss = this.createMidBoss(
+                    state,
+                    event.x,
+                    event.y,
+                    event.midbossType,
+                    event.vx,
+                    event.vy,
+                    event.xRange,
+                    event.yRange
+                );
                 console.log(`Spawned MIDBOSS${event.midbossType ? ` (${event.midbossType})` : ""} at ${event.x}, ${event.y}`);
                 break;
             case "BOSS":
                 state.current_phase = StagePhase.BOSS;
                 state.midboss = undefined;
-                state.boss = this.createBoss(state, event.x, event.y, event.bossType);
+                state.boss = this.createBoss(
+                    state,
+                    event.x,
+                    event.y,
+                    event.bossType,
+                    event.vx,
+                    event.vy,
+                    event.xRange,
+                    event.yRange
+                );
                 console.log(`Spawned BOSS${event.bossType ? ` (${event.bossType})` : ""} at ${event.x}, ${event.y}`);
                 break;
             default:
@@ -361,23 +443,82 @@ export class Director {
         cycle.index = (cycle.index + 1) % patternNames.length;
     }
 
-    private updateLoserMovement(state: GameState) {
-        if (state.losers.length === 0) return;
+    private updateEnemyMovement(state: GameState) {
         const scale = state.dt * TARGET_FPS;
 
-        for (const loser of state.losers) {
-            loser.x += loser.vx * scale;
+        // Helper: clamp to screen so enemies never leave view
+        const clampToScreen = (entity: { x: number; y: number; width: number; height: number; }) => {
+            const halfW = entity.width / 2;
+            const halfH = entity.height / 2;
+            const minX = halfW;
+            const maxX = CANVAS_WIDTH - halfW;
+            const minY = halfH;
+            const maxY = CANVAS_HEIGHT - halfH;
+            entity.x = Math.min(Math.max(entity.x, minX), maxX);
+            entity.y = Math.min(Math.max(entity.y, minY), maxY);
+        };
 
-            const leftEdge = loser.x - loser.width / 2;
-            const rightEdge = loser.x + loser.width / 2;
-
-            if (leftEdge <= LOSER_LEFT_BOUND) {
-                loser.x = LOSER_LEFT_BOUND + loser.width / 2;
-                loser.vx = Math.abs(loser.vx);
-            } else if (rightEdge >= LOSER_RIGHT_BOUND) {
-                loser.x = LOSER_RIGHT_BOUND - loser.width / 2;
-                loser.vx = -Math.abs(loser.vx);
+        // Helper: apply local range-bounce around origin if ranges are set
+        const applyRangeBounce = (entity: { x: number; y: number; originX: number; originY: number; vx?: number; vy?: number; xRange?: number; yRange?: number; }) => {
+            if (typeof entity.xRange === "number") {
+                const minRx = entity.originX - entity.xRange;
+                const maxRx = entity.originX + entity.xRange;
+                if (entity.x < minRx) {
+                    entity.x = minRx;
+                    if (entity.vx !== undefined) entity.vx = Math.abs(entity.vx);
+                } else if (entity.x > maxRx) {
+                    entity.x = maxRx;
+                    if (entity.vx !== undefined) entity.vx = -Math.abs(entity.vx);
+                }
             }
+            if (typeof entity.yRange === "number") {
+                const minRy = entity.originY - entity.yRange;
+                const maxRy = entity.originY + entity.yRange;
+                if (entity.y < minRy) {
+                    entity.y = minRy;
+                    if (entity.vy !== undefined) entity.vy = Math.abs(entity.vy);
+                } else if (entity.y > maxRy) {
+                    entity.y = maxRy;
+                    if (entity.vy !== undefined) entity.vy = -Math.abs(entity.vy);
+                }
+            }
+        };
+
+        for (const loser of state.losers) {
+            loser.x += (loser.vx ?? 0) * scale;
+            loser.y += (loser.vy ?? 0) * scale;
+
+            // If a custom xRange/yRange is set, use that. Otherwise keep old global left/right bounce.
+            if (typeof loser.xRange === "number" || typeof loser.yRange === "number") {
+                applyRangeBounce(loser);
+            } else {
+                const leftEdge = loser.x - loser.width / 2;
+                const rightEdge = loser.x + loser.width / 2;
+
+                if (leftEdge <= LOSER_LEFT_BOUND) {
+                    loser.x = LOSER_LEFT_BOUND + loser.width / 2;
+                    loser.vx = Math.abs(loser.vx);
+                } else if (rightEdge >= LOSER_RIGHT_BOUND) {
+                    loser.x = LOSER_RIGHT_BOUND - loser.width / 2;
+                    loser.vx = -Math.abs(loser.vx);
+                }
+            }
+
+            clampToScreen(loser);
+        }
+
+        if (state.midboss) {
+            state.midboss.x += (state.midboss.vx ?? 0) * scale;
+            state.midboss.y += (state.midboss.vy ?? 0) * scale;
+            applyRangeBounce(state.midboss);
+            clampToScreen(state.midboss);
+        }
+
+        if (state.boss) {
+            state.boss.x += (state.boss.vx ?? 0) * scale;
+            state.boss.y += (state.boss.vy ?? 0) * scale;
+            applyRangeBounce(state.boss);
+            clampToScreen(state.boss);
         }
     }
 
@@ -398,5 +539,6 @@ const PATTERN_GAP_SECONDS = 0;
 const PATTERN_GAP_FRAMES = Math.round(PATTERN_GAP_SECONDS * TARGET_FPS);
 
 const CANVAS_WIDTH = 600;
+const CANVAS_HEIGHT = 800;
 const LOSER_LEFT_BOUND = 50;
 const LOSER_RIGHT_BOUND = CANVAS_WIDTH - 50;

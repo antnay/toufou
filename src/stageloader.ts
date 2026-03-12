@@ -225,12 +225,20 @@ export enum Direction {
 export interface Loser {
     x: number;
     y: number;
+    /** Spawn position used as the center for local movement ranges. */
+    originX: number;
+    originY: number;
     width: number;
     height: number;
     speed: number;
     hp: number;
     maxHp: number;
     vx: number;
+    vy?: number;
+    /** Optional horizontal range around originX to bounce within. */
+    xRange?: number;
+    /** Optional vertical range around originY to bounce within. */
+    yRange?: number;
     bullets: Bullet[];
     patternInstances?: BulletPatternInstance[];
     patternNames?: string[];
@@ -256,6 +264,13 @@ export interface Loser {
 export interface MidBoss {
     x: number;
     y: number;
+    /** Spawn position used as the center for local movement ranges. */
+    originX: number;
+    originY: number;
+    vx?: number;
+    vy?: number;
+    xRange?: number;
+    yRange?: number;
     width: number;
     height: number;
     speed: number;
@@ -286,6 +301,13 @@ export enum MidBossPhase {
 export interface Boss {
     x: number;
     y: number;
+    /** Spawn position used as the center for local movement ranges. */
+    originX: number;
+    originY: number;
+    vx?: number;
+    vy?: number;
+    xRange?: number;
+    yRange?: number;
     width: number;
     height: number;
     speed: number;
@@ -345,6 +367,14 @@ export interface SceneEnemy {
     type: string;
     x: number;
     y: number;
+    /** Optional per-spawn velocity (pixels per frame at TARGET_FPS, scaled by dt). */
+    vx?: number;
+    /** Optional per-spawn velocity (pixels per frame at TARGET_FPS, scaled by dt). */
+    vy?: number;
+    /** Optional local horizontal range from spawn position (in pixels). */
+    xRange?: number;
+    /** Optional local vertical range from spawn position (in pixels). */
+    yRange?: number;
     /** Which loser config to use when type is LOSER. Omit or use "default" for stage.loser. */
     loserType?: string;
     /** Which midboss config to use when type is MIDBOSS. Omit or use "default" for stage.midboss. */
