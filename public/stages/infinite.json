@@ -67,7 +67,7 @@
                 "y": 0,
                 "width": 15,
                 "height": 15,
-                "frames": 9,
+                "frames": 1,
                 "speed": 0.4,
                 "scale": 1
             }
@@ -367,7 +367,7 @@
                 {
                     "type": "MIDBOSS",
                     "x": 200,
-                    "y": 100
+                    "y": 100, "vx": 0.1, "vy": 0.1, "xRange": 10, "yRange": 30
                 }
             ]
         },
@@ -376,7 +376,7 @@
                 {
                     "type": "BOSS",
                     "x": 200,
-                    "y": 200
+                    "y": 200, "vx": -0.15, "vy": 0.1, "xRange": 80, "yRange": 20
                 }
             ]
         }
