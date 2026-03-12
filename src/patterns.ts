@@ -259,12 +259,12 @@ export function createPlayerBullet(
     x: number,
     y: number
 ): Bullet {
-    const anim = state.stage.loser.bullet.animation;
-    const img = state.assets.getImage(state.stage.player.player_bullet.animation.sprite);
+    const anim = state.stage.player.player_bullet.animation;
+    const img = state.assets.getImage(anim.sprite);
     return createBullet(
         {
             owner: state.player,
-            bulletSprite: state.stage.player.player_bullet.animation.sprite,
+            bulletSprite: anim.sprite,
             bulletAnimation: anim,
             bulletImage: img,
         },
