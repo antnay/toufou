@@ -1,0 +1,523 @@
+{
+    "background": "test-background.png",
+    "useStarfield": true,
+    "player": {
+        "speed": 1.5,
+        "x": 400,
+        "y": 700,
+        "initial_lives": 999,
+        "initial_bombs": 2,
+        "bomb_freq": 10,
+        "hitbox": 2,
+        "animation_up": {
+            "sprite": "naruto_animation.png",
+            "x": 0,
+            "y": 0,
+            "width": 41,
+            "height": 64,
+            "frames": 4,
+            "speed": 0.3,
+            "scale": 1
+        },
+        "animation_down": {
+            "sprite": "naruto_animation.png",
+            "x": 0,
+            "y": 0,
+            "width": 41,
+            "height": 64,
+            "frames": 4,
+            "speed": 0.3,
+            "scale": 1
+        },
+        "animation_left": {
+            "sprite": "naruto_animation.png",
+            "x": 0,
+            "y": 117,
+            "width": 50,
+            "height": 58,
+            "frames": 4,
+            "speed": 0.2,
+            "scale": 1
+        },
+        "animation_right": {
+            "sprite": "naruto_animation.png",
+            "x": 0,
+            "y": 65,
+            "width": 56,
+            "height": 58,
+            "frames": 4,
+            "speed": 0.2,
+            "scale": 1
+        },
+        "animation_idle": {
+            "sprite": "naruto_animation.png",
+            "x": 0,
+            "y": 0,
+            "width": 41,
+            "height": 64,
+            "frames": 4,
+            "speed": 0.3,
+            "scale": 1
+        },
+        "player_bullet": {
+            "animation": {
+                "sprite": "test-bullet.png",
+                "x": 0,
+                "y": 0,
+                "width": 2,
+                "height": 32,
+                "frames": 9,
+                "speed": 0.4,
+                "scale": 2
+            }
+        }
+    },
+    "boss": {
+        "phases": [
+            {
+                "speed": 5,
+                "hitbox": 10,
+                "hp": 125,
+                "patterns": [
+                    "slowcircle",
+                    "hj",
+                    "circle",
+                    "spiral",
+                    "player60tracking"
+                ],
+                "animation": {
+                    "sprite": "touhou1.png",
+                    "x": 0,
+                    "y": 0,
+                    "width": 64,
+                    "height": 87,
+                    "frames": 8,
+                    "speed": 0.4,
+                    "scale": 2
+                },
+                "bullet": {
+                    "animation": {
+                        "sprite": "boss-bullet.png",
+                        "x": 0,
+                        "y": 0,
+                        "width": 64,
+                        "height": 64,
+                        "frames": 1,
+                        "speed": 0.4,
+                        "scale": 0.5
+                    }
+                }
+            }
+        ]
+    },
+    "midboss": {
+        "phases": [
+            {
+                "speed": 5,
+                "hitbox": 10,
+                "hp": 75,
+                "patterns": [
+                    "spiral",
+                    "hj"
+                ],
+                "animation": {
+                    "sprite": "touhou_enemies.png",
+                    "x": 0,
+                    "y": 1024,
+                    "width": 64,
+                    "height": 64,
+                    "frames": 5,
+                    "speed": 0.3,
+                    "scale": 2
+                },
+                "bullet": {
+                    "animation": {
+                        "sprite": "midboss-bullet.png",
+                        "x": 0,
+                        "y": 0,
+                        "width": 64,
+                        "height": 64,
+                        "frames": 1,
+                        "speed": 0.4,
+                        "scale": 0.5
+                    }
+                }
+            }
+        ]
+    },
+    "loser": {
+        "speed": 0.5,
+        "hitbox": 10,
+        "hp": 20,
+        "patterns": [
+            "straight"
+        ],
+        "animation": {
+            "sprite": "touhou_enemies.png",
+            "x": 0,
+            "y": 0,
+            "width": 48,
+            "height": 32,
+            "frames": 4,
+            "speed": 0.3,
+            "scale": 1
+        },
+        "bullet": {
+            "animation": {
+                "sprite": "test-bullet.png",
+                "x": 0,
+                "y": 0,
+                "width": 16,
+                "height": 16,
+                "frames": 1,
+                "speed": 0.1,
+                "scale": 1
+            }
+        }
+    },
+    "loser_types": {
+        "red": {
+            "speed": -0.5,
+            "hitbox": 10,
+            "hp": 3,
+            "patterns": [
+                "straight"
+            ],
+            "animation": {
+                "sprite": "touhou_enemies.png",
+                "x": 0,
+                "y": 1440,
+                "width": 32,
+                "height": 32,
+                "frames": 5,
+                "speed": 0.2,
+                "scale": 1
+            },
+            "bullet": {
+                "animation": {
+                    "sprite": "test-bullet.png",
+                    "x": 0,
+                    "y": 0,
+                    "width": 16,
+                    "height": 16,
+                    "frames": 1,
+                    "speed": 1,
+                    "scale": 1.2
+                }
+            }
+        },
+        "blue": {
+            "speed": 0.5,
+            "hitbox": 10,
+            "hp": 3,
+            "patterns": [
+                "straight"
+            ],
+            "animation": {
+                "sprite": "touhou_enemies.png",
+                "x": 0,
+                "y": 1410,
+                "width": 32,
+                "height": 32,
+                "frames": 5,
+                "speed": 0.2,
+                "scale": 1
+            },
+            "bullet": {
+                "animation": {
+                    "sprite": "test-bullet.png",
+                    "x": 0,
+                    "y": 0,
+                    "width": 16,
+                    "height": 16,
+                    "frames": 1,
+                    "speed": 1,
+                    "scale": 1.2
+                }
+            }
+        },
+        "red2": {
+            "speed": -0.5,
+            "hitbox": 10,
+            "hp": 2,
+            "patterns": [
+                "straight"
+            ],
+            "animation": {
+                "sprite": "touhou_enemies.png",
+                "x": 0,
+                "y": 1440,
+                "width": 32,
+                "height": 32,
+                "frames": 5,
+                "speed": 0.2,
+                "scale": 1
+            },
+            "bullet": {
+                "animation": {
+                    "sprite": "test-bullet.png",
+                    "x": 0,
+                    "y": 0,
+                    "width": 16,
+                    "height": 16,
+                    "frames": 1,
+                    "speed": 1,
+                    "scale": 1.2
+                }
+            }
+        },
+        "blue2": {
+            "speed": 0.5,
+            "hitbox": 10,
+            "hp": 2,
+            "patterns": [
+                "straight"
+            ],
+            "animation": {
+                "sprite": "touhou_enemies.png",
+                "x": 0,
+                "y": 1410,
+                "width": 32,
+                "height": 32,
+                "frames": 5,
+                "speed": 0.2,
+                "scale": 1
+            },
+            "bullet": {
+                "animation": {
+                    "sprite": "test-bullet.png",
+                    "x": 0,
+                    "y": 0,
+                    "width": 16,
+                    "height": 16,
+                    "frames": 1,
+                    "speed": 1,
+                    "scale": 1.2
+                }
+            }
+        },
+        "purple": {
+            "speed": 0,
+            "hitbox": 10,
+            "hp": 10,
+            "patterns": [
+                "slowcircle"
+            ],
+            "animation": {
+                "sprite": "touhou_enemies.png",
+                "x": 0,
+                "y": 1472,
+                "width": 32,
+                "height": 32,
+                "frames": 5,
+                "speed": 0.2,
+                "scale": 2
+            },
+            "bullet": {
+                "animation": {
+                    "sprite": "test-bullet.png",
+                    "x": 0,
+                    "y": 0,
+                    "width": 16,
+                    "height": 16,
+                    "frames": 1,
+                    "speed": 0.1,
+                    "scale": 1.2
+                }
+            }
+        }
+    },
+    "config": {
+        "player_start": {
+            "x": 400,
+            "y": 700
+        },
+        "initial_lives": 3,
+        "initial_bombs": 2
+    },
+    "pattern_index": [
+        "spiral.txt",
+        "circle.txt",
+        "slowcircle.txt",
+        "straight.txt",
+        "spin.txt",
+        "player60tracking.txt",
+        "hj.txt"
+    ],
+    "timeline": [
+        {
+            "enemies": [
+                {
+                    "type": "LOSER",
+                    "loserType": "blue",
+                    "x": 300,
+                    "y": 50
+                },
+                {
+                    "type": "LOSER",
+                    "loserType": "red",
+                    "x": 300,
+                    "y": 100
+                },
+                {
+                    "type": "LOSER",
+                    "loserType": "blue",
+                    "x": 300,
+                    "y": 150
+                },
+                {
+                    "type": "LOSER",
+                    "loserType": "red",
+                    "x": 300,
+                    "y": 200
+                },
+                {
+                    "type": "LOSER",
+                    "loserType": "blue",
+                    "x": 300,
+                    "y": 250
+                },
+                {
+                    "type": "LOSER",
+                    "loserType": "red",
+                    "x": 300,
+                    "y": 300
+                },
+                {
+                    "type": "LOSER",
+                    "loserType": "blue",
+                    "x": 300,
+                    "y": 350
+                },
+                {
+                    "type": "LOSER",
+                    "loserType": "red",
+                    "x": 300,
+                    "y": 400
+                }
+            ]
+        },
+        {
+            "enemies": [
+                {
+                    "type": "LOSER",
+                    "loserType": "purple",
+                    "x": 150,
+                    "y": 50
+                },
+                {
+                    "type": "LOSER",
+                    "loserType": "purple",
+                    "x": 450,
+                    "y": 50
+                }
+            ]
+        },
+        {
+            "enemies": [
+                {
+                    "type": "MIDBOSS",
+                    "x": 300,
+                    "y": 100
+                }
+            ]
+        },
+        {
+            "enemies": [
+                {
+                    "type": "LOSER",
+                    "loserType": "blue",
+                    "x": 100,
+                    "y": 100
+                },
+                {
+                    "type": "LOSER",
+                    "loserType": "blue",
+                    "x": 150,
+                    "y": 150
+                },
+                {
+                    "type": "LOSER",
+                    "loserType": "blue",
+                    "x": 200,
+                    "y": 200
+                },
+                {
+                    "type": "LOSER",
+                    "loserType": "blue",
+                    "x": 250,
+                    "y": 250
+                },
+                {
+                    "type": "LOSER",
+                    "loserType": "blue",
+                    "x": 300,
+                    "y": 300
+                },
+                {
+                    "type": "LOSER",
+                    "loserType": "blue",
+                    "x": 350,
+                    "y": 350
+                },
+                {
+                    "type": "LOSER",
+                    "loserType": "blue",
+                    "x": 400,
+                    "y": 400
+                },
+                {
+                    "type": "LOSER",
+                    "loserType": "red",
+                    "x": 500,
+                    "y": 100
+                },
+                {
+                    "type": "LOSER",
+                    "loserType": "red",
+                    "x": 450,
+                    "y": 150
+                },
+                {
+                    "type": "LOSER",
+                    "loserType": "red",
+                    "x": 400,
+                    "y": 200
+                },
+                {
+                    "type": "LOSER",
+                    "loserType": "red",
+                    "x": 350,
+                    "y": 250
+                },
+                {
+                    "type": "LOSER",
+                    "loserType": "red",
+                    "x": 300,
+                    "y": 300
+                },
+                {
+                    "type": "LOSER",
+                    "loserType": "red",
+                    "x": 250,
+                    "y": 350
+                },
+                {
+                    "type": "LOSER",
+                    "loserType": "red",
+                    "x": 200,
+                    "y": 400
+                }
+            ]
+        },
+        {
+            "enemies": [
+                {
+                    "type": "BOSS",
+                    "x": 300,
+                    "y": 100
+                }
+            ]
+        }
+    ]
+}
