@@ -1,0 +1,361 @@
+{
+  "background": "space-background.png",
+  "useStarfield": true,
+  "player": {
+    "speed": 1.5,
+    "x": 400,
+    "y": 700,
+    "initial_lives": 3,
+    "initial_bombs": 2,
+    "bomb_freq": 10,
+    "hitbox": 2,
+    "animation_up": {
+      "sprite": "player_1.png",
+      "x": 0,
+      "y": 0,
+      "width": 32,
+      "height": 50,
+      "frames": 8,
+      "speed": 0.4,
+      "scale": 1
+    },
+    "animation_down": {
+      "sprite": "player_1.png",
+      "x": 0,
+      "y": 0,
+      "width": 32,
+      "height": 50,
+      "frames": 8,
+      "speed": 0.4,
+      "scale": 1
+    },
+    "animation_left": {
+      "sprite": "player_1.png",
+      "x": 128,
+      "y": 50,
+      "width": 32,
+      "height": 50,
+      "frames": 4,
+      "speed": 0.4,
+      "scale": 1
+    },
+    "animation_right": {
+      "sprite": "player_1.png",
+      "x": 128,
+      "y": 100,
+      "width": 32,
+      "height": 44,
+      "frames": 4,
+      "speed": 0.4,
+      "scale": 1
+    },
+    "animation_idle": {
+      "sprite": "player_1.png",
+      "x": 0,
+      "y": 0,
+      "width": 32,
+      "height": 50,
+      "frames": 8,
+      "speed": 0.4,
+      "scale": 1
+    },
+    "player_bullet": {
+      "animation": {
+        "sprite": "test-bullet.png",
+        "x": 0,
+        "y": 0,
+        "width": 15,
+        "height": 15,
+        "frames": 1,
+        "speed": 0.4,
+        "scale": 1
+      }
+    }
+  },
+  "boss": {
+    "phases": [
+      {
+        "speed": 3,
+        "hitbox": 10,
+        "hp": 100,
+        "patterns": ["noop"],
+        "animation": {
+          "sprite": "touhou1.png",
+          "x": 0,
+          "y": 0,
+          "width": 64,
+          "height": 87,
+          "frames": 8,
+          "speed": 0.4,
+          "scale": 2
+        },
+        "bullet": {
+          "animation": {
+            "sprite": "boss-bullet.png",
+            "x": 0,
+            "y": 0,
+            "width": 64,
+            "height": 64,
+            "frames": 1,
+            "speed": 0.4,
+            "scale": 0.5
+          }
+        }
+      },
+      {
+        "speed": 3,
+        "hitbox": 10,
+        "hp": 100,
+        "patterns": ["noop"],
+        "animation": {
+          "sprite": "touhou_enemies.png",
+          "x": 0,
+          "y": 1740,
+          "width": 64,
+          "height": 54,
+          "frames": 7,
+          "speed": 0.3,
+          "scale": 2
+        },
+        "bullet": {
+          "animation": {
+            "sprite": "midboss-bullet.png",
+            "x": 0,
+            "y": 0,
+            "width": 64,
+            "height": 64,
+            "frames": 1,
+            "speed": 0.4,
+            "scale": 0.5
+          }
+        }
+      },
+      {
+        "speed": 3,
+        "hitbox": 10,
+        "hp": 100,
+        "patterns": ["noop"],
+        "animation": {
+          "sprite": "touhou_enemies2.png",
+          "x": 0,
+          "y": 645,
+          "width": 33,
+          "height": 32,
+          "frames": 2,
+          "speed": 0.2,
+          "scale": 2
+        },
+        "bullet": {
+          "animation": {
+            "sprite": "blue2_bullet.png",
+            "x": 0,
+            "y": 0,
+            "width": 10,
+            "height": 10,
+            "frames": 1,
+            "speed": 1,
+            "scale": 2
+          }
+        }
+      }
+    ]
+  },
+  "midboss": {
+    "phases": [
+      {
+        "speed": 4,
+        "hitbox": 10,
+        "hp": 80,
+        "patterns": ["noop"],
+        "animation": {
+          "sprite": "touhou_enemies.png",
+          "x": 0,
+          "y": 1024,
+          "width": 64,
+          "height": 64,
+          "frames": 5,
+          "speed": 0.3,
+          "scale": 2
+        },
+        "bullet": {
+          "animation": {
+            "sprite": "pale_purple_bullet.png",
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 12,
+            "frames": 1,
+            "speed": 1,
+            "scale": 1.5
+          }
+        }
+      }
+    ]
+  },
+  "loser": {
+    "speed": 1,
+    "hitbox": 5,
+    "hp": 6,
+    "patterns": ["noop"],
+    "animation": {
+      "sprite": "touhou_enemies.png",
+      "x": 0,
+      "y": 0,
+      "width": 48,
+      "height": 32,
+      "frames": 4,
+      "speed": 0.3,
+      "scale": 1
+    },
+    "bullet": {
+      "animation": {
+        "sprite": "red2_bullet.png",
+        "x": 0,
+        "y": 0,
+        "width": 10,
+        "height": 10,
+        "frames": 1,
+        "speed": 1,
+        "scale": 2
+      }
+    }
+  },
+  "loser_types": {
+    "raid_1": {
+      "speed": 0.5,
+      "hitbox": 10,
+      "hp": 20,
+      "patterns": ["straight"],
+      "animation": {
+        "sprite": "touhou_enemies.png",
+        "x": 0,
+        "y": 95,
+        "width": 48,
+        "height": 34,
+        "frames": 4,
+        "speed": 0.2,
+        "scale": 1
+      },
+      "bullet": {
+        "animation": {
+          "sprite": "test-bullet.png",
+          "x": 0,
+          "y": 0,
+          "width": 16,
+          "height": 16,
+          "frames": 1,
+          "speed": 1,
+          "scale": 1.2
+        }
+      }
+    },
+    "raid_2": {
+      "speed": 1,
+      "hitbox": 5,
+      "hp": 6,
+      "patterns": ["noop"],
+      "animation": {
+        "sprite": "touhou_enemies2.png",
+        "x": 0,
+        "y": 720,
+        "width": 64,
+        "height": 45,
+        "frames": 4,
+        "speed": 0.2,
+        "scale": 1
+      },
+      "bullet": {
+        "animation": {
+          "sprite": "blue_ufo_bullet.png",
+          "x": 0,
+          "y": 0,
+          "width": 15,
+          "height": 30,
+          "frames": 1,
+          "speed": 0.1,
+          "scale": 1.5
+        }
+      }
+    },
+    "raid_support": {
+      "speed": 1,
+      "hitbox": 5,
+      "hp": 6,
+      "patterns": ["noop"],
+      "animation": {
+        "sprite": "touhou_enemies2.png",
+        "x": 0,
+        "y": 784,
+        "width": 64,
+        "height": 45,
+        "frames": 4,
+        "speed": 0.2,
+        "scale": 1
+      },
+      "bullet": {
+        "animation": {
+          "sprite": "green_ufo_bullet.png",
+          "x": 0,
+          "y": 0,
+          "width": 15,
+          "height": 30,
+          "frames": 1,
+          "speed": 0.1,
+          "scale": 1.5
+        }
+      }
+    },
+    "sniper_corner": {
+      "speed": 0.5,
+      "hitbox": 5,
+      "hp": 20,
+      "patterns": ["sniper_turret", "noop"],
+      "animation": {
+        "sprite": "touhou_enemies.png",
+        "x": 0,
+        "y": 95,
+        "width": 48,
+        "height": 34,
+        "frames": 4,
+        "speed": 0.2,
+        "scale": 1
+      },
+      "bullet": {
+        "animation": {
+          "sprite": "blue_bullet.png",
+          "x": 0,
+          "y": 0,
+          "width": 16,
+          "height": 16,
+          "frames": 1,
+          "speed": 1,
+          "scale": 1.2
+        }
+      }
+    }
+  },
+  "config": {
+    "player_start": {
+      "x": 400,
+      "y": 700
+    },
+    "initial_lives": 3,
+    "initial_bombs": 2
+  },
+  "pattern_index": [
+    "straight.txt",
+    "noop.txt",
+    "sniper_turret.txt",
+    "spiral.txt"
+  ],
+  "timeline": [
+    {
+      "enemies": [
+        { "type": "LOSER", "loserType": "raid_2", "x": 280, "y": 120, "vx": 0.3, "vy": 0 },
+        { "type": "LOSER", "loserType": "raid_2", "x": 520, "y": 120, "vx": -0.3, "vy": 0 },
+        { "type": "LOSER", "loserType": "sniper_corner", "x": 60, "y": 80, "vx": 0, "vy": 0 },
+        { "type": "LOSER", "loserType": "sniper_corner", "x": 540, "y": 80, "vx": 0, "vy": 0 }
+      ]
+    }
+  ]
+}
