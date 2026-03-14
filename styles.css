@@ -129,7 +129,9 @@ button {
 #btn-leaderboard,
 #btn-leaderboard-close,
 #btn-submit-score,
-#btn-submit-score-gg {
+#btn-submit-score-gg,
+#btn-resume,
+#btn-pause-main-menu {
   margin-top: 0.5rem;
   padding: 0.7rem 2.8rem;
   font-size: 0.9rem;
@@ -149,7 +151,9 @@ button {
 #btn-leaderboard:hover,
 #btn-leaderboard-close:hover,
 #btn-submit-score:hover,
-#btn-submit-score-gg:hover {
+#btn-submit-score-gg:hover,
+#btn-resume:hover,
+#btn-pause-main-menu:hover {
   background: rgba(168, 176, 255, 0.1);
   border-color: rgba(168, 176, 255, 0.75);
   color: #dde0ff;
@@ -187,14 +191,16 @@ button {
 /* Back buttons — subtle red */
 #btn-back,
 #btn-won-back,
-#btn-leaderboard-close {
+#btn-leaderboard-close,
+#btn-pause-main-menu {
   border-color: rgba(220, 100, 100, 0.4);
   color: #dd8888;
 }
 
 #btn-back:hover,
 #btn-won-back:hover,
-#btn-leaderboard-close:hover {
+#btn-leaderboard-close:hover,
+#btn-pause-main-menu:hover {
   background: rgba(220, 100, 100, 0.08);
   border-color: rgba(220, 100, 100, 0.75);
   color: #ffaaaa;
@@ -366,4 +372,36 @@ button {
   font-family: 'Courier New', monospace;
   letter-spacing: 0.08em;
   color: #c8d0ff;
+}
+
+/* ─── Pause Overlay ─────────────────────────────────────── */
+
+#pause-layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.74) 0%, rgba(0, 0, 0, 0.88) 100%);
+  z-index: 30;
+}
+
+.pause-title {
+  margin: 0 0 0.8rem;
+  font-size: 2.4rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #c8d0ff;
+  text-shadow:
+    0 0 16px rgba(168, 176, 255, 0.5),
+    0 0 36px rgba(168, 176, 255, 0.2);
+}
+
+#btn-resume,
+#btn-pause-main-menu {
+  margin-top: 0;
+  min-width: 220px;
 }

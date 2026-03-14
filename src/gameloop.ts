@@ -9,24 +9,73 @@ const director = new Director();
 const CANVAS_W = 600;
 const CANVAS_H = 800;
 
-export function run(state: GameState, input: InputState, GG?: (score: number, isInfinite: boolean) => void, WIN?: (score: number, isInfinite: boolean) => void) {
+export interface RunControls {
+    pause: () => void;
+    resume: () => void;
+    stop: () => void;
+    isPaused: () => boolean;
+}
+
+export interface RunOptions {
+    onPauseChange?: (paused: boolean) => void;
+}
+
+export function run(
+    state: GameState,
+    input: InputState,
+    GG?: (score: number, isInfinite: boolean) => void,
+    WIN?: (score: number, isInfinite: boolean) => void,
+    options?: RunOptions
+): RunControls {
     const MAX_DT = 0.05;
     director.initGame(state);
     const starfield = createStarfield();
     let lastTime = 0;
+    let paused = false;
+    let stopped = false;
+    let previousPausePressed = false;
+
+    const setPaused = (nextPaused: boolean) => {
+        if (paused === nextPaused) return;
+        paused = nextPaused;
+        options?.onPauseChange?.(paused);
+    };
+
+    const handleWindowBlur = () => {
+        setPaused(true);
+    };
+    window.addEventListener("blur", handleWindowBlur);
 
     function loop(timestamp: number) {
+        if (stopped) return;
+
         if (lastTime === 0) lastTime = timestamp;
         const rawDt = (timestamp - lastTime) / 1000;
         lastTime = timestamp;
+
+        const pausePressed = input.pause;
+        if (pausePressed && !previousPausePressed) {
+            setPaused(!paused);
+        }
+        previousPausePressed = pausePressed;
+
+        if (paused) {
+            state.dt = 0;
+            draw(state, starfield);
+            requestAnimationFrame(loop);
+            return;
+        }
+
         state.dt = Math.min(rawDt, MAX_DT);
 
         update(state, input);
         if (state.lives <= 0) {
+            setPaused(false);
             GG?.(state.score, state.isInfinite);
             return;
         }
         if (state.current_phase === StagePhase.CLEAR) {
+            setPaused(false);
             WIN?.(state.score, state.isInfinite);
             return;
         }
@@ -35,6 +84,17 @@ export function run(state: GameState, input: InputState, GG?: (score: number, is
         requestAnimationFrame(loop);
     }
     requestAnimationFrame(loop);
+
+    return {
+        pause: () => setPaused(true),
+        resume: () => setPaused(false),
+        stop: () => {
+            stopped = true;
+            setPaused(false);
+            window.removeEventListener("blur", handleWindowBlur);
+        },
+        isPaused: () => paused,
+    };
 }
 
 function dtScale(dt: number): number {
