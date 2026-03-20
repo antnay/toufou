@@ -2,7 +2,7 @@
     "background": "space-background.png",
     "music": "ocarina.mp3",
     "bomb_sound": "nuke.mp3",
-    "player_hit_sound": "fort.mp3",
+    "player_hit_sound": "hitmark.mp3",
     "midboss_spawn_sound": "prowler.mp3",
     "midboss_death_sound": "hitmark.mp3",
     "boss_spawn_sound": "prowler.mp3",

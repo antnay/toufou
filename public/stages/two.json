@@ -1,11 +1,11 @@
 {
     "background": "test-background.png",
-    "music": "diblu.mp3",
+    "music": "ocarina.mp3",
     "bomb_sound": "nuke.mp3",
     "player_hit_sound": "hitmark.mp3",
     "midboss_spawn_sound": "prowler.mp3",
     "midboss_death_sound": "hitmark.mp3",
-    "boss_spawn_sound": "getout.mp3",
+    "boss_spawn_sound": "prowler.mp3",
     "boss_death_sound": "hitmark.mp3",
     "useStarfield": true,
     "player": {
