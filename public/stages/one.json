@@ -1,5 +1,12 @@
 {
     "background": "space-background.png",
+    "music": "ocarina.mp3",
+    "bomb_sound": "nuke.mp3",
+    "player_hit_sound": "fort.mp3",
+    "midboss_spawn_sound": "prowler.mp3",
+    "midboss_death_sound": "hitmark.mp3",
+    "boss_spawn_sound": "prowler.mp3",
+    "boss_death_sound": "hitmark.mp3",
     "useStarfield": true,
     "player": {
         "speed": 1.5,
@@ -78,7 +85,14 @@
                 "speed": 5,
                 "hitbox": 10,
                 "hp": 125,
-                "patterns": ["spiral", "hj", "player60tracking", "spin", "spiral", "player60tracking"],
+                "patterns": [
+                    "spiral",
+                    "hj",
+                    "player60tracking",
+                    "spin",
+                    "spiral",
+                    "player60tracking"
+                ],
                 "animation": {
                     "sprite": "touhou1.png",
                     "x": 0,
@@ -110,7 +124,10 @@
                 "speed": 5,
                 "hitbox": 10,
                 "hp": 75,
-                "patterns": ["circle", "spiral"],
+                "patterns": [
+                    "circle",
+                    "spiral"
+                ],
                 "animation": {
                     "sprite": "touhou_enemies.png",
                     "x": 0,
@@ -171,7 +188,9 @@
             "speed": 0.5,
             "hitbox": 10,
             "hp": 3,
-            "patterns": ["straight"],
+            "patterns": [
+                "straight"
+            ],
             "animation": {
                 "sprite": "touhou_enemies.png",
                 "x": 0,
@@ -199,7 +218,9 @@
             "speed": 0.5,
             "hitbox": 10,
             "hp": 3,
-            "patterns": ["straight"],
+            "patterns": [
+                "straight"
+            ],
             "animation": {
                 "sprite": "touhou_enemies.png",
                 "x": 0,
@@ -227,7 +248,9 @@
             "speed": 0.5,
             "hitbox": 10,
             "hp": 10,
-            "patterns": ["straight"],
+            "patterns": [
+                "straight"
+            ],
             "animation": {
                 "sprite": "touhou_enemies.png",
                 "x": 0,
@@ -350,7 +373,11 @@
                 {
                     "type": "MIDBOSS",
                     "x": 200,
-                    "y": 100, "vx": 0.1, "vy": 0.1, "xRange": 10, "yRange": 30
+                    "y": 100,
+                    "vx": 0.1,
+                    "vy": 0.1,
+                    "xRange": 10,
+                    "yRange": 30
                 }
             ]
         },
@@ -359,7 +386,11 @@
                 {
                     "type": "BOSS",
                     "x": 200,
-                    "y": 200, "vx": -0.15, "vy": 0.1, "xRange": 80, "yRange": 20
+                    "y": 200,
+                    "vx": -0.15,
+                    "vy": 0.1,
+                    "xRange": 80,
+                    "yRange": 20
                 }
             ]
         }

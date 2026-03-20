@@ -46,6 +46,10 @@ export function run(
     };
     window.addEventListener("blur", handleWindowBlur);
 
+    if (state.stage.music) {
+        state.audio.playMusic(state.stage.music);
+    }
+
     function loop(timestamp: number) {
         if (stopped) return;
 
@@ -71,11 +75,13 @@ export function run(
         update(state, input);
         if (state.lives <= 0) {
             setPaused(false);
+            state.audio.stopMusic();
             GG?.(state.score, state.isInfinite);
             return;
         }
         if (state.current_phase === StagePhase.CLEAR) {
             setPaused(false);
+            state.audio.stopMusic();
             WIN?.(state.score, state.isInfinite);
             return;
         }
@@ -171,6 +177,11 @@ function useBomb(state: GameState, input: InputState): void {
     if (!pressed || state.current_bomb <= 0) return;
 
     state.current_bomb -= 1;
+    if (state.stage.bomb_sound) {
+        state.audio.playSFX(state.stage.bomb_sound);
+    } else {
+        state.audio.playSFX('bomb');
+    }
     for (const loser of state.losers) {
         loser.bullets = [];
     }
@@ -196,9 +207,11 @@ function updateBombEffect(state: GameState): void {
 function cleanupEnemies(state: GameState) {
     state.losers = state.losers.filter(l => l.hp > 0);
     if (state.midboss && state.midboss.hp <= 0) {
+        if (state.stage.midboss_death_sound) state.audio.playSFX(state.stage.midboss_death_sound);
         state.midboss = undefined;
     }
     if (state.boss && state.boss.hp <= 0) {
+        if (state.stage.boss_death_sound) state.audio.playSFX(state.stage.boss_death_sound);
         state.boss = undefined;
     }
 }
@@ -472,6 +485,11 @@ function checkCollisions(state: GameState) {
 
 function playerHit(state: GameState) {
     console.log("Player hit!");
+    if (state.stage.player_hit_sound) {
+        state.audio.playSFX(state.stage.player_hit_sound);
+    } else {
+        state.audio.playSFX('player_hit');
+    }
     state.player.hitbox.startInvulnerability();
     state.lives = Math.max(0, state.lives - 1);
     if (state.lives === 0) {
@@ -482,12 +500,18 @@ function playerHit(state: GameState) {
 
 function enemyHit(state: GameState, enemy: MidBoss | Boss | Loser) {
     enemy.hp = Math.max(0, enemy.hp - 1);
+    state.audio.playSFX('enemy_hit');
     if (enemy == state.midboss && enemy.hp != 0) {
         state.score += midBossPoints;
     } else if (enemy == state.boss && enemy.hp != 0) {
         state.score += bossPoints;
     } else if (enemy.hp != 0) {
         state.score += loserPoints;
+    }
+
+    if (!state.secretSoundPlayed && state.score >= 10000000) {
+        state.audio.playSFX('secret');
+        state.secretSoundPlayed = true;
     }
 }
 

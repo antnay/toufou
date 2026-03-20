@@ -294,6 +294,7 @@ export function updatePlayerShooting(state: GameState, input: InputState): void 
     if (_playerFireCooldown <= 0) {
         _playerFireCooldown = PLAYER_FIRE_INTERVAL;
         const { x, y } = getOrbCenter(state);
+        state.audio.playSFX('shoot');
         state.player.bullets.push(createPlayerBullet(state, x, y));
     }
 }

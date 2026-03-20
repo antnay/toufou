@@ -285,6 +285,9 @@ export class Director {
                 break;
             }
             case "MIDBOSS":
+                if (state.stage.midboss_spawn_sound) {
+                    state.audio.playSFX(state.stage.midboss_spawn_sound);
+                }
                 state.current_phase = StagePhase.MIDBOSS;
                 state.boss = undefined;
                 state.midboss = this.createMidBoss(
@@ -300,6 +303,9 @@ export class Director {
                 console.log(`Spawned MIDBOSS${event.midbossType ? ` (${event.midbossType})` : ""} at ${event.x}, ${event.y}`);
                 break;
             case "BOSS":
+                if (state.stage.boss_spawn_sound) {
+                    state.audio.playSFX(state.stage.boss_spawn_sound);
+                }
                 state.current_phase = StagePhase.BOSS;
                 state.midboss = undefined;
                 state.boss = this.createBoss(

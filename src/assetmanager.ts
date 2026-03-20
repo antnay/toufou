@@ -4,6 +4,12 @@ import { Stage } from "./stageloader";
 export class AssetManager {
     images: Map<string, HTMLImageElement> = new Map();
     patterns: Map<string, BulletPatternDef> = new Map();
+    audioBuffers: Map<string, AudioBuffer> = new Map();
+    private audioContext: AudioContext;
+
+    constructor() {
+        this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    }
 
     async loadStageAssets(stage: Stage) {
         await this.loadImage(stage.background);
@@ -49,10 +55,19 @@ export class AssetManager {
             }
         }
 
-
         for (const pattern of stage.pattern_index) {
             await this.loadPatterns(pattern);
         }
+
+        if (stage.music) {
+            await this.loadAudio(stage.music, `assets/${stage.music}`);
+        }
+        if (stage.bomb_sound) await this.loadAudio(stage.bomb_sound, `assets/${stage.bomb_sound}`);
+        if (stage.player_hit_sound) await this.loadAudio(stage.player_hit_sound, `assets/${stage.player_hit_sound}`);
+        if (stage.midboss_spawn_sound) await this.loadAudio(stage.midboss_spawn_sound, `assets/${stage.midboss_spawn_sound}`);
+        if (stage.midboss_death_sound) await this.loadAudio(stage.midboss_death_sound, `assets/${stage.midboss_death_sound}`);
+        if (stage.boss_spawn_sound) await this.loadAudio(stage.boss_spawn_sound, `assets/${stage.boss_spawn_sound}`);
+        if (stage.boss_death_sound) await this.loadAudio(stage.boss_death_sound, `assets/${stage.boss_death_sound}`);
     }
 
     async loadImage(src: string) {
@@ -97,6 +112,27 @@ export class AssetManager {
         }
         return text;
     }
+
+    async loadAudio(name: string, url: string): Promise<AudioBuffer | undefined> {
+        if (this.audioBuffers.has(name)) {
+            return this.audioBuffers.get(name);
+        }
+
+        try {
+            const response = await fetch(`${import.meta.env.BASE_URL}${url}`);
+            const arrayBuffer = await response.arrayBuffer();
+            const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
+            this.audioBuffers.set(name, audioBuffer);
+            return audioBuffer;
+        } catch (e) {
+            console.error(`Failed to load audio: ${url}`, e);
+            return undefined;
+        }
+    }
+
+    getAudio(name: string): AudioBuffer | undefined {
+        return this.audioBuffers.get(name);
+    }
 }
 
 export const loadImage = (src: string): Promise<HTMLImageElement> => {
@@ -123,18 +159,6 @@ export const loadText = (url: string): Promise<string> => {
         xhr.send();
     });
 };
-
-// export async function loadPatterns(files: string[], assetManager: AssetManager) {
-//     for (const file of files) {
-//         const text = assetManager.getPattern(file);
-//         if (!text) continue;
-
-//         const defs = parsePatternFile(file, text);
-//         for (const def of defs) {
-//             assetManager.patterns.set(def.name, def);
-//         }
-//     }
-// }
 
 function parsePatternFile(fileName: string, text: string): BulletPatternDef[] {
     const baseName = fileName.replace(/\.[^/.]+$/, "");

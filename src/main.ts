@@ -58,6 +58,8 @@ function main() {
         return a.localeCompare(b);
     });
 
+    let currentState: any = null;
+
     initUI({
         stages: stages,
         start: async (stageName: string) => {
@@ -66,6 +68,7 @@ function main() {
             currentRun?.stop();
             const stagePath = `stages/${stageName}`;
             const state = await initState(stagePath);
+            currentState = state;
             const input = createInput();
             currentRun = run(state, input, GG, WIN, {
                 onPauseChange: (paused) => {
@@ -78,6 +81,9 @@ function main() {
             currentRun = null;
             setPauseVisible(false);
             if (panel) (panel as HTMLElement).style.display = "none";
+            if (currentState && currentState.audio) {
+                currentState.audio.stopMusic();
+            }
         },
     });
 }

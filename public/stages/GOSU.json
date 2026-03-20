@@ -1,5 +1,12 @@
 {
   "background": "",
+  "music": "ocarina.mp3",
+  "bomb_sound": "nuke.mp3",
+  "player_hit_sound": "fort.mp3",
+  "midboss_spawn_sound": "prowler.mp3",
+  "midboss_death_sound": "hitmark.mp3",
+  "boss_spawn_sound": "getout.mp3",
+  "boss_death_sound": "hitmark.mp3",
   "useStarfield": true,
   "player": {
     "speed": 1.5,
@@ -78,10 +85,34 @@
         "speed": 3,
         "hitbox": 40,
         "hp": 300,
-        "patterns": ["noop", "noop", "noop", "noop", "noop","noop",
-        "noop", "spin", "hj", "slowcircle", "double_spiral_1", "double_spiral_2", "expanding_fan", 
-        "circle", "double_spiral_1", "slowcircle", "spiral", "rotating_wall", "tracking_spiral", "cage_pattern", "spin"
-        , "double_spiral_2", "player60tacking", "spin", "hj", "double_spiral_1"],
+        "patterns": [
+          "noop",
+          "noop",
+          "noop",
+          "noop",
+          "noop",
+          "noop",
+          "noop",
+          "spin",
+          "hj",
+          "slowcircle",
+          "double_spiral_1",
+          "double_spiral_2",
+          "expanding_fan",
+          "circle",
+          "double_spiral_1",
+          "slowcircle",
+          "spiral",
+          "rotating_wall",
+          "tracking_spiral",
+          "cage_pattern",
+          "spin",
+          "double_spiral_2",
+          "player60tacking",
+          "spin",
+          "hj",
+          "double_spiral_1"
+        ],
         "animation": {
           "sprite": "boboss.png",
           "x": 0,
@@ -109,7 +140,9 @@
         "speed": 3,
         "hitbox": 10,
         "hp": 100,
-        "patterns": ["noop"],
+        "patterns": [
+          "noop"
+        ],
         "animation": {
           "sprite": "touhou_enemies2.png",
           "x": 1,
@@ -137,7 +170,9 @@
         "speed": 3,
         "hitbox": 10,
         "hp": 100,
-        "patterns": ["noop"],
+        "patterns": [
+          "noop"
+        ],
         "animation": {
           "sprite": "touhou_enemies2.png",
           "x": 0,
@@ -169,8 +204,24 @@
         "speed": 4,
         "hitbox": 10,
         "hp": 80,
-        "patterns": ["spiral", "hj", "player60tracking", "spiral", "player60tracking", "expanding_fan", "slowcircle", "circle", "double_spiral_1", "double_spiral_2",
-        "noop", "player60tracking", "rotating_wall", "double_spiral_1", "double_spiral_2", "circle"],
+        "patterns": [
+          "spiral",
+          "hj",
+          "player60tracking",
+          "spiral",
+          "player60tracking",
+          "expanding_fan",
+          "slowcircle",
+          "circle",
+          "double_spiral_1",
+          "double_spiral_2",
+          "noop",
+          "player60tracking",
+          "rotating_wall",
+          "double_spiral_1",
+          "double_spiral_2",
+          "circle"
+        ],
         "animation": {
           "sprite": "touhou_enemies2.png",
           "x": 1,
@@ -203,8 +254,22 @@
           "speed": 4,
           "hitbox": 10,
           "hp": 80,
-          "patterns": ["spin", "spin", "noop", "spiral_boss", "spin", "noop", "spiral_boss", "spin", "player60tracking", "expanding_fan", "noop", 
-          "circle", "double_spiral_1", "double_spiral_2"],
+          "patterns": [
+            "spin",
+            "spin",
+            "noop",
+            "spiral_boss",
+            "spin",
+            "noop",
+            "spiral_boss",
+            "spin",
+            "player60tracking",
+            "expanding_fan",
+            "noop",
+            "circle",
+            "double_spiral_1",
+            "double_spiral_2"
+          ],
           "animation": {
             "sprite": "touhou-boss.png",
             "x": 0,
@@ -236,7 +301,9 @@
           "speed": 3,
           "hitbox": 10,
           "hp": 30,
-          "patterns": ["noop"],
+          "patterns": [
+            "noop"
+          ],
           "animation": {
             "sprite": "transition.png",
             "x": 0,
@@ -267,7 +334,9 @@
     "speed": 0.8,
     "hitbox": 7,
     "hp": 15,
-    "patterns": ["straight"],
+    "patterns": [
+      "straight"
+    ],
     "animation": {
       "sprite": "touhou_enemies.png",
       "x": 0,
@@ -295,9 +364,17 @@
     "final_looser": {
       "speed": 1,
       "hitbox": 15,
-      "hp":70,
-      "patterns": ["noop", "hj", "noop", "player60tracking", "noop", "slowcircle",
-      "noop", "noop"],
+      "hp": 70,
+      "patterns": [
+        "noop",
+        "hj",
+        "noop",
+        "player60tracking",
+        "noop",
+        "slowcircle",
+        "noop",
+        "noop"
+      ],
       "animation": {
         "sprite": "touhou-boss.png",
         "x": 0,
@@ -325,7 +402,10 @@
       "speed": 1,
       "hitbox": 5,
       "hp": 15,
-      "patterns": ["flower_burst", "noop"],
+      "patterns": [
+        "flower_burst",
+        "noop"
+      ],
       "animation": {
         "sprite": "touhou_enemies2.png",
         "x": 0,
@@ -353,7 +433,10 @@
       "speed": 1,
       "hitbox": 5,
       "hp": 15,
-      "patterns": ["noop", "flower_burst"],
+      "patterns": [
+        "noop",
+        "flower_burst"
+      ],
       "animation": {
         "sprite": "touhou_enemies2.png",
         "x": 0,
@@ -381,7 +464,13 @@
       "speed": 1,
       "hitbox": 5,
       "hp": 30,
-      "patterns": ["bullet_rain", "noop", "sniper_turret", "sniper_turret", "noop"],
+      "patterns": [
+        "bullet_rain",
+        "noop",
+        "sniper_turret",
+        "sniper_turret",
+        "noop"
+      ],
       "animation": {
         "sprite": "touhou_enemies2.png",
         "x": 0,
@@ -409,7 +498,10 @@
       "speed": 0.5,
       "hitbox": 5,
       "hp": 20,
-      "patterns": ["sniper_turret", "noop"],
+      "patterns": [
+        "sniper_turret",
+        "noop"
+      ],
       "animation": {
         "sprite": "touhou_enemies.png",
         "x": 0,
@@ -471,39 +563,134 @@
   "timeline": [
     {
       "enemies": [
-        { "type": "LOSER", "loserType": "raid_1", "x": 400, "y": 120 }
+        {
+          "type": "LOSER",
+          "loserType": "raid_1",
+          "x": 400,
+          "y": 120
+        }
       ]
     },
     {
       "enemies": [
-        { "type": "LOSER", "loserType": "raid_2_flower_first", "x": 280, "y": 120, "vx": 0.3, "vy": 0 },
-        { "type": "LOSER", "loserType": "raid_2_flower_second", "x": 520, "y": 120, "vx": -0.3, "vy": 0 },
-        { "type": "LOSER", "loserType": "sniper_corner", "x": 60, "y": 80, "vx": 0, "vy": 0 },
-        { "type": "LOSER", "loserType": "sniper_corner", "x": 540, "y": 80, "vx": 0, "vy": 0 }
+        {
+          "type": "LOSER",
+          "loserType": "raid_2_flower_first",
+          "x": 280,
+          "y": 120,
+          "vx": 0.3,
+          "vy": 0
+        },
+        {
+          "type": "LOSER",
+          "loserType": "raid_2_flower_second",
+          "x": 520,
+          "y": 120,
+          "vx": -0.3,
+          "vy": 0
+        },
+        {
+          "type": "LOSER",
+          "loserType": "sniper_corner",
+          "x": 60,
+          "y": 80,
+          "vx": 0,
+          "vy": 0
+        },
+        {
+          "type": "LOSER",
+          "loserType": "sniper_corner",
+          "x": 540,
+          "y": 80,
+          "vx": 0,
+          "vy": 0
+        }
       ]
     },
     {
       "enemies": [
-        { "type": "MIDBOSS", "x": 300, "y": 120, "vx": 0.15, "vy": 0.1, "xRange": 50, "yRange": 30 }
+        {
+          "type": "MIDBOSS",
+          "x": 300,
+          "y": 120,
+          "vx": 0.15,
+          "vy": 0.1,
+          "xRange": 50,
+          "yRange": 30
+        }
       ]
     },
     {
       "enemies": [
-        { "type": "MIDBOSS", "midbossType": "phase4_midboss", "x": 300, "y": 120, "vx": 0.15, "vy": 0.1, "xRange": 50, "yRange": 30 },
-        { "type": "LOSER", "loserType": "raid_support", "x": 200, "y": 160, "vx": 0.2, "vy": 0 },
-        { "type": "LOSER", "loserType": "raid_support", "x": 400, "y": 160, "vx": -0.2, "vy": 0 }
+        {
+          "type": "MIDBOSS",
+          "midbossType": "phase4_midboss",
+          "x": 300,
+          "y": 120,
+          "vx": 0.15,
+          "vy": 0.1,
+          "xRange": 50,
+          "yRange": 30
+        },
+        {
+          "type": "LOSER",
+          "loserType": "raid_support",
+          "x": 200,
+          "y": 160,
+          "vx": 0.2,
+          "vy": 0
+        },
+        {
+          "type": "LOSER",
+          "loserType": "raid_support",
+          "x": 400,
+          "y": 160,
+          "vx": -0.2,
+          "vy": 0
+        }
       ]
     },
     {
       "enemies": [
-        { "type": "MIDBOSS", "midbossType": "transition_midboss", "x": 300, "y": 120, "vx": 0, "vy": 0, "xRange": 0, "yRange": 0 }
+        {
+          "type": "MIDBOSS",
+          "midbossType": "transition_midboss",
+          "x": 300,
+          "y": 120,
+          "vx": 0,
+          "vy": 0,
+          "xRange": 0,
+          "yRange": 0
+        }
       ]
     },
-{
+    {
       "enemies": [
-        { "type": "BOSS", "x": 300, "y": 120, "vx": -0.15, "vy": 0.1, "xRange": 80, "yRange": 20 },
-        { "type": "LOSER", "loserType": "final_looser", "x": 70, "y": 70, "vx": 0, "vy": 0 },
-        { "type": "LOSER", "loserType": "final_looser", "x": 530, "y": 70, "vx": 0, "vy": 0 }
+        {
+          "type": "BOSS",
+          "x": 300,
+          "y": 120,
+          "vx": -0.15,
+          "vy": 0.1,
+          "xRange": 80,
+          "yRange": 20
+        },
+        {
+          "type": "LOSER",
+          "loserType": "final_looser",
+          "x": 70,
+          "y": 70,
+          "vx": 0,
+          "vy": 0
+        },
+        {
+          "type": "LOSER",
+          "loserType": "final_looser",
+          "x": 530,
+          "y": 70,
+          "vx": 0,
+          "vy": 0
+        }
       ]
     }
   ]

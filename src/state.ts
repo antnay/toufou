@@ -2,6 +2,7 @@ import { HitBox } from "./hitbox";
 import { loadStage, Loser, MidBoss, Boss, StagePhase, Player, Stage, MidBossPhase, BossPhase, Direction } from './stageloader';
 import { AssetManager } from "./assetmanager";
 import { BulletPatternDef } from "./patterns";
+import { AudioManager } from "./audiomanager";
 
 export interface BombEffect {
     flashAlpha: number;
@@ -25,10 +26,12 @@ export interface GameState {
     score: number;
     deaths: number;
     assets: AssetManager;
+    audio: AudioManager;
     patterns: Map<string, BulletPatternDef>;
     dt: number;
     bombEffect: BombEffect | null;
     hitEffect: number;
+    secretSoundPlayed: boolean;
 }
 
 export async function initState(stagePath: string = "stages/one.json"): Promise<GameState> {
@@ -36,6 +39,32 @@ export async function initState(stagePath: string = "stages/one.json"): Promise<
 
     const assets = new AssetManager();
     await assets.loadStageAssets(stage);
+
+    const audio = new AudioManager();
+    // Load common SFX
+    // await audio.loadAudio("hit", "assets/hit.wav");
+    // await audio.loadAudio("shoot", "assets/shoot.wav");
+    // await audio.loadAudio("bomb", "assets/bomb.wav");
+
+    const copyAudio = (name?: string) => {
+        if (name) {
+            const buffer = assets.getAudio(name);
+            if (buffer) {
+                (audio as any).buffers.set(name, buffer);
+            }
+        }
+    };
+
+    copyAudio(stage.music);
+    copyAudio(stage.bomb_sound);
+    copyAudio(stage.player_hit_sound);
+    copyAudio(stage.midboss_spawn_sound);
+    copyAudio(stage.midboss_death_sound);
+    copyAudio(stage.boss_spawn_sound);
+    copyAudio(stage.boss_death_sound);
+
+    await assets.loadAudio("secret", "assets/secret.mp3");
+    copyAudio("secret");
 
     return {
         stage: stage,
@@ -62,9 +91,11 @@ export async function initState(stagePath: string = "stages/one.json"): Promise<
         score: 0,
         deaths: 0,
         assets: assets,
+        audio: audio,
         patterns: assets.patterns,
         dt: 0,
         bombEffect: null,
         hitEffect: 0,
+        secretSoundPlayed: false,
     };
 }

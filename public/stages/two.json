@@ -1,5 +1,12 @@
 {
     "background": "test-background.png",
+    "music": "diblu.mp3",
+    "bomb_sound": "nuke.mp3",
+    "player_hit_sound": "hitmark.mp3",
+    "midboss_spawn_sound": "prowler.mp3",
+    "midboss_death_sound": "hitmark.mp3",
+    "boss_spawn_sound": "getout.mp3",
+    "boss_death_sound": "hitmark.mp3",
     "useStarfield": true,
     "player": {
         "speed": 1.5,
@@ -418,7 +425,11 @@
                 {
                     "type": "MIDBOSS",
                     "x": 300,
-                    "y": 100, "vx": 0.1, "vy": 0.1, "xRange": 10, "yRange": 30
+                    "y": 100,
+                    "vx": 0.1,
+                    "vy": 0.1,
+                    "xRange": 10,
+                    "yRange": 30
                 }
             ]
         },
@@ -515,7 +526,11 @@
                 {
                     "type": "BOSS",
                     "x": 300,
-                    "y": 100, "vx": -0.15, "vy": 0.1, "xRange": 80, "yRange": 20
+                    "y": 100,
+                    "vx": -0.15,
+                    "vy": 0.1,
+                    "xRange": 80,
+                    "yRange": 20
                 }
             ]
         }

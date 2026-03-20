@@ -4,6 +4,13 @@ import type { BulletPatternInstance } from "./patterns";
 
 export interface Stage {
     background: string;
+    music?: string;
+    bomb_sound?: string;
+    player_hit_sound?: string;
+    midboss_spawn_sound?: string;
+    midboss_death_sound?: string;
+    boss_spawn_sound?: string;
+    boss_death_sound?: string;
     player: {
         speed: number;
         x: number;
